@@ -1,0 +1,11 @@
+{
+  "plugins": ["typescript", "unicorn"],
+  "rules": {
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-unused-vars": "error",
+    "unicorn/prefer-node-protocol": "error",
+    "unicorn/no-null": "off",
+    "no-console": "off"
+  },
+  "ignorePatterns": ["dist", "node_modules", "*.config.ts", "*.config.js"]
+}

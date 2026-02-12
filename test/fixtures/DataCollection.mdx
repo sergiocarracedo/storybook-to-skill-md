@@ -1,0 +1,47 @@
+# Data Collection
+
+The Data Collection component is a powerful data table that helps you display, sort, filter, and manage large datasets.
+
+## When to Use
+
+Use Data Collection when you need to:
+- Display tabular data with multiple columns
+- Allow users to select, sort, or filter rows
+- Handle pagination for large datasets
+
+## Features
+
+- **Selectable rows**: Enable checkbox selection for bulk actions
+- **Sortable columns**: Click column headers to sort
+- **Pagination**: Handle large datasets efficiently
+- **Custom rendering**: Define custom cell renderers
+
+## Basic Example
+
+```tsx
+import { DataCollection } from '@/components/DataCollection';
+
+const data = [
+  { id: 1, name: 'John', email: 'john@example.com' },
+  { id: 2, name: 'Jane', email: 'jane@example.com' },
+];
+
+const columns = [
+  { key: 'id', header: 'ID' },
+  { key: 'name', header: 'Name' },
+  { key: 'email', header: 'Email' },
+];
+
+<DataCollection data={data} columns={columns} />
+```
+
+## With Selection
+
+```tsx
+<DataCollection
+  data={data}
+  columns={columns}
+  selectable
+  onSelectionChange={(selected) => console.log(selected)}
+/>
+```

@@ -1,0 +1,47 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+const SKILL_FILENAME = 'SKILL.md';
+
+/**
+ * Write SKILL.md file to the output directory
+ */
+export function writeSkillFile(outputDir: string, slug: string, content: string): void {
+  const componentDir = path.join(outputDir, slug);
+  const skillPath = path.join(componentDir, SKILL_FILENAME);
+
+  // Ensure directory exists
+  if (!fs.existsSync(componentDir)) {
+    fs.mkdirSync(componentDir, { recursive: true });
+  }
+
+  fs.writeFileSync(skillPath, content, 'utf-8');
+}
+
+/**
+ * Read SKILL.md file from the output directory
+ */
+export function readSkillFile(outputDir: string, slug: string): string | null {
+  const skillPath = path.join(outputDir, slug, SKILL_FILENAME);
+
+  if (!fs.existsSync(skillPath)) {
+    return null;
+  }
+
+  return fs.readFileSync(skillPath, 'utf-8');
+}
+
+/**
+ * Check if SKILL.md exists for a component
+ */
+export function skillFileExists(outputDir: string, slug: string): boolean {
+  const skillPath = path.join(outputDir, slug, SKILL_FILENAME);
+  return fs.existsSync(skillPath);
+}
+
+/**
+ * Get the path to the SKILL.md file
+ */
+export function getSkillFilePath(outputDir: string, slug: string): string {
+  return path.join(outputDir, slug, SKILL_FILENAME);
+}
