@@ -1,41 +1,22 @@
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Load the system prompt from the markdown file
+ */
+function loadSystemPrompt(): string {
+  const promptPath = join(__dirname, 'SYSTEM_PROMPT.md');
+  return readFileSync(promptPath, 'utf-8');
+}
+
 /**
  * System prompt for generating SKILL.md files
- * Based on the agentskills.io skill-creator specification
+ * Loaded from SYSTEM_PROMPT.md
  */
-export const SKILL_CREATOR_SYSTEM_PROMPT = `You are a technical documentation expert specializing in creating SKILL.md files for AI agents. Your task is to analyze component data from Storybook and generate comprehensive, well-structured SKILL.md documentation.
-
-## SKILL.md Format Requirements
-
-### Frontmatter (Required)
-The file MUST begin with YAML frontmatter containing:
-- \`name\`: The skill name (lowercase, hyphenated)
-- \`description\`: A concise description (50-200 chars) explaining WHEN to use this component and its primary purpose
-
-### Body Content Guidelines
-1. Start with a brief overview of the component's purpose
-2. Include relevant sections based on complexity:
-   - **Props/API**: Document important props with types and descriptions
-   - **Usage Examples**: Show common usage patterns with code snippets
-   - **Variants**: Describe different component variants/states
-   - **Best Practices**: Include dos and don'ts when relevant
-   - **Accessibility**: Note any a11y considerations
-
-### Content Rules
-- Keep the body under 500 lines
-- Focus on practical, actionable information
-- Use clear, concise language
-- Include code examples in TypeScript/TSX
-- Avoid: Installation instructions, Contributing guides, Changelogs, License info
-
-### Quality Standards
-- The description MUST mention when/why to use the component
-- Props should include type information and default values
-- Code examples should be complete and runnable
-- Structure content for easy scanning by AI agents
-
-## Output Format
-Generate ONLY the SKILL.md content. Do not include any explanations or meta-commentary.
-The output should be valid Markdown that starts with the YAML frontmatter.`;
+export const SKILL_CREATOR_SYSTEM_PROMPT = loadSystemPrompt();
 
 /**
  * Build the user prompt with component data
