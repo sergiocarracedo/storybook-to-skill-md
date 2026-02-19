@@ -1,21 +1,38 @@
-import type { ComponentData, GenerationResult, SkillgenConfig } from './types.js';
-import { ensureLogDir, logExtractionSummary, logStorybookIndex } from './debug/index.js';
-import { buildComponentGroups, fetchStorybookIndexWithRetry, resolveAllComponentFiles } from './discovery/index.js';
-import { aggregateAllComponentData, createServerExtractor } from './extraction/index.js';
-import { orchestrateGeneration } from './generation/index.js';
+import type { ComponentData, GenerationResult, ProcessSummary, SkillgenConfig } from './types.js';
+import { ensureLogDir, logStorybookIndex } from './debug/index.js';
+import { buildComponentGroups, getStorybookIndex, resolveAllComponentFiles } from './discovery/index.js';
+import { aggregateComponentData, createServerExtractor } from './extraction/index.js';
+import { generateForComponent } from './generation/orchestrator.js';
 import { printSummary } from './output/index.js';
+import {
+  printComponentComplete,
+  printComponentFailed,
+  printComponentHeader,
+  printExtractionItem,
+  printExtractionStart,
+  printExtractionTotal,
+  printGenerationItem,
+  printGenerationStart,
+  printGenerationTotal,
+} from './output/reporter.js';
+import pLimit from 'p-limit';
 
 /**
  * Main entry point for programmatic usage
  * Generates SKILL.md files from a Storybook project
  */
 export async function generate(config: SkillgenConfig): Promise<GenerationResult[]> {
+  const processStartTime = Date.now();
+  const results: GenerationResult[] = [];
+  const extractionErrors: string[] = [];
+
   if (config.verbose) {
-    console.log(`Fetching Storybook index from ${config.storybookUrl}...`);
+    const source = config.indexFile ? `local file ${config.indexFile}` : config.storybookUrl;
+    console.log(`Loading Storybook index from ${source}...`);
   }
 
-  // Step 1: Fetch Storybook index
-  const index = await fetchStorybookIndexWithRetry(config.storybookUrl);
+  // Step 1: Get Storybook index (from local file or URL)
+  const index = await getStorybookIndex(config.indexFile, config.storybookUrl, config.fetchRetries);
 
   if (config.verbose) {
     console.log(`Found ${Object.keys(index.entries).length} entries in index.json`);
@@ -42,49 +59,114 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
   // Step 3: Resolve file paths
   const resolvedGroups = resolveAllComponentFiles(groups, config.sourceDir);
 
-  // Step 4: Extract and aggregate component data
-  if (config.verbose) {
-    console.log('Extracting component metadata...');
+  // Step 4 & 5: For each component, extract and generate (pipeline-per-component)
+  for (const group of resolvedGroups) {
+    printComponentHeader(group.hierarchyPath);
+    
+    const componentStartTime = Date.now();
+    
+    try {
+      // Extract component data
+      printExtractionStart();
+      
+      const extractionStart = Date.now();
+      const componentData = await aggregateComponentData(group, config.sourceDir);
+      const extractionDuration = Date.now() - extractionStart;
+      
+      printExtractionItem('Main component', extractionDuration, false);
+      
+      // Track subcomponent extractions if verbose
+      if (group.children.length > 0) {
+        printExtractionItem(`${group.children.length} subcomponents`, 0, true);
+      } else {
+        printExtractionItem('Sources complete', 0, true);
+      }
+      
+      printExtractionTotal(extractionDuration);
+      
+      // Generate SKILL.md
+      printGenerationStart();
+      
+      const generationStart = Date.now();
+      const result = await generateForComponent(componentData, config);
+      const generationDuration = Date.now() - generationStart;
+      
+      // Print generation items
+      if (result.referenceResults && result.referenceResults.length > 0) {
+        for (let i = 0; i < result.referenceResults.length; i++) {
+          const ref = result.referenceResults[i];
+          const isLast = i === result.referenceResults.length - 1;
+          if (ref) {
+            printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
+          }
+        }
+      } else {
+        printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
+      }
+      
+      const totalGenTokens = result.estimatedTokens ?? 0;
+      printGenerationTotal(generationDuration, totalGenTokens);
+      
+      const componentDuration = Date.now() - componentStartTime;
+      
+      if (result.status === 'failed') {
+        printComponentFailed(result.error ?? 'Unknown error');
+      } else {
+        printComponentComplete(
+          componentDuration,
+          totalGenTokens,
+          result.storiesCount ?? 0,
+          result.propsCount ?? 0
+        );
+      }
+      
+      results.push(result);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      extractionErrors.push(`${group.hierarchyPath}: ${errorMessage}`);
+      printComponentFailed(errorMessage);
+      
+      results.push({
+        slug: group.slug,
+        status: 'failed',
+        error: errorMessage,
+      });
+    }
   }
 
-  const componentData: ComponentData[] = await aggregateAllComponentData(
-    resolvedGroups,
-    config.sourceDir,
-  );
-
-  if (config.verbose) {
-    console.log(`Extracted data for ${componentData.length} components`);
-  }
-
-  // Log extraction summary if debugging
-  if (config.logPromptsDir) {
-    logExtractionSummary(config.logPromptsDir, componentData);
-  }
-
-  // Step 5: Generate SKILL.md files
-  if (config.verbose) {
-    console.log(`Generating SKILL.md files (concurrency: ${config.concurrency})...`);
-  }
-
-  const results = await orchestrateGeneration(componentData, config);
+  // Build process summary
+  const totalDuration = Date.now() - processStartTime;
+  const totalEstimatedTokens = results.reduce((sum, r) => sum + (r.estimatedTokens ?? 0), 0);
+  
+  const summary: ProcessSummary = {
+    results,
+    totalDuration,
+    totalEstimatedTokens,
+    extractionErrors,
+  };
 
   // Step 6: Print summary
-  printSummary(results);
+  printSummary(summary);
 
   return results;
 }
 
 /**
- * Server-only generation - extracts all metadata from Storybook server
- * No local source files required
+ * Generate SKILL.md files using server-only extraction (browser-based)
+ * Used when source files are not available locally
  */
 export async function generateServerOnly(config: SkillgenConfig): Promise<GenerationResult[]> {
+  const processStartTime = Date.now();
+  const results: GenerationResult[] = [];
+  const extractionErrors: string[] = [];
+
   if (config.verbose) {
-    console.log(`Fetching Storybook index from ${config.storybookUrl}...`);
+    const source = config.indexFile ? `local file ${config.indexFile}` : config.storybookUrl;
+    console.log(`Loading Storybook index from ${source}...`);
   }
 
-  // Step 1: Fetch Storybook index
-  const index = await fetchStorybookIndexWithRetry(config.storybookUrl);
+  // Step 1: Get Storybook index (from local file or URL)
+  const index = await getStorybookIndex(config.indexFile, config.storybookUrl, config.fetchRetries);
 
   if (config.verbose) {
     console.log(`Found ${Object.keys(index.entries).length} entries in index.json`);
@@ -108,7 +190,11 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
     return [];
   }
 
-  // Step 3: Initialize browser-based extractor
+  // Step 3: Initialize browser-based extractor (requires storybookUrl)
+  if (!config.storybookUrl) {
+    throw new Error('storybookUrl is required for server-only mode (browser-based extraction)');
+  }
+
   if (config.verbose) {
     console.log('Initializing browser for metadata extraction...');
   }
@@ -117,46 +203,23 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
   await extractor.init();
 
   try {
-    // Step 4: Extract metadata for each component from the server
+    // Step 4: Extract metadata for each component from the server (pipeline-per-component)
     if (config.verbose) {
       console.log('Extracting component metadata from Storybook server...');
     }
 
-    const componentData: ComponentData[] = [];
-
     for (const group of groups) {
+      printComponentHeader(group.hierarchyPath);
+      
+      const componentStartTime = Date.now();
+      
       try {
-        if (config.verbose) {
-          console.log(`\n  Component: ${group.hierarchyPath}`);
-          console.log(`    Stories: ${group.storyEntries.length}`);
-          console.log(`    Docs: ${group.docsEntries.length}`);
-          console.log(`    Sub-components: ${group.children.length}`);
-        }
-
+        printExtractionStart();
+        
         // Collect all docs entries to extract from children only (avoid duplicates)
         const childDocsEntries: typeof group.docsEntries = [];
         for (const child of group.children) {
           childDocsEntries.push(...child.docsEntries);
-        }
-
-        if (config.verbose) {
-          console.log(`    Sources to extract:`);
-          // Show main docs
-          for (const entry of group.docsEntries) {
-            // Only show if it's not a child doc
-            const isChildDoc = childDocsEntries.some(c => c.id === entry.id);
-            if (!isChildDoc) {
-              console.log(`      - [main] ${entry.title}`);
-            }
-          }
-          // Show child docs grouped by child
-          for (const child of group.children) {
-            if (child.docsEntries.length > 0) {
-              for (const entry of child.docsEntries) {
-                console.log(`      - [${child.title}] ${entry.title}`);
-              }
-            }
-          }
         }
 
         // Extract from main docs entry for props/argTypes
@@ -169,12 +232,17 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
         }
 
         const fullTitle = mainDocsEntry.title;
+        
+        const extractionStart = Date.now();
 
         // Try API extraction first, fall back to DOM extraction for main component
         let meta = await extractor.extractViaStorybookApi(mainDocsEntry.id, fullTitle);
         if (!meta) {
           meta = await extractor.extractComponentMeta(mainDocsEntry.id, fullTitle);
         }
+        
+        const mainExtractionDuration = Date.now() - extractionStart;
+        printExtractionItem('Main component', mainExtractionDuration, false);
 
         // Collect documentation from all docs entries
         const documentation: ComponentData['documentation'] = [];
@@ -189,64 +257,80 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
           });
         }
 
-        // Extract documentation from child pages
+        // Extract documentation from child pages in parallel
         const subPages: string[] = [];
-        for (const child of group.children) {
-          subPages.push(child.title);
+        
+        if (group.children.length > 0) {
+          const limit = pLimit(config.extractionConcurrency);
+          const childExtractionStart = Date.now();
+          
+          const childTasks = group.children.flatMap((child) => {
+            subPages.push(child.title);
+            
+            return child.docsEntries.map((childDocsEntry) =>
+              limit(async () => {
+                if (config.verbose) {
+                  console.log(`    Extracting child: ${childDocsEntry.title}`);
+                }
 
-          for (const childDocsEntry of child.docsEntries) {
-            if (config.verbose) {
-              console.log(`    Extracting child: ${childDocsEntry.title}`);
-            }
+                try {
+                  const childMeta = await extractor.extractComponentMeta(
+                    childDocsEntry.id,
+                    childDocsEntry.title
+                  );
 
-            try {
-              const childMeta = await extractor.extractComponentMeta(
-                childDocsEntry.id,
-                childDocsEntry.title
-              );
+                  if (childMeta.docsContent) {
+                    documentation.push({
+                      filePath: `${config.storybookUrl}/?path=/docs/${childDocsEntry.id}`,
+                      textContent: `## ${child.title}\n\n${childMeta.docsContent}`,
+                      codeExamples: [],
+                      headings: [{ level: 2, text: child.title }],
+                    });
+                  }
 
-              if (childMeta.docsContent) {
-                documentation.push({
-                  filePath: `${config.storybookUrl}/?path=/docs/${childDocsEntry.id}`,
-                  textContent: `## ${child.title}\n\n${childMeta.docsContent}`,
-                  codeExamples: [],
-                  headings: [{ level: 2, text: child.title }],
-                });
-              }
+                  // Merge props from child if any
+                  if (childMeta.props.length > 0) {
+                    for (const prop of childMeta.props) {
+                      if (!meta.props.some((p) => p.name === prop.name)) {
+                        meta.props.push(prop);
+                      }
+                    }
+                  }
 
-              // Merge props from child if any
-              if (childMeta.props.length > 0) {
-                for (const prop of childMeta.props) {
-                  if (!meta.props.some((p) => p.name === prop.name)) {
-                    meta.props.push(prop);
+                  // Merge stories from child
+                  if (childMeta.stories.length > 0) {
+                    for (const story of childMeta.stories) {
+                      meta.stories.push({
+                        ...story,
+                        name: `${child.title}/${story.name}`,
+                      });
+                    }
+                  }
+                } catch (childError) {
+                  const childErrorMsg = childError instanceof Error ? childError.message : String(childError);
+                  extractionErrors.push(`${childDocsEntry.title}: ${childErrorMsg}`);
+                  if (config.verbose) {
+                    console.warn(`      Warning: Failed to extract child ${childDocsEntry.title}`);
                   }
                 }
-              }
-
-              // Merge stories from child
-              if (childMeta.stories.length > 0) {
-                for (const story of childMeta.stories) {
-                  meta.stories.push({
-                    ...story,
-                    name: `${child.title}/${story.name}`,
-                  });
-                }
-              }
-            } catch (childError) {
-              if (config.verbose) {
-                console.warn(`      Warning: Failed to extract child ${childDocsEntry.title}`);
-              }
-            }
-          }
+              })
+            );
+          });
+          
+          await Promise.all(childTasks);
+          
+          const childExtractionDuration = Date.now() - childExtractionStart;
+          printExtractionItem(`${group.children.length} subcomponents`, childExtractionDuration, true);
+        } else {
+          printExtractionItem('Sources complete', 0, true);
         }
+        
+        const totalExtractionDuration = Date.now() - extractionStart;
+        printExtractionTotal(totalExtractionDuration);
 
-        if (config.verbose) {
-          console.log(`    Extracted: ${meta.props.length} props, ${meta.stories.length} stories, ${documentation.length} docs`);
-        }
-
-        componentData.push({
+        const componentData: ComponentData = {
           slug: group.slug,
-          title: group.hierarchyPath, // Use hierarchy path, not the first entry's title
+          title: group.hierarchyPath,
           hierarchyPath: group.hierarchyPath,
           props: meta.props,
           argTypes: meta.argTypes,
@@ -255,32 +339,71 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
           documentation,
           subPages,
           sourceFiles: [],
-        });
-      } catch (error) {
-        if (config.verbose) {
-          console.warn(`  Warning: Failed to extract ${group.hierarchyPath}:`, error);
+        };
+        
+        // Generate SKILL.md
+        printGenerationStart();
+        
+        const generationStart = Date.now();
+        const result = await generateForComponent(componentData, config);
+        const generationDuration = Date.now() - generationStart;
+        
+        // Print generation items
+        if (result.referenceResults && result.referenceResults.length > 0) {
+          for (let i = 0; i < result.referenceResults.length; i++) {
+            const ref = result.referenceResults[i];
+            const isLast = i === result.referenceResults.length - 1;
+            if (ref) {
+              printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
+            }
+          }
+        } else {
+          printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
         }
+        
+        const totalGenTokens = result.estimatedTokens ?? 0;
+        printGenerationTotal(generationDuration, totalGenTokens);
+        
+        const componentDuration = Date.now() - componentStartTime;
+        
+        if (result.status === 'failed') {
+          printComponentFailed(result.error ?? 'Unknown error');
+        } else {
+          printComponentComplete(
+            componentDuration,
+            totalGenTokens,
+            result.storiesCount ?? 0,
+            result.propsCount ?? 0
+          );
+        }
+        
+        results.push(result);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        extractionErrors.push(`${group.hierarchyPath}: ${errorMessage}`);
+        printComponentFailed(errorMessage);
+        
+        results.push({
+          slug: group.slug,
+          status: 'failed',
+          error: errorMessage,
+        });
       }
     }
 
-    if (config.verbose) {
-      console.log(`\nExtracted data for ${componentData.length} components`);
-    }
-
-    // Log extraction summary if debugging
-    if (config.logPromptsDir) {
-      logExtractionSummary(config.logPromptsDir, componentData);
-    }
-
-    // Step 5: Generate SKILL.md files
-    if (config.verbose) {
-      console.log(`Generating SKILL.md files (concurrency: ${config.concurrency})...`);
-    }
-
-    const results = await orchestrateGeneration(componentData, config);
+    // Build process summary
+    const totalDuration = Date.now() - processStartTime;
+    const totalEstimatedTokens = results.reduce((sum, r) => sum + (r.estimatedTokens ?? 0), 0);
+    
+    const summary: ProcessSummary = {
+      results,
+      totalDuration,
+      totalEstimatedTokens,
+      extractionErrors,
+    };
 
     // Step 6: Print summary
-    printSummary(results);
+    printSummary(summary);
 
     return results;
   } finally {

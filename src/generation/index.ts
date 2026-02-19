@@ -1,4 +1,4 @@
 export { createModel, getDefaultModel } from './model-factory.js';
-export { buildPrompt, buildUserPrompt, SKILL_CREATOR_SYSTEM_PROMPT } from './prompt-builder.js';
+export { buildPrompt, buildUserPrompt } from './prompt-builder.js';
 export { generateSkillMd } from './generator.js';
-export { orchestrateGeneration } from './orchestrator.js';
+export { orchestrateGeneration, generateForComponent } from './orchestrator.js';

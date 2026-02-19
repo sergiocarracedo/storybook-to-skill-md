@@ -41,7 +41,8 @@
     "agent",
     "cli"
   ],
-  "author": "",
+  "author": "Sergio Carracedo <hi@sergiocarracedo.es",
+  "repository": "https://github.com/sergiocarracedo/storybook-to-skill-md",
   "license": "MIT",
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",

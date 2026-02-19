@@ -8,6 +8,10 @@ export const DEFAULT_CONFIG: SkillgenConfig = {
   verbose: false,
   dryRun: false,
   force: false,
+  timeout: 60000,
+  retries: 2,
+  fetchRetries: 3,
+  extractionConcurrency: 3,
 };
 
 export const ENV_PREFIX = 'SKILLGEN_';

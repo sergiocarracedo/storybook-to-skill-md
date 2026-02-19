@@ -2,34 +2,79 @@ import type { LanguageModelV1 } from 'ai';
 import { generateText } from 'ai';
 
 /**
+ * Result from generating skill content
+ */
+export interface GenerateResult {
+  text: string;
+  estimatedTokens: number;
+}
+
+/**
  * Generate SKILL.md content using the LLM
  */
 export async function generateSkillMd(
   model: LanguageModelV1,
   prompt: { system: string; user: string },
+  timeout = 60000,
   maxRetries = 2,
-): Promise<string> {
+): Promise<GenerateResult> {
   let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
     try {
-      const { text, finishReason } = await generateText({
-        model,
-        system: prompt.system,
-        prompt: prompt.user,
-        maxTokens: 65536,
-        temperature: 0.1, // Very low temperature for more complete output
-      });
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), timeout);
 
-      if (finishReason === 'length') {
-        console.warn('Warning: Output was truncated due to length limits');
+      try {
+        const result = await generateText({
+          model,
+          system: prompt.system,
+          prompt: prompt.user,
+          maxTokens: 65536,
+          temperature: 0.1,
+          abortSignal: abortController.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (result.finishReason === 'length') {
+          console.warn('Warning: Output was truncated due to length limits');
+        }
+
+        // Calculate tokens: try to use actual usage from AI SDK, fallback to estimation
+        let estimatedTokens = 0;
+        if (result.usage?.totalTokens) {
+          estimatedTokens = result.usage.totalTokens;
+        } else if (result.usage?.completionTokens) {
+          estimatedTokens = result.usage.completionTokens;
+        } else {
+          // Fallback: ~4 chars per token
+          estimatedTokens = Math.ceil(result.text.length / 4);
+        }
+
+        // Clean up the response
+        const cleanedText = cleanGeneratedContent(result.text);
+
+        return {
+          text: cleanedText,
+          estimatedTokens,
+        };
+      } finally {
+        clearTimeout(timeoutId);
       }
-
-      // Clean up the response - ensure it starts with frontmatter
-      const cleanedText = cleanGeneratedContent(text);
-      return cleanedText;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
+
+      // Check if aborted (timeout)
+      if (error instanceof Error && error.name === 'AbortError') {
+        if (attempt <= maxRetries) {
+          const waitTime = attempt * 1000;
+          console.warn(`Timeout, retrying in ${waitTime}ms...`);
+          await sleep(waitTime);
+          continue;
+        }
+        throw new Error(`Generation timed out after ${timeout}ms`);
+      }
 
       // Check if it's a rate limit error
       if (isRateLimitError(error)) {

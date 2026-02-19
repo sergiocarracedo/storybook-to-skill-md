@@ -1,4 +1,4 @@
-export { fetchStorybookIndex, fetchStorybookIndexWithRetry } from './index-fetcher.js';
+export { fetchStorybookIndex, fetchStorybookIndexWithRetry, loadLocalIndex, getStorybookIndex } from './index-fetcher.js';
 export {
   buildComponentGroups,
   filterEntries,

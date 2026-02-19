@@ -1,7 +1,7 @@
 import type { LanguageModelV1 } from 'ai';
 import pLimit from 'p-limit';
 
-import type { ComponentData, GenerationResult, SkillgenConfig } from '../types.js';
+import type { ComponentData, GenerationResult, SkillgenConfig, ReferenceResult } from '../types.js';
 import { createSkillMeta, hashContents, hashFiles, needsRegeneration, writeSkillMeta } from '../cache/index.js';
 import { logExtractedData, logResponse, logSystemPrompt, logUserPrompt } from '../debug/index.js';
 
@@ -140,14 +140,42 @@ export async function orchestrateGeneration(
 }
 
 /**
+ * Generate skill file for a single component (pipeline-per-component version)
+ * This creates the model instance per-call and is used in the new pipeline architecture
+ */
+export async function generateForComponent(
+  component: ComponentData,
+  config: SkillgenConfig,
+): Promise<GenerationResult> {
+  // For dry run, we don't need provider/model/apiKey
+  if (!config.dryRun) {
+    if (!config.provider) {
+      throw new Error('Provider is required. Use -p/--provider or set it in config file.');
+    }
+    if (!config.model) {
+      throw new Error('Model is required. Use -m/--model or set it in config file.');
+    }
+  }
+
+  // Create the LLM model (only if not dry run)
+  let model: LanguageModelV1 | null = null;
+  if (!config.dryRun && config.provider && config.model) {
+    model = await createModel(config.provider, config.model, config.apiKey);
+  }
+
+  return generateComponentSkill(component, model, config);
+}
+
+/**
  * Generate SKILL.md for a single component
  */
-async function generateComponentSkill(
+export async function generateComponentSkill(
   component: ComponentData,
   model: LanguageModelV1 | null,
   config: SkillgenConfig,
 ): Promise<GenerationResult> {
   const { slug, title, stories, props } = component;
+  const startTime = Date.now();
 
   try {
     // Determine if we're in server-only mode (no local source files)
@@ -191,7 +219,7 @@ async function generateComponentSkill(
     }
 
     // Check if regeneration is needed
-    const { needsRegen, reason } = needsRegeneration(
+    const { needsRegen } = needsRegeneration(
       config.outputDir,
       slug,
       fileHashes,
@@ -200,9 +228,6 @@ async function generateComponentSkill(
     );
 
     if (!needsRegen) {
-      if (config.verbose) {
-        console.log(`⏭️  ${title} — unchanged, skipped`);
-      }
       return {
         slug,
         status: 'skipped',
@@ -212,21 +237,16 @@ async function generateComponentSkill(
       };
     }
 
-    if (config.verbose) {
-      console.log(`🔄 ${title} — generating (${reason})...`);
-    }
-
     // Dry run - don't actually generate
     if (config.dryRun) {
       // Log extracted data and prompts even in dry run mode (useful for debugging)
       if (config.logPromptsDir) {
         logExtractedData(config.logPromptsDir, slug, component);
-        const prompt = buildPrompt(component);
+        const prompt = buildPrompt(component, config.promptFile);
         logSystemPrompt(config.logPromptsDir, slug, prompt.system);
         logUserPrompt(config.logPromptsDir, slug, prompt.user);
       }
 
-      console.log(`🔍 ${title} — would generate (dry run)`);
       return {
         slug,
         status: 'skipped',
@@ -247,7 +267,7 @@ async function generateComponentSkill(
     }
 
     // Build prompt
-    const prompt = buildPrompt(component);
+    const prompt = buildPrompt(component, config.promptFile);
 
     // Log prompts
     if (config.logPromptsDir) {
@@ -256,27 +276,39 @@ async function generateComponentSkill(
     }
 
     // Generate SKILL.md (main content)
-    let skillMdContent = await generateSkillMd(model, prompt);
+    const skillResult = await generateSkillMd(model, prompt, config.timeout, config.retries);
+    let skillMdContent = skillResult.text;
+    let totalTokens = skillResult.estimatedTokens;
+    const referenceResults: ReferenceResult[] = [];
 
     // If there are sub-components, generate reference files
     if (component.subPages.length > 0) {
-      const subPrompt = buildSubcomponentsPrompt(component);
+      const subPrompt = buildSubcomponentsPrompt(component, config.promptFile);
       
       if (config.logPromptsDir) {
         logUserPrompt(config.logPromptsDir, slug + '-subcomponents', subPrompt.user);
       }
 
-      const subContent = await generateSkillMd(model, subPrompt);
+      const subResult = await generateSkillMd(model, subPrompt, config.timeout, config.retries);
+      totalTokens += subResult.estimatedTokens;
       
       // Parse and write reference files for each sub-component
-      const refFiles = parseReferenceFiles(subContent, component.subPages);
+      const refFiles = parseReferenceFiles(subResult.text, component.subPages);
       
       // Write reference files
       for (const ref of refFiles) {
+        const refStartTime = Date.now();
         writeReferenceFile(config.outputDir, slug, `${ref.name}.md`, ref.content);
-        if (config.verbose) {
-          console.log(`  📄 Created reference: references/${ref.name}.md`);
-        }
+        const refDuration = Date.now() - refStartTime;
+        
+        // Estimate tokens for this reference (rough split)
+        const refTokens = Math.ceil((ref.content.length / subResult.text.length) * subResult.estimatedTokens);
+        
+        referenceResults.push({
+          name: ref.name,
+          duration: refDuration,
+          estimatedTokens: refTokens,
+        });
       }
 
       // Update main SKILL.md to have lean content with references
@@ -290,12 +322,11 @@ async function generateComponentSkill(
     // Validate the generated content
     const validation = validateSkillMd(skillMdContent);
     if (!validation.valid) {
-      console.warn(`⚠️  ${title} — validation errors:`, validation.errors);
-      // Try to regenerate with feedback (simplified - just log for now)
+      console.warn(`[WARN] ${title} — validation errors:`, validation.errors);
     }
 
     if (validation.warnings.length > 0 && config.verbose) {
-      console.log(`⚠️  ${title} — warnings:`, validation.warnings);
+      console.log(`[WARN] ${title} — warnings:`, validation.warnings);
     }
 
     // Write the SKILL.md file
@@ -305,23 +336,27 @@ async function generateComponentSkill(
     const meta = createSkillMeta(config.provider!, config.model!, fileHashes, TOOL_VERSION);
     writeSkillMeta(config.outputDir, slug, meta);
 
-    console.log(`✅ ${title} — generated (${stories.length} stories, ${props.length} props)`);
+    const duration = Date.now() - startTime;
 
     return {
       slug,
       status: 'generated',
       storiesCount: stories.length,
       propsCount: props.length,
+      duration,
+      estimatedTokens: totalTokens,
+      referenceResults,
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(`❌ ${title} — failed: ${errorMessage}`);
+    const duration = Date.now() - startTime;
 
     return {
       slug,
       status: 'failed',
       message: errorMessage,
-      error: error instanceof Error ? error : new Error(errorMessage),
+      error: errorMessage,
+      duration,
     };
   }
 }

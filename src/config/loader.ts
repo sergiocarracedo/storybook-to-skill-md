@@ -19,6 +19,9 @@ function loadEnvConfig(): Partial<SkillgenConfig> {
   const storybookUrl = process.env[`${ENV_PREFIX}STORYBOOK_URL`];
   if (storybookUrl) env.storybookUrl = storybookUrl;
 
+  const indexFile = process.env[`${ENV_PREFIX}INDEX_FILE`];
+  if (indexFile) env.indexFile = indexFile;
+
   const sourceDir = process.env[`${ENV_PREFIX}SOURCE_DIR`];
   if (sourceDir) env.sourceDir = sourceDir;
 
@@ -44,6 +47,33 @@ function loadEnvConfig(): Partial<SkillgenConfig> {
 
   const verbose = process.env[`${ENV_PREFIX}VERBOSE`];
   if (verbose) env.verbose = verbose === 'true' || verbose === '1';
+
+  const promptFile = process.env[`${ENV_PREFIX}PROMPT_FILE`];
+  if (promptFile) env.promptFile = promptFile;
+
+  const timeout = process.env[`${ENV_PREFIX}TIMEOUT`];
+  if (timeout) {
+    const parsed = parseInt(timeout, 10);
+    if (!isNaN(parsed)) env.timeout = parsed;
+  }
+
+  const retries = process.env[`${ENV_PREFIX}RETRIES`];
+  if (retries) {
+    const parsed = parseInt(retries, 10);
+    if (!isNaN(parsed)) env.retries = parsed;
+  }
+
+  const fetchRetries = process.env[`${ENV_PREFIX}FETCH_RETRIES`];
+  if (fetchRetries) {
+    const parsed = parseInt(fetchRetries, 10);
+    if (!isNaN(parsed)) env.fetchRetries = parsed;
+  }
+
+  const extractionConcurrency = process.env[`${ENV_PREFIX}EXTRACTION_CONCURRENCY`];
+  if (extractionConcurrency) {
+    const parsed = parseInt(extractionConcurrency, 10);
+    if (!isNaN(parsed)) env.extractionConcurrency = parsed;
+  }
 
   return env;
 }

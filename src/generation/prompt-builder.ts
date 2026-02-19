@@ -10,18 +10,20 @@ const MAX_TOTAL_DOCS = 50000; // Max total chars for all documentation
 const MAX_STORIES = 100; // Max number of stories to list
 
 /**
- * Load the system prompt from the markdown file
+ * Load the system prompt from a file (custom or built-in)
  */
-function loadSystemPrompt(): string {
-  const promptPath = join(__dirname, 'SYSTEM_PROMPT.md');
+function loadSystemPrompt(customPath?: string): string {
+  const promptPath = customPath || join(__dirname, 'SYSTEM_PROMPT.md');
   return readFileSync(promptPath, 'utf-8');
 }
 
 /**
  * System prompt for generating SKILL.md files
- * Loaded from SYSTEM_PROMPT.md
+ * Loaded from SYSTEM_PROMPT.md (or custom file if specified)
  */
-export const SKILL_CREATOR_SYSTEM_PROMPT = loadSystemPrompt();
+export function getSystemPrompt(customPromptFile?: string): string {
+  return loadSystemPrompt(customPromptFile);
+}
 
 /**
  * Truncate text to a maximum length, trying to cut at a sentence boundary
@@ -48,220 +50,142 @@ export function buildUserPrompt(componentData: {
   slug: string;
   title: string;
   hierarchyPath: string;
-  props: Array<{
-    name: string;
-    type: string;
-    required: boolean;
-    description: string;
-    defaultValue?: string;
-  }>;
+  props: Array<{ name: string; type: string; required: boolean; description: string; defaultValue?: string }>;
   argTypes: Record<string, unknown>;
   defaultArgs: Record<string, unknown>;
   stories: Array<{ name: string; args: Record<string, unknown> }>;
-  documentation: Array<{ textContent: string; codeExamples: string[] }>;
+  documentation: Array<{ filePath: string; textContent: string }>;
   subPages: string[];
 }): string {
-  const sections: string[] = [];
+  const { title, props, stories, documentation, subPages } = componentData;
 
-  // Basic info - use hierarchyPath for the component name (not the first entry's title)
-  const componentName = componentData.hierarchyPath.split('/').pop() || componentData.title;
-  sections.push(`# Component: ${componentName}`);
-  sections.push(`Slug: ${componentData.slug}`);
-  sections.push(`Hierarchy: ${componentData.hierarchyPath}`);
+  let prompt = `# Component: ${title}\n\n`;
 
-  // Sub-pages (early in prompt so LLM knows the component structure)
-  if (componentData.subPages.length > 0) {
-    sections.push('\n## Sub-components / Sub-pages');
-    sections.push('This component includes the following sub-pages with additional documentation:');
-    for (const subPage of componentData.subPages) {
-      sections.push(`- ${subPage}`);
+  // Component description from docs (if available)
+  if (documentation.length > 0 && documentation[0]?.textContent) {
+    const firstParagraph = documentation[0].textContent.split('\n\n')[0];
+    if (firstParagraph) {
+      prompt += `## Description\n${firstParagraph.trim()}\n\n`;
     }
   }
 
-  // Props - include all props
-  if (componentData.props.length > 0) {
-    sections.push('\n## Props');
-    
-    // Prioritize required props, then sort by name
-    const sortedProps = [...componentData.props].sort((a, b) => {
-      if (a.required !== b.required) return a.required ? -1 : 1;
-      return a.name.localeCompare(b.name);
-    });
-    
-    for (const prop of sortedProps) {
-      const required = prop.required ? '(required)' : '(optional)';
-      const defaultVal = prop.defaultValue ? ` [default: ${prop.defaultValue}]` : '';
-      const typeDisplay = prop.type !== 'unknown' ? prop.type : '';
-      sections.push(`- **${prop.name}** ${required}${typeDisplay ? `: \`${typeDisplay}\`` : ''}${defaultVal}`);
-      if (prop.description && prop.description !== prop.type) {
-        sections.push(`  ${prop.description}`);
-      }
+  // Props (component API)
+  if (props.length > 0) {
+    prompt += `## Props\n\n`;
+    for (const prop of props.slice(0, 50)) { // Limit to 50 props max
+      prompt += `- **${prop.name}**`;
+      if (prop.required) prompt += ' (required)';
+      prompt += `: \`${prop.type}\``;
+      if (prop.defaultValue) prompt += ` = ${prop.defaultValue}`;
+      if (prop.description) prompt += ` — ${prop.description}`;
+      prompt += '\n';
     }
+    prompt += '\n';
   }
 
   // Stories (use cases) - only show args for Default story
-  if (componentData.stories.length > 0) {
-    sections.push('\n## Stories (Use Cases)');
+  if (stories.length > 0) {
+    prompt += `## Stories (${stories.length} total)\n\n`;
+    const storiesToShow = stories.slice(0, Math.min(MAX_STORIES, stories.length));
     
-    // Find and show Default story with full args
-    const defaultStory = componentData.stories.find(
-      (s) => s.name.toLowerCase() === 'default' || s.name.toLowerCase() === 'primary'
-    );
-    
-    if (defaultStory && Object.keys(defaultStory.args).length > 0) {
-      sections.push(`\n### Default Story Args`);
-      sections.push('```json');
-      sections.push(JSON.stringify(defaultStory.args, null, 2));
-      sections.push('```');
-    }
-    
-    // List story names (limited)
-    sections.push('\n### Available Stories');
-    const storiesToShow = componentData.stories.slice(0, MAX_STORIES);
     for (const story of storiesToShow) {
-      sections.push(`- ${story.name}`);
+      // Find and show Default story with full args
+      if (story.name === 'Default' && Object.keys(story.args).length > 0) {
+        prompt += `### ${story.name}\n\`\`\`json\n${JSON.stringify(story.args, null, 2)}\n\`\`\`\n\n`;
+      } else {
+        // Just list other stories by name
+        prompt += `- ${story.name}\n`;
+      }
     }
     
-    const hiddenStories = componentData.stories.length - storiesToShow.length;
-    if (hiddenStories > 0) {
-      sections.push(`- *(${hiddenStories} more stories...)*`);
+    if (stories.length > MAX_STORIES) {
+      prompt += `\n... and ${stories.length - MAX_STORIES} more stories\n`;
     }
+    prompt += '\n';
   }
 
   // Default args (component-level defaults) - only if not too large
   if (Object.keys(componentData.defaultArgs).length > 0) {
     const argsJson = JSON.stringify(componentData.defaultArgs, null, 2);
     if (argsJson.length < 2000) {
-      sections.push('\n## Default Args (Component Level)');
-      sections.push('```json');
-      sections.push(argsJson);
-      sections.push('```');
+      prompt += `## Default Args\n\`\`\`json\n${argsJson}\n\`\`\`\n\n`;
     }
   }
 
-  // Documentation content - with size limits
-  if (componentData.documentation.length > 0) {
-    sections.push('\n## Documentation');
-    
+  // Documentation content
+  if (documentation.length > 0) {
+    prompt += `## Documentation\n\n`;
     let totalDocsLength = 0;
-    for (const doc of componentData.documentation) {
+    
+    for (const doc of documentation) {
       if (totalDocsLength >= MAX_TOTAL_DOCS) {
-        sections.push('\n*[Additional documentation truncated for brevity]*');
+        prompt += `\n[Additional documentation omitted - total docs exceeded ${MAX_TOTAL_DOCS} chars]\n`;
         break;
       }
       
-      if (doc.textContent) {
-        const remainingSpace = MAX_TOTAL_DOCS - totalDocsLength;
-        const maxForThis = Math.min(MAX_DOCS_PER_COMPONENT, remainingSpace);
-        const truncatedContent = truncateText(doc.textContent, maxForThis);
-        sections.push(truncatedContent);
-        totalDocsLength += truncatedContent.length;
-      }
-      
-      // Limit code examples
-      if (doc.codeExamples.length > 0 && totalDocsLength < MAX_TOTAL_DOCS) {
-        sections.push('\n### Code Examples');
-        for (const example of doc.codeExamples.slice(0, 2)) {
-          if (example.length < 1000) {
-            sections.push('```tsx');
-            sections.push(example);
-            sections.push('```');
-            totalDocsLength += example.length;
-          }
-        }
-      }
+      const content = truncateText(doc.textContent, MAX_DOCS_PER_COMPONENT);
+      prompt += `### From ${doc.filePath}\n${content}\n\n`;
+      totalDocsLength += content.length;
     }
   }
 
-  sections.push('\n---');
-  sections.push('Generate a SKILL.md file for this component following the guidelines in the system prompt.');
-  sections.push('IMPORTANT: Start your response with the YAML frontmatter delimiters (---).');
-  sections.push('IMPORTANT: When the documentation references other components, hooks, or patterns, add a note directing users to find the related skill. Use format: "For [component/hook name], see the skill in ./references/[component-name].md"');
-  sections.push('IMPORTANT: Output props as a bullet list format (one prop per line), NOT as a markdown table. Use format: "- **propName** (required/optional): `type` - description"');
+  // Sub-pages (if any)
+  if (subPages.length > 0) {
+    prompt += `## Sub-pages\n\n`;
+    prompt += `This component has the following sub-pages that should be extracted as separate reference files:\n\n`;
+    for (const page of subPages) {
+      prompt += `- ${page}\n`;
+    }
+    prompt += '\n';
+  }
 
-  return sections.join('\n');
+  return prompt;
 }
 
 /**
- * Build complete prompt object
+ * Build the complete prompt for main SKILL.md generation
  */
-export function buildPrompt(componentData: Parameters<typeof buildUserPrompt>[0]): {
-  system: string;
-  user: string;
-} {
+export function buildPrompt(
+  componentData: Parameters<typeof buildUserPrompt>[0],
+  customPromptFile?: string,
+): { system: string; user: string } {
   return {
-    system: SKILL_CREATOR_SYSTEM_PROMPT,
+    system: getSystemPrompt(customPromptFile),
     user: buildUserPrompt(componentData),
   };
 }
 
 /**
- * Build prompt for sub-components documentation (part 2)
+ * Build prompt for generating sub-component reference files
  */
-export function buildSubcomponentsPrompt(componentData: Parameters<typeof buildUserPrompt>[0]): {
-  system: string;
-  user: string;
-} {
-  // Include documentation content for sub-components
-  let docsContent = '';
-  for (const doc of componentData.documentation) {
-    docsContent += '\n\n## Documentation from Storybook:\n' + doc.textContent;
-    if (doc.codeExamples.length > 0) {
-      docsContent += '\n\n### Code Examples:\n';
-      for (const example of doc.codeExamples.slice(0, 3)) {
-        docsContent += '```tsx\n' + example + '\n```\n';
-      }
-    }
-  }
-
-  const subPagesList = componentData.subPages.map((sub) => '- ' + sub).join('\n');
+export function buildSubcomponentsPrompt(
+  componentData: Parameters<typeof buildUserPrompt>[0],
+  customPromptFile?: string,
+): { system: string; user: string } {
+  const systemPrompt = getSystemPrompt(customPromptFile);
   
-  const formatExample = `[COMPONENT_START]
-name: value-display
----
-## Value Display
-
-The Value Display component...
-
-**Props:**
-- prop1: description
-
-\`\`\`tsx
-// example code
-\`\`\`
-
-[COMPONENT_END]`;
-
-  let userPrompt = '# Additional Sub-component Documentation\n\n' +
-    'You need to document the following sub-components that are part of "' + componentData.hierarchyPath + '":\n' +
-    subPagesList + '\n\n' +
-    'IMPORTANT: Generate COMPREHENSIVE documentation for each sub-component.\n\n' +
-    'For each sub-component from the list above, provide:\n' +
-    '1. A clear description explaining what it does and when to use it\n' +
-    '2. ALL props with their types, whether required, and detailed descriptions\n' +
-    '3. Practical code examples showing real usage patterns\n' +
-    '4. Any edge cases or gotchas to be aware of\n\n' +
-    'Output format - use this EXACT format for each sub-component:\n' +
-    formatExample + '\n\n' +
-    'Here is the documentation extracted from Storybook for reference:\n' +
-    docsContent + '\n\n' +
-    'Now generate documentation for each sub-component using the format above:\n';
-
-  // Add each sub-component placeholder
-  for (const sub of componentData.subPages) {
-    const name = sub.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    userPrompt += '\n[COMPONENT_START]\n' +
-      'name: ' + name + '\n' +
-      '---\n' +
-      '## ' + sub + '\n\n' +
-      '[content]\n' +
-      '[COMPONENT_END]\n';
+  let userPrompt = `# Component: ${componentData.title}\n\n`;
+  userPrompt += `Generate separate reference documentation files for each of the following sub-pages.\n\n`;
+  userPrompt += `Each reference file should:\n`;
+  userPrompt += `1. Start with [COMPONENT_START]\n`;
+  userPrompt += `2. Include "name: <filename>" (lowercase, hyphenated)\n`;
+  userPrompt += `3. Include a separator: ---\n`;
+  userPrompt += `4. Include the markdown content\n`;
+  userPrompt += `5. End with [COMPONENT_END]\n\n`;
+  
+  userPrompt += `## Sub-pages to generate:\n\n`;
+  for (const page of componentData.subPages) {
+    userPrompt += `- ${page}\n`;
   }
-
-  userPrompt += '\nIMPORTANT: Follow the format exactly - use [COMPONENT_START], name:, ---, and [COMPONENT_END] markers.';
-
+  
+  userPrompt += `\n## Source documentation:\n\n`;
+  for (const doc of componentData.documentation) {
+    const content = truncateText(doc.textContent, MAX_DOCS_PER_COMPONENT);
+    userPrompt += `### From ${doc.filePath}\n${content}\n\n`;
+  }
+  
   return {
-    system: SKILL_CREATOR_SYSTEM_PROMPT,
+    system: systemPrompt,
     user: userPrompt,
   };
 }

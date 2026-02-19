@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const providerSchema = z.enum(['openai', 'anthropic', 'google']);
 
 export const configSchema = z.object({
-  storybookUrl: z.string().url('storybookUrl must be a valid URL'),
+  storybookUrl: z.string().url('storybookUrl must be a valid URL').optional(),
+  indexFile: z.string().min(1).optional(),
   sourceDir: z.string().min(1, 'sourceDir is required'),
   outputDir: z.string().min(1, 'outputDir is required'),
   provider: providerSchema.optional(),
@@ -16,7 +17,18 @@ export const configSchema = z.object({
   dryRun: z.boolean().default(false),
   force: z.boolean().default(false),
   logPromptsDir: z.string().optional(),
-});
+  promptFile: z.string().optional(),
+  timeout: z.number().int().min(1000).default(60000),
+  retries: z.number().int().min(0).max(10).default(2),
+  fetchRetries: z.number().int().min(1).max(10).default(3),
+  extractionConcurrency: z.number().int().min(1).max(10).default(3),
+}).refine(
+  (data) => data.storybookUrl || data.indexFile,
+  {
+    message: 'Either storybookUrl or indexFile must be provided',
+    path: ['storybookUrl'],
+  }
+);
 
 export type ConfigSchema = z.infer<typeof configSchema>;
 

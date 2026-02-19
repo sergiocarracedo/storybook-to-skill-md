@@ -139,7 +139,8 @@ export type ProviderType = 'openai' | 'anthropic' | 'google';
  * CLI/Config options
  */
 export interface SkillgenConfig {
-  storybookUrl: string;
+  storybookUrl?: string;
+  indexFile?: string;
   sourceDir: string;
   outputDir: string;
   provider?: ProviderType;
@@ -152,6 +153,20 @@ export interface SkillgenConfig {
   dryRun: boolean;
   force: boolean;
   logPromptsDir?: string;
+  promptFile?: string;
+  timeout: number;
+  retries: number;
+  fetchRetries: number;
+  extractionConcurrency: number;
+}
+
+/**
+ * Reference file generation result
+ */
+export interface ReferenceResult {
+  name: string;
+  duration: number;
+  estimatedTokens: number;
 }
 
 /**
@@ -163,7 +178,20 @@ export interface GenerationResult {
   message?: string;
   storiesCount?: number;
   propsCount?: number;
-  error?: Error;
+  error?: string;
+  duration?: number;
+  estimatedTokens?: number;
+  referenceResults?: ReferenceResult[];
+}
+
+/**
+ * Process summary for all components
+ */
+export interface ProcessSummary {
+  results: GenerationResult[];
+  totalDuration: number;
+  totalEstimatedTokens: number;
+  extractionErrors: string[];
 }
 
 /**
