@@ -1,0 +1,39 @@
+src/generation/index.ts
+  3f1cd165041b1628 2,4
+package.json
+  3f1cd165041b1628 44
+src/config/schema.ts
+  3f1cd165041b1628 6-7,25-31
+src/discovery/index.ts
+  3f1cd165041b1628 1
+src/config/loader.ts
+  3f1cd165041b1628 22-24
+src/types.ts
+  3f1cd165041b1628 142-143
+test/integration/local-index.test.ts
+  3f1cd165041b1628 1-58
+src/discovery/index-fetcher.ts
+  3f1cd165041b1628 1-2,6-26,79-96
+src/index.ts
+  3f1cd165041b1628 3,30-31,34-35,155-156,164-165,168-169,193-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "0165a4185e3379605ed4662d90e50c7d1427204b",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 149,
+      "total_deletions": 26,
+      "accepted_lines": 142,
+      "overriden_lines": 0
+    }
+  }
+}
