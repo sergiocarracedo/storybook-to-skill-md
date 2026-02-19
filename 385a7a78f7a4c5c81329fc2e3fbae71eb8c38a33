@@ -1,0 +1,33 @@
+src/generation/SYSTEM_PROMPT.md
+  6d395827e92e038f 379-386
+src/generation/orchestrator.ts
+  6d395827e92e038f 10,12,16-103,258-259,261-284,287
+src/generation/model-factory.ts
+  6d395827e92e038f 70
+src/output/writer.ts
+  6d395827e92e038f 22-35
+src/generation/generator.ts
+  6d395827e92e038f 16,20-21,24-26,69-93
+src/generation/prompt-builder.ts
+  6d395827e92e038f 8-10,81,91,97,179-180,197-267
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "385a7a78f7a4c5c81329fc2e3fbae71eb8c38a33",
+  "prompts": {
+    "6d395827e92e038f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_38a50ba37ffeTi6AGg8YJmHyjM",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 390,
+      "total_deletions": 166,
+      "accepted_lines": 254,
+      "overriden_lines": 0
+    }
+  }
+}
