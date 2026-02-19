@@ -19,6 +19,21 @@ export function writeSkillFile(outputDir: string, slug: string, content: string)
 }
 
 /**
+ * Write a reference file to the output directory
+ */
+export function writeReferenceFile(outputDir: string, slug: string, filename: string, content: string): void {
+  const refDir = path.join(outputDir, slug, 'references', filename);
+  const refDirPath = path.dirname(refDir);
+
+  // Ensure directory exists
+  if (!fs.existsSync(refDirPath)) {
+    fs.mkdirSync(refDirPath, { recursive: true });
+  }
+
+  fs.writeFileSync(refDir, content, 'utf-8');
+}
+
+/**
  * Read SKILL.md file from the output directory
  */
 export function readSkillFile(outputDir: string, slug: string): string | null {

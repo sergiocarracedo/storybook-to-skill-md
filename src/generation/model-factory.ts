@@ -67,7 +67,7 @@ export function getDefaultModel(provider: ProviderType): string {
     case 'anthropic':
       return 'claude-3-5-sonnet-20241022';
     case 'google':
-      return 'gemini-2.0-flash';
+      return 'gemini-3-flash-preview';
     default:
       return 'gpt-4o';
   }

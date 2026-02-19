@@ -13,13 +13,17 @@ export async function generateSkillMd(
 
   for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
     try {
-      const { text } = await generateText({
+      const { text, finishReason } = await generateText({
         model,
         system: prompt.system,
         prompt: prompt.user,
-        maxTokens: 16384,
-        temperature: 0.3, // Lower temperature for more consistent output
+        maxTokens: 65536,
+        temperature: 0.1, // Very low temperature for more complete output
       });
+
+      if (finishReason === 'length') {
+        console.warn('Warning: Output was truncated due to length limits');
+      }
 
       // Clean up the response - ensure it starts with frontmatter
       const cleanedText = cleanGeneratedContent(text);
@@ -62,8 +66,31 @@ function cleanGeneratedContent(text: string): string {
     cleaned = cleaned.replace(/^```\n?/, '').replace(/\n?```$/, '');
   }
 
-  // Ensure frontmatter starts correctly
-  if (!cleaned.startsWith('---')) {
+  // Check if we already have valid frontmatter (--- ... ---)
+  const hasValidFrontmatter = /^---\n[\s\S]*?\n---\n/.test(cleaned);
+  
+  if (hasValidFrontmatter) {
+    return cleaned.trim();
+  }
+
+  // Ensure frontmatter has proper closing delimiter
+  const frontmatterOpenMatch = cleaned.match(/^---\n/);
+  if (frontmatterOpenMatch) {
+    const afterFrontmatterOpen = cleaned.slice(frontmatterOpenMatch[0].length);
+    
+    // Check if there's a closing ---
+    if (!afterFrontmatterOpen.match(/^---[\n\r]/)) {
+      // Find where the body starts (first # heading or end of content)
+      const bodyStartMatch = afterFrontmatterOpen.match(/\n#{1,6}\s+/);
+      let bodyStartIndex = bodyStartMatch ? bodyStartMatch.index! : afterFrontmatterOpen.length;
+      
+      // Insert closing --- before body
+      const frontmatterContent = afterFrontmatterOpen.slice(0, bodyStartIndex);
+      const bodyContent = afterFrontmatterOpen.slice(bodyStartIndex);
+      
+      cleaned = '---\n' + frontmatterContent.trim() + '\n---\n' + bodyContent;
+    }
+  } else if (!cleaned.startsWith('---')) {
     // Try to find frontmatter in the content
     const frontmatterMatch = cleaned.match(/---\n[\s\S]*?\n---/);
     if (frontmatterMatch) {
