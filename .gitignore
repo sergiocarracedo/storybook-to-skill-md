@@ -8,6 +8,9 @@ bin/
 # Generated skills (for testing)
 skills/
 
+# Debug logs
+debug-logs/
+
 # Environment
 .env
 .env.local
