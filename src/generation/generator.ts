@@ -17,7 +17,7 @@ export async function generateSkillMd(
         model,
         system: prompt.system,
         prompt: prompt.user,
-        maxTokens: 4096,
+        maxTokens: 16384,
         temperature: 0.3, // Lower temperature for more consistent output
       });
 

@@ -151,6 +151,7 @@ export interface SkillgenConfig {
   verbose: boolean;
   dryRun: boolean;
   force: boolean;
+  logPromptsDir?: string;
 }
 
 /**

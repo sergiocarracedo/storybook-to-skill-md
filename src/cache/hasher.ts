@@ -2,6 +2,13 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 
 /**
+ * Calculate SHA-256 hash of a string
+ */
+export function hashString(content: string): string {
+  return crypto.createHash('sha256').update(content).digest('hex');
+}
+
+/**
  * Calculate SHA-256 hash of a file
  */
 export function hashFile(filePath: string): string {
@@ -26,6 +33,26 @@ export function hashFiles(filePaths: string[]): Record<string, string> {
     const hash = hashFile(filePath);
     if (hash) {
       hashes[filePath] = hash;
+    }
+  }
+
+  return hashes;
+}
+
+/**
+ * Calculate hashes for content (used in server-only mode)
+ * Takes a map of source identifiers to content
+ */
+export function hashContents(contents: Record<string, string>): Record<string, string> {
+  const hashes: Record<string, string> = {};
+
+  // Sort keys for consistent ordering
+  const sortedKeys = Object.keys(contents).sort();
+
+  for (const key of sortedKeys) {
+    const content = contents[key];
+    if (content) {
+      hashes[key] = hashString(content);
     }
   }
 

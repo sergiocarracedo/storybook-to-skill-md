@@ -15,6 +15,7 @@ export const configSchema = z.object({
   verbose: z.boolean().default(false),
   dryRun: z.boolean().default(false),
   force: z.boolean().default(false),
+  logPromptsDir: z.string().optional(),
 });
 
 export type ConfigSchema = z.infer<typeof configSchema>;

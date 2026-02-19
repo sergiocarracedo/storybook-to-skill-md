@@ -2,7 +2,8 @@ import type { LanguageModelV1 } from 'ai';
 import pLimit from 'p-limit';
 
 import type { ComponentData, GenerationResult, SkillgenConfig } from '../types.js';
-import { createSkillMeta, hashFiles, needsRegeneration, writeSkillMeta } from '../cache/index.js';
+import { createSkillMeta, hashContents, hashFiles, needsRegeneration, writeSkillMeta } from '../cache/index.js';
+import { logExtractedData, logResponse, logSystemPrompt, logUserPrompt } from '../debug/index.js';
 
 import { generateSkillMd } from './generator.js';
 import { createModel } from './model-factory.js';
@@ -60,14 +61,45 @@ async function generateComponentSkill(
   const { slug, title, stories, props } = component;
 
   try {
-    // Get all files involved in this component
-    const allFiles = [
-      ...component.sourceFiles,
-      ...component.documentation.map((d) => d.filePath),
-    ];
+    // Determine if we're in server-only mode (no local source files)
+    const isServerOnly = component.sourceFiles.length === 0;
 
-    // Calculate file hashes
-    const fileHashes = hashFiles(allFiles);
+    // Calculate hashes based on mode
+    let fileHashes: Record<string, string>;
+
+    if (isServerOnly) {
+      // Server-only mode: hash the extracted content
+      const contents: Record<string, string> = {};
+
+      // Hash documentation content
+      for (const doc of component.documentation) {
+        contents[doc.filePath] = doc.textContent;
+      }
+
+      // Hash props as JSON (they affect the output)
+      if (component.props.length > 0) {
+        contents['__props__'] = JSON.stringify(component.props);
+      }
+
+      // Hash stories as JSON (they affect the output)
+      if (component.stories.length > 0) {
+        contents['__stories__'] = JSON.stringify(component.stories);
+      }
+
+      // Hash subPages
+      if (component.subPages.length > 0) {
+        contents['__subPages__'] = JSON.stringify(component.subPages);
+      }
+
+      fileHashes = hashContents(contents);
+    } else {
+      // Local mode: hash actual files
+      const allFiles = [
+        ...component.sourceFiles,
+        ...component.documentation.map((d) => d.filePath),
+      ];
+      fileHashes = hashFiles(allFiles);
+    }
 
     // Check if regeneration is needed
     const { needsRegen, reason } = needsRegeneration(
@@ -97,6 +129,14 @@ async function generateComponentSkill(
 
     // Dry run - don't actually generate
     if (config.dryRun) {
+      // Log extracted data and prompts even in dry run mode (useful for debugging)
+      if (config.logPromptsDir) {
+        logExtractedData(config.logPromptsDir, slug, component);
+        const prompt = buildPrompt(component);
+        logSystemPrompt(config.logPromptsDir, slug, prompt.system);
+        logUserPrompt(config.logPromptsDir, slug, prompt.user);
+      }
+
       console.log(`🔍 ${title} — would generate (dry run)`);
       return {
         slug,
@@ -112,11 +152,27 @@ async function generateComponentSkill(
       throw new Error('Model not initialized. Provider and model are required for generation.');
     }
 
+    // Log extracted data before building prompt
+    if (config.logPromptsDir) {
+      logExtractedData(config.logPromptsDir, slug, component);
+    }
+
     // Build prompt
     const prompt = buildPrompt(component);
 
+    // Log prompts
+    if (config.logPromptsDir) {
+      logSystemPrompt(config.logPromptsDir, slug, prompt.system);
+      logUserPrompt(config.logPromptsDir, slug, prompt.user);
+    }
+
     // Generate SKILL.md
     const skillMdContent = await generateSkillMd(model, prompt);
+
+    // Log response
+    if (config.logPromptsDir) {
+      logResponse(config.logPromptsDir, slug, skillMdContent);
+    }
 
     // Validate the generated content
     const validation = validateSkillMd(skillMdContent);

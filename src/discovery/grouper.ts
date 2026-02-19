@@ -22,9 +22,20 @@ export function getRootComponentTitle(title: string, depth = 2): string {
 
 /**
  * Check if a title matches any of the glob patterns
+ * Supports:
+ * - Exact match: "Components/Button"
+ * - Wildcard: "Components/*" (single level)
+ * - Glob star: "Components/**" (all descendants)
+ * - Prefix match: "Components/Data Collection" matches "Components/Data Collection/Actions"
  */
 function matchesPatterns(title: string, patterns: string[]): boolean {
   return patterns.some((pattern) => {
+    // If pattern doesn't contain wildcards, treat it as a prefix match
+    // This allows "Components/Data Collection" to match all children
+    if (!pattern.includes('*')) {
+      return title === pattern || title.startsWith(pattern + '/');
+    }
+
     // Convert glob pattern to regex
     const regexPattern = pattern
       .replace(/\*\*/g, '.*')
