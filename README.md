@@ -1,16 +1,25 @@
 # storybook-to-skill-md
 
+[![npm version](https://img.shields.io/npm/v/storybook-to-skill-md.svg)](https://www.npmjs.com/package/storybook-to-skill-md)
+[![CI Status](https://github.com/sergiocarracedo/storybook-to-skill-md/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiocarracedo/storybook-to-skill-md/actions)
+[![npm downloads](https://img.shields.io/npm/dm/storybook-to-skill-md)](https://www.npmjs.com/package/storybook-to-skill-md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
 
 ## Features
 
 - Fetches component metadata from Storybook's `index.json`
+- **Offline mode** - Use local `index.json` from built Storybook (no server needed)
 - Extracts props using `react-docgen-typescript`
 - Parses story files with `@storybook/csf-tools`
 - Extracts documentation from MDX files
 - Generates SKILL.md files using AI SDK (OpenAI, Anthropic, Google)
 - Caches results to skip unchanged components
 - Supports include/exclude patterns for filtering
+- Detailed progress output with timing and token estimates
+- Customizable timeouts and retries
+- Parallel extraction for server-only mode
 
 ## Installation
 
@@ -29,7 +38,18 @@ storybook-to-skill-md generate \
   --source-dir ./src \
   --output-dir ./skills \
   --provider openai \
-  --model gpt-4o
+  --model gpt-4o \
+  --api-key $OPENAI_API_KEY
+
+# Or use offline mode with local build
+npm run build-storybook
+storybook-to-skill-md generate \
+  --index-file ./storybook-static/index.json \
+  --source-dir ./src \
+  --output-dir ./skills \
+  --provider openai \
+  --model gpt-4o \
+  --api-key $OPENAI_API_KEY
 ```
 
 ## CLI Usage
@@ -149,9 +169,36 @@ The tool caches file hashes in `.skill-meta.json` to skip regeneration when sour
 
 ## Requirements
 
-- Node.js 22+
-- A deployed Storybook with `index.json` accessible
+- Node.js 20+
+- A deployed Storybook OR a local build with `index.json`
 - API key for your chosen LLM provider
+
+## GitHub Action
+
+Automate SKILL.md generation in your CI/CD pipeline:
+
+```yaml
+- name: Generate SKILL.md files
+  uses: sergiocarracedo/storybook-to-skill-md-action@v1
+  with:
+    storybook-url: 'https://your-storybook.com'
+    source-dir: './src'
+    output-dir: './skills'
+    provider: 'openai'
+    model: 'gpt-4o'
+    api-key: ${{ secrets.OPENAI_API_KEY }}
+```
+
+See [GitHub Action Repository](https://github.com/sergiocarracedo/storybook-to-skill-md-action) for more examples.
+
+## Documentation
+
+See the [docs](./docs/) folder for detailed documentation:
+
+- [Getting Started](./docs/getting-started.md)
+- [CLI Reference](./docs/cli-reference.md)
+- [Configuration](./docs/configuration.md)
+- [Use Cases](./docs/use-cases.md)
 
 ## Development
 

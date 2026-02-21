@@ -13,7 +13,10 @@ const MAX_STORIES = 100; // Max number of stories to list
  * Load the system prompt from a file (custom or built-in)
  */
 function loadSystemPrompt(customPath?: string): string {
-  const promptPath = customPath || join(__dirname, 'SYSTEM_PROMPT.md');
+  // In production (dist), SYSTEM_PROMPT.md is in the same directory as the compiled code
+  // In development, it's in src/generation/
+  const defaultPath = join(__dirname, 'SYSTEM_PROMPT.md');
+  const promptPath = customPath || defaultPath;
   return readFileSync(promptPath, 'utf-8');
 }
 

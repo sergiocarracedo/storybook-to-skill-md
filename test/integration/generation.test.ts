@@ -28,10 +28,10 @@ describe('Generation - Prompt Builder', () => {
   };
 
   describe('buildUserPrompt', () => {
-    it('includes component title and slug', () => {
+    it('includes component title', () => {
       const prompt = buildUserPrompt(mockComponentData);
       expect(prompt).toContain('Button');
-      expect(prompt).toContain('button');
+      expect(prompt).toContain('# Component: Button');
     });
 
     it('includes all props with types', () => {
@@ -55,8 +55,16 @@ describe('Generation - Prompt Builder', () => {
     });
 
     it('marks required props correctly', () => {
-      const prompt = buildUserPrompt(mockComponentData);
-      expect(prompt).toContain('(optional)');
+      const mockDataWithRequired: ComponentData = {
+        ...mockComponentData,
+        props: [
+          { name: 'id', type: 'string', required: true, description: 'Unique identifier' },
+          { name: 'variant', type: "'primary' | 'secondary'", required: false, description: 'Button style', defaultValue: 'primary' },
+        ],
+      };
+      const prompt = buildUserPrompt(mockDataWithRequired);
+      expect(prompt).toContain('(required)');
+      expect(prompt).toContain('**id** (required)');
     });
   });
 

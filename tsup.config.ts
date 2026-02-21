@@ -1,4 +1,6 @@
 import { defineConfig } from 'tsup';
+import { copyFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 export default defineConfig({
   entry: {
@@ -9,6 +11,13 @@ export default defineConfig({
   dts: true,
   clean: true,
   shims: true,
-  target: 'node22',
+  target: 'node20',
   sourcemap: true,
+  onSuccess: async () => {
+    // Copy SYSTEM_PROMPT.md to dist
+    copyFileSync(
+      join('src', 'generation', 'SYSTEM_PROMPT.md'),
+      join('dist', 'SYSTEM_PROMPT.md')
+    );
+  },
 });
