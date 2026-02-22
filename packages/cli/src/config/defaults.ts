@@ -1,7 +1,6 @@
 import type { SkillgenConfig } from '../types.js';
 
 export const DEFAULT_CONFIG: SkillgenConfig = {
-  storybookUrl: '',
   sourceDir: './src',
   outputDir: './skills',
   concurrency: 3,

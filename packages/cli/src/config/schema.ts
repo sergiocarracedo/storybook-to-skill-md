@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const providerSchema = z.enum(['openai', 'anthropic', 'google']);
 
 export const configSchema = z.object({
-  storybookUrl: z.string().url('storybookUrl must be a valid URL').nullish(),
+  storybookUrl: z.string().url('storybookUrl must be a valid URL').optional().or(z.literal('')),
   indexFile: z.string().min(1).optional(),
   sourceDir: z.string().min(1, 'sourceDir is required'),
   outputDir: z.string().min(1, 'outputDir is required'),

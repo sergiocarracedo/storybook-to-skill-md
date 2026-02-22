@@ -1,12 +1,14 @@
 #!/usr/bin/env node
-import { program } from 'commander';
 import chalk from 'chalk';
+import { program } from 'commander';
 
+import { createRequire } from 'node:module';
 import { loadConfig } from '../src/config/index.js';
 import { generate, generateServerOnly } from '../src/index.js';
 import type { SkillgenConfig } from '../src/types.js';
 
-const VERSION = '0.1.0';
+const require = createRequire(import.meta.url);
+const { version: VERSION } = require('../package.json');
 
 /**
  * Print configuration in a nice box format

@@ -63,7 +63,7 @@ export function extractComponentImports(storyFilePath: string): string[] {
         }
       }
 
-      if (fs.existsSync(resolvedPath)) {
+      if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isFile()) {
         imports.push(resolvedPath);
       }
     }
@@ -86,7 +86,7 @@ export function findComponentByConvention(storyFilePath: string): string | null 
   const extensions = ['.tsx', '.ts', '.jsx', '.js'];
   for (const ext of extensions) {
     const componentPath = path.join(dir, componentName + ext);
-    if (fs.existsSync(componentPath)) {
+    if (fs.existsSync(componentPath) && fs.statSync(componentPath).isFile()) {
       return componentPath;
     }
   }
@@ -96,7 +96,7 @@ export function findComponentByConvention(storyFilePath: string): string | null 
   if (fs.existsSync(componentDir) && fs.statSync(componentDir).isDirectory()) {
     for (const ext of extensions) {
       const indexPath = path.join(componentDir, `index${ext}`);
-      if (fs.existsSync(indexPath)) {
+      if (fs.existsSync(indexPath) && fs.statSync(indexPath).isFile()) {
         return indexPath;
       }
     }

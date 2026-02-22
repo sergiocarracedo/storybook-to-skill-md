@@ -6,7 +6,7 @@
 
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
 
-> 📚 **[Full Documentation](https://storybook-to-skill-md.vercel.app)** | **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** | **[Quick Start](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)** | **[Security](./SECURITY.md)**
+> 📚 **[Full Documentation](https://sergiocarracedo.github.io/storybook-to-skill-md)** | **[CLI Reference](https://sergiocarracedo.github.io/storybook-to-skill-md/cli/commands)** | **[Quick Start](https://sergiocarracedo.github.io/storybook-to-skill-md/getting-started/quick-start)** | **[Security](./SECURITY.md)**
 
 ## Monorepo Structure
 
@@ -62,7 +62,7 @@ storybook-to-skills-md generate \
   --api-key $OPENAI_API_KEY
 ```
 
-For detailed usage, see the **[Quick Start Guide](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)**.
+For detailed usage, see the **[Quick Start Guide](https://sergiocarracedo.github.io/storybook-to-skill-md/getting-started/quick-start)**.
 
 ## CLI Usage
 
@@ -82,7 +82,7 @@ storybook-to-skills-md generate [options]
 - `-v, --verbose` - Enable verbose logging
 - `--force` - Regenerate all files (ignore cache)
 
-For all options, see the **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)**.
+For all options, see the **[CLI Reference](https://sergiocarracedo.github.io/storybook-to-skill-md/cli/commands)**.
 
 ## Configuration
 
@@ -110,7 +110,7 @@ SKILLGEN_MODEL=gpt-4o
 SKILLGEN_API_KEY=sk-...
 ```
 
-For full configuration options, see the **[Configuration Guide](https://storybook-to-skill-md.vercel.app/cli/configuration)**.
+For full configuration options, see the **[Configuration Guide](https://sergiocarracedo.github.io/storybook-to-skill-md/cli/configuration)**.
 
 ## Programmatic Usage
 
@@ -208,14 +208,14 @@ See the [GitHub Action repository](https://github.com/sergiocarracedo/storybook-
 
 ## Documentation
 
-Full documentation is available at **https://storybook-to-skill-md.vercel.app**:
+Full documentation is available at **https://sergiocarracedo.github.io/storybook-to-skill-md**:
 
-- **[Getting Started](https://storybook-to-skill-md.vercel.app/getting-started/installation)** - Installation and quick start
-- **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** - All CLI commands and options
-- **[Configuration](https://storybook-to-skill-md.vercel.app/cli/configuration)** - Config files, env vars, and best practices
-- **[LLM Providers](https://storybook-to-skill-md.vercel.app/providers/overview)** - OpenAI, Anthropic, Google setup
-- **[GitHub Action](https://storybook-to-skill-md.vercel.app/guides/github-action)** - CI/CD integration guide
-- **[Troubleshooting](https://storybook-to-skill-md.vercel.app/reference/troubleshooting)** - Common issues and solutions
+- **[Getting Started](https://sergiocarracedo.github.io/storybook-to-skill-md/getting-started/installation)** - Installation and quick start
+- **[CLI Reference](https://sergiocarracedo.github.io/storybook-to-skill-md/cli/commands)** - All CLI commands and options
+- **[Configuration](https://sergiocarracedo.github.io/storybook-to-skill-md/cli/configuration)** - Config files, env vars, and best practices
+- **[LLM Providers](https://sergiocarracedo.github.io/storybook-to-skill-md/providers/overview)** - OpenAI, Anthropic, Google setup
+- **[GitHub Action](https://sergiocarracedo.github.io/storybook-to-skill-md/guides/github-action)** - CI/CD integration guide
+- **[Troubleshooting](https://sergiocarracedo.github.io/storybook-to-skill-md/reference/troubleshooting)** - Common issues and solutions
 
 ## Development
 

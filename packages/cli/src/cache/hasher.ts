@@ -16,6 +16,11 @@ export function hashFile(filePath: string): string {
     return '';
   }
 
+  const stat = fs.statSync(filePath);
+  if (!stat.isFile()) {
+    return '';
+  }
+
   const content = fs.readFileSync(filePath);
   return crypto.createHash('sha256').update(content).digest('hex');
 }
