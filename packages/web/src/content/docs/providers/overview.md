@@ -12,16 +12,8 @@ storybook-to-skills-md supports three LLM providers: OpenAI, Anthropic, and Goog
 Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
 
 ```bash
---provider openai --model gpt-5.2 --api-key sk-...
+--provider openai --model <model> --api-key sk-...
 ```
-
-**Available Models:**
-
-| Model | Description |
-|-------|-------------|
-| `gpt-5.2` | Latest GPT-5 model (recommended) |
-| `gpt-5.1` | Stable GPT-5 model |
-| `gpt-5.1-mini` | Faster, cheaper GPT-5 variant |
 
 ## Anthropic
 
@@ -30,16 +22,8 @@ Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
 Get your API key from [Anthropic Console](https://console.anthropic.com/).
 
 ```bash
---provider anthropic --model claude-sonnet-4-6 --api-key sk-ant-...
+--provider anthropic --model <model> --api-key sk-ant-...
 ```
-
-**Available Models:**
-
-| Model | Description |
-|-------|-------------|
-| `claude-opus-4-6` | Best quality, for complex tasks |
-| `claude-sonnet-4-6` | Best balance of speed and quality (recommended) |
-| `claude-haiku-4-5` | Fastest model |
 
 ## Google AI
 
@@ -48,16 +32,8 @@ Get your API key from [Anthropic Console](https://console.anthropic.com/).
 Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey).
 
 ```bash
---provider google --model gemini-2.5-pro --api-key ...
+--provider google --model <model> --api-key ...
 ```
-
-**Available Models:**
-
-| Model | Description |
-|-------|-------------|
-| `gemini-2.5-pro` | Best quality, complex tasks (recommended) |
-| `gemini-2.5-flash` | Best price-performance |
-| `gemini-2.0-flash` | Stable, reliable |
 
 ## API Key Security
 
