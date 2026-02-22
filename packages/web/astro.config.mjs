@@ -31,25 +31,21 @@ export default defineConfig({
           items: [
             { label: 'Installation', slug: 'getting-started/installation' },
             { label: 'Quick Start', slug: 'getting-started/quick-start' },
+            { label: 'Caching', slug: 'getting-started/caching' },
+            { label: 'GitHub Action', slug: 'getting-started/github-action' },
           ],
         },
         {
-          label: 'CLI Reference',
+          label: 'CLI',
           items: [
             { label: 'Commands', slug: 'cli/commands' },
             { label: 'Configuration', slug: 'cli/configuration' },
           ],
         },
         {
-          label: 'LLM Providers',
+          label: 'Providers',
           items: [
             { label: 'Overview', slug: 'providers/overview' },
-          ],
-        },
-        {
-          label: 'Guides',
-          items: [
-            { label: 'GitHub Action', slug: 'guides/github-action' },
           ],
         },
         {

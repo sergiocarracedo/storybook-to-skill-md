@@ -3,62 +3,91 @@ title: Quick Start
 description: Generate your first SKILL.md files in minutes
 ---
 
-This guide will walk you through generating your first SKILL.md files from a Storybook project.
+This guide walks you through generating SKILL.md files from a Storybook project.
 
-## Basic Usage
+## Input Options
 
-### 1. Using a Deployed Storybook URL
+You need to tell the tool how to access your Storybook. Choose one of these options:
 
-If you have a publicly accessible Storybook deployment:
+### Option 1: Storybook URL
+
+Use when your Storybook is deployed and accessible via URL.
+
+```bash
+--storybook-url https://your-storybook.com
+```
+
+**Best for:** Quick testing, public Storybooks  
+**Requires:** Storybook accessible via HTTP  
+**Speed:** Medium (fetches from URL each time)
+
+### Option 2: Index File (Offline)
+
+Use when you have a built Storybook locally.
+
+```bash
+# Build Storybook first
+npm run build-storybook
+
+# Generate from local index.json
+--index-file ./storybook-static/index.json
+```
+
+**Best for:** CI/CD, offline environments, faster runs  
+**Requires:** Pre-built Storybook (`npm run build-storybook`)  
+**Speed:** Fast (local file)
+
+### Option 3: Source Directory Only
+
+Use when you only have component source files (no Storybook needed).
+
+```bash
+--source-dir ./src/components
+```
+
+**Best for:** Simple projects, when you don't use Storybook  
+**Requires:** Component source files  
+**Speed:** Fastest (no Storybook needed)
+
+## Examples
+
+### Minimal Command
 
 ```bash
 storybook-to-skills-md generate \
   --storybook-url https://your-storybook.com \
-  --source-dir ./src/components \
-  --output-dir ./skills \
   --provider openai \
-  --model gpt-4o \
-  --api-key sk-your-api-key
+  --model gpt-5.2 \
+  --api-key $OPENAI_API_KEY
 ```
 
-### 2. Offline Mode (Local Build)
-
-For working with a local Storybook build:
+### Offline (CI/CD)
 
 ```bash
-# First, build your Storybook
 npm run build-storybook
 
-# Then generate from the local index.json
 storybook-to-skills-md generate \
   --index-file ./storybook-static/index.json \
   --source-dir ./src/components \
-  --output-dir ./skills \
   --provider anthropic \
-  --model claude-3-5-sonnet-20241022 \
+  --model claude-sonnet-4-6 \
   --api-key $ANTHROPIC_API_KEY
 ```
 
-### 3. Using Environment Variables
-
-Simplify commands by setting environment variables:
+### With Environment Variables
 
 ```bash
-# Set environment variables
-export SKILLGEN_STORYBOOK_URL=https://your-storybook.com
+export OPENAI_API_KEY=sk-...
 export SKILLGEN_PROVIDER=openai
-export SKILLGEN_MODEL=gpt-4o
-export SKILLGEN_API_KEY=sk-your-api-key
+export SKILLGEN_MODEL=gpt-5.2
 
-# Run with minimal flags
 storybook-to-skills-md generate \
-  --source-dir ./src/components \
-  --output-dir ./skills
+  --storybook-url https://your-storybook.com
 ```
 
-### 4. Using a Configuration File
+## Configuration File
 
-For the cleanest setup, create `.skillgenrc.json` in your project root:
+Create `.skillgenrc.json` for reusable config:
 
 ```json
 {
@@ -66,46 +95,45 @@ For the cleanest setup, create `.skillgenrc.json` in your project root:
   "sourceDir": "./src/components",
   "outputDir": "./skills",
   "provider": "openai",
-  "model": "gpt-4o",
-  "concurrency": 3,
-  "include": ["Components/**"],
-  "exclude": ["**/Internal/**"]
+  "model": "gpt-5.2"
 }
 ```
 
-Then simply run:
+Run with just the API key:
 
 ```bash
-storybook-to-skills-md generate --api-key sk-your-api-key
+storybook-to-skills-md generate --api-key $OPENAI_API_KEY
 ```
 
-## What Gets Generated?
+## Output
 
-The tool creates a folder structure like this:
+The tool creates:
 
 ```
 skills/
 ├── button/
-│   ├── SKILL.md          # AI-friendly component documentation
-│   └── .skill-meta.json  # Metadata for caching
-├── data-collection/
 │   ├── SKILL.md
-│   ├── actions.md        # Subcomponent reference
-│   ├── filters.md        # Subcomponent reference
-│   └── .skill-meta.json
+│   └── .skill-meta.json   # Cache (see Caching)
+├── input/
+│   └── SKILL.md
 └── ...
 ```
 
-Each `SKILL.md` file includes:
-- Component description and purpose
+Each `SKILL.md` includes:
+- Component description
 - Props/API documentation
-- Usage examples from your Storybook stories
-- Implementation guidelines
-- Links to your Storybook stories
+- Usage examples
+- Storybook links
+
+## Caching
+
+On subsequent runs, the tool only regenerates components that changed. See [Caching](./caching) for details.
+
+Use `--force` to ignore cache and regenerate everything.
 
 ## Next Steps
 
-- Explore all [CLI commands and options](../cli/commands)
-- Learn about [configuration options](../cli/configuration)
-- Set up different [LLM providers](../providers/overview)
-- Integrate with [GitHub Actions](../guides/github-action) for CI/CD
+- [CLI Commands](../cli/commands) - All available options
+- [Configuration](../cli/configuration) - Config files, env vars
+- [Providers](../providers/overview) - OpenAI, Anthropic, Google setup
+- [GitHub Action](./github-action) - CI/CD automation

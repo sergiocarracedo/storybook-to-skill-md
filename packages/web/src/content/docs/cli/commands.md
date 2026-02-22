@@ -50,9 +50,9 @@ storybook-to-skills-md generate [options]
 ### `--model <model>` / `-m <model>` (required)
 - **Description:** Model name
 - **Examples:**
-  - OpenAI: `gpt-4o`, `gpt-4-turbo`
-  - Anthropic: `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`
-  - Google: `gemini-2.0-flash-exp`, `gemini-1.5-pro`
+  - OpenAI: `gpt-5.2`, `gpt-5.1`, `gpt-5.1-mini`
+  - Anthropic: `claude-sonnet-4-6`, `claude-opus-4-6`, `claude-haiku-4-5`
+  - Google: `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.0-flash`
 - **Env:** `SKILLGEN_MODEL`
 
 ### `--api-key <key>` / `-k <key>` (required)

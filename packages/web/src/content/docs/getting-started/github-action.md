@@ -59,7 +59,7 @@ jobs:
           source-dir: './src/components'
           output-dir: './skills'
           provider: 'openai'
-          model: 'gpt-4o'
+          model: 'gpt-5.2'
         env:
           API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -105,7 +105,7 @@ jobs:
   with:
     storybook-url: 'https://your-storybook.com'
     provider: 'openai'
-    model: 'gpt-4o'
+    model: 'gpt-5.2'
   env:
     API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
@@ -153,7 +153,7 @@ jobs:
             --source-dir ./src/components \
             --output-dir ./skills \
             --provider openai \
-            --model gpt-4o \
+            --model gpt-5.2 \
             --api-key ${{ secrets.OPENAI_API_KEY }}
 
       - name: Commit and push if changed
@@ -199,7 +199,7 @@ jobs:
             --source-dir ./src/components \
             --output-dir ./skills \
             --provider anthropic \
-            --model claude-3-5-sonnet-20241022 \
+            --model claude-sonnet-4-6 \
             --api-key ${{ secrets.ANTHROPIC_API_KEY }} \
             --force
 ```
@@ -216,7 +216,7 @@ Upload generated files as workflow artifacts:
             --source-dir ./src \
             --output-dir ./skills \
             --provider openai \
-            --model gpt-4o \
+            --model gpt-5.2 \
             --api-key ${{ secrets.OPENAI_API_KEY }}
 
       - name: Upload SKILL.md artifacts
@@ -263,7 +263,7 @@ jobs:
             --source-dir ./src/components \
             --output-dir ./skills \
             --provider openai \
-            --model gpt-4o \
+            --model gpt-5.2 \
             --api-key ${{ secrets.OPENAI_API_KEY }}
       
       - name: Commit skills
@@ -287,10 +287,10 @@ jobs:
         provider: [openai, anthropic, google]
         include:
           - provider: openai
-            model: gpt-4o
+            model: gpt-5.2
             secret: OPENAI_API_KEY
           - provider: anthropic
-            model: claude-3-5-sonnet-20241022
+            model: claude-sonnet-4-6
             secret: ANTHROPIC_API_KEY
           - provider: google
             model: gemini-2.0-flash-exp
@@ -322,7 +322,7 @@ Use a config file to simplify the workflow:
   "sourceDir": "./src/components",
   "outputDir": "./skills",
   "provider": "openai",
-  "model": "gpt-4o",
+  "model": "gpt-5.2",
   "concurrency": 5,
   "include": ["Components/**"],
   "exclude": ["**/Internal/**"]
