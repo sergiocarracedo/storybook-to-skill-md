@@ -1,0 +1,33 @@
+README.md
+  3f1cd165041b1628 192,199,203-204,207
+.github/workflows/deploy-pages.yml
+  3f1cd165041b1628 1-66
+packages/web/src/content/docs/guides/github-action.md
+  3f1cd165041b1628 3,6,8,10-117
+packages/cli/README.md
+  3f1cd165041b1628 1-274
+packages/web/src/pages/index.astro
+  3f1cd165041b1628 48,54-69,252-256,264,290-339
+packages/web/astro.config.mjs
+  3f1cd165041b1628 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "9adfd9e78f0d3535468101b6f0ce2ccbd4a50e22",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 532,
+      "total_deletions": 12,
+      "accepted_lines": 532,
+      "overriden_lines": 0
+    }
+  }
+}
