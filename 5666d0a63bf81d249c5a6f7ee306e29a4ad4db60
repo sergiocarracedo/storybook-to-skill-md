@@ -1,0 +1,44 @@
+README.md
+  3f1cd165041b1628 9,65,85,113,211,213-218
+packages/cli/src/discovery/path-resolver.ts
+  7c02bfcb85fec246 89,99
+packages/cli/bin/cli.ts
+  7c02bfcb85fec246 3,5
+packages/cli/src/config/schema.ts
+  7c02bfcb85fec246 6
+packages/cli/src/cache/hasher.ts
+  7c02bfcb85fec246 19-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "5666d0a63bf81d249c5a6f7ee306e29a4ad4db60",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 12,
+      "total_deletions": 12,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    },
+    "7c02bfcb85fec246": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a72ffbb1-5ca5-49e2-a77f-af6fd997f633",
+        "model": "copilot/claude-sonnet-4.5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 15,
+      "total_deletions": 9,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
