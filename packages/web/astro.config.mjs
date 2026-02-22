@@ -3,10 +3,13 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 
+const siteUrl = process.env.SITE_URL || process.env.PUBLIC_SITE_URL;
+const basePath = process.env.BASE_PATH || '/';
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sergiocarracedo.github.io',
-  base: '/storybook-to-skill-md',
+  site: siteUrl,
+  base: basePath === '/' ? undefined : basePath,
   
   integrations: [
     starlight({
