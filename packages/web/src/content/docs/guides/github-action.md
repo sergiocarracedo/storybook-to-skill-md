@@ -37,7 +37,7 @@ jobs:
         run: npm run build-storybook
 
       - name: Install CLI
-        run: npm install -g @sergiocarracedo/storybook-to-skills-md
+        run: npm install -g storybook-to-skills-md
 
       - name: Generate SKILL.md files
         run: |
@@ -150,7 +150,7 @@ jobs:
       # Generate SKILL.md from deployed URL
       - name: Generate SKILL.md files
         run: |
-          npm install -g @sergiocarracedo/storybook-to-skills-md
+          npm install -g storybook-to-skills-md
           storybook-to-skills-md generate \
             --storybook-url https://your-deployed-storybook.com \
             --source-dir ./src/components \
@@ -226,7 +226,7 @@ Use a config file to simplify the workflow:
 ```yaml
       - name: Generate SKILL.md files
         run: |
-          npm install -g @sergiocarracedo/storybook-to-skills-md
+          npm install -g storybook-to-skills-md
           storybook-to-skills-md generate \
             --api-key ${{ secrets.OPENAI_API_KEY }}
 ```

@@ -1,0 +1,166 @@
+---
+interface Props {
+  command: string
+  class?: string
+}
+
+const { command, class: className = '' } = Astro.props
+const id = `tabs-${Math.random().toString(36).substring(2, 11)}`
+
+// Generate commands for each package manager
+const commands = {
+  npm: command.replace(/\{pm\}/g, 'npm'),
+  pnpm: command.replace(/\{pm\}/g, 'pnpm'),
+  yarn: command.replace(/\{pm\}/g, 'yarn'),
+  bun: command.replace(/\{pm\}/g, 'bun'),
+}
+
+const activeTabClass = "flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-200 border-b-2 border-emerald-500 transition-colors"
+const inactiveTabClass = "flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 border-b-2 border-transparent transition-colors"
+---
+
+<div class={`rounded-lg overflow-hidden bg-[#1e1e20] border border-gray-800 ${className}`} data-tabs-container={id}>
+  <div class="flex items-center bg-[#252529] px-2 border-b border-gray-800 overflow-x-auto hide-scrollbar">
+    <button
+      class={activeTabClass}
+      data-tab="npm"
+      data-tabs-id={id}
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#CB3837]" fill="currentColor"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
+      npm
+    </button>
+    <button
+      class={inactiveTabClass}
+      data-tab="pnpm"
+      data-tabs-id={id}
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#F69220]" fill="currentColor"><path d="M0 0h7.5v7.5H0zm8.25 0h7.5v7.5h-7.5zm8.25 0H24v7.5h-7.5zM0 8.25h7.5v7.5H0zm8.25 0h7.5v7.5h-7.5zm8.25 0H24v7.5h-7.5zM0 16.5h7.5V24H0zm8.25 0h7.5V24h-7.5z"/></svg>
+      pnpm
+    </button>
+    <button
+      class={inactiveTabClass}
+      data-tab="yarn"
+      data-tabs-id={id}
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#2C8EBB]" fill="currentColor"><path d="M22.49 5.38l-10.49 18.62-10.49-18.62h5.24l5.25 9.31 5.25-9.31z"/></svg>
+      yarn
+    </button>
+    <button
+      class={inactiveTabClass}
+      data-tab="bun"
+      data-tabs-id={id}
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#FBF0DF]" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22c-5.523 0-10-4.477-10-10S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-3.5-8.5c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm7 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-3.5 4.5c-1.933 0-3.5-1.567-3.5-3.5h7c0 1.933-1.567 3.5-3.5 3.5z"/></svg>
+      bun
+    </button>
+  </div>
+
+  <div class="relative">
+    {['npm', 'pnpm', 'yarn', 'bun'].map((pm, index) => (
+      <div data-tab-content={pm} data-tabs-id={id} class={index === 0 ? '' : 'hidden'}>
+        <div class="relative group flex items-center justify-between px-4 py-4">
+          <pre
+            class="bg-transparent text-gray-300 text-sm overflow-x-auto text-left font-mono m-0 p-0 flex-1 hide-scrollbar"
+            id={`${id}-${pm}`}><code class="flex items-center"><span class="text-gray-500 select-none mr-3">$</span>{commands[pm as keyof typeof commands]}</code></pre>
+          
+          <div class="flex items-center gap-3 pl-4">
+            <span class="text-gray-600 text-xs select-none font-mono">sh</span>
+            <button
+              class="p-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
+              data-copy-target={`${id}-${pm}`}
+              title="Copy to clipboard"
+            >
+              <svg class="w-4 h-4 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+              <svg class="w-4 h-4 check-icon hidden text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script>
+  // Tab switching
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element).closest('[data-tab]')
+    if (!button) return
+
+    const tabName = button.getAttribute('data-tab')
+    const tabsId = button.getAttribute('data-tabs-id')
+    
+    if (!tabName || !tabsId) return
+
+    const container = document.querySelector(`[data-tabs-container="${tabsId}"]`)
+    if (!container) return
+
+    // Update button states
+    const buttons = container.querySelectorAll('[data-tab]')
+    buttons.forEach((btn) => {
+      if (btn === button) {
+        btn.className = 'flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-200 border-b-2 border-emerald-500 transition-colors'
+      } else {
+        btn.className = 'flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 border-b-2 border-transparent transition-colors'
+      }
+    })
+
+    // Update content visibility
+    const contents = container.querySelectorAll(`[data-tab-content][data-tabs-id="${tabsId}"]`)
+    contents.forEach((content) => {
+      if (content.getAttribute('data-tab-content') === tabName) {
+        content.classList.remove('hidden')
+      } else {
+        content.classList.add('hidden')
+      }
+    })
+  })
+
+  // Copy functionality
+  document.addEventListener('click', async (e) => {
+    const button = (e.target as Element).closest('[data-copy-target]')
+    if (!button) return
+
+    const targetId = button.getAttribute('data-copy-target')
+    const codeElement = document.getElementById(targetId!)
+    if (!codeElement) return
+
+    // Get text content but remove the '$ ' prefix if it exists
+    let code = codeElement.textContent || ''
+    if (code.startsWith('$')) {
+      code = code.substring(1).trim()
+    }
+    
+    try {
+      await navigator.clipboard.writeText(code)
+      
+      // Show check icon
+      const copyIcon = button.querySelector('.copy-icon')
+      const checkIcon = button.querySelector('.check-icon')
+      
+      copyIcon?.classList.add('hidden')
+      checkIcon?.classList.remove('hidden')
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        copyIcon?.classList.remove('hidden')
+        checkIcon?.classList.add('hidden')
+      }, 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  })
+</script>

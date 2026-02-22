@@ -1,0 +1,41 @@
+# Lefthook configuration
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  
+  commands:
+    # Secret scanning - prevent committing secrets (optional if gitleaks not installed)
+    secrets:
+      run: pnpm secrets:protect
+      tags: security
+      skip:
+        - merge
+        - rebase
+
+commit-msg:
+  commands:
+    # Commitlint - enforce conventional commits
+    commitlint:
+      run: npx commitlint --edit {1}
+      tags: commit
+
+pre-push:
+  commands:
+    # Type checking before push
+    typecheck:
+      run: pnpm typecheck
+      tags: validate
+      
+    # Run tests before push
+    test:
+      run: pnpm test:run
+      tags: validate
+      
+    # Secret scan entire repo before push (optional if gitleaks not installed)
+    secrets-full:
+      run: pnpm secrets:detect
+      tags: security
+      skip:
+        - merge
+        - rebase

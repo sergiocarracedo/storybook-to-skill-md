@@ -9,13 +9,13 @@ Install the CLI globally using your preferred package manager:
 
 ```bash
 # Using npm
-npm install -g @sergiocarracedo/storybook-to-skills-md
+npm install -g storybook-to-skills-md
 
 # Using pnpm
-pnpm add -g @sergiocarracedo/storybook-to-skills-md
+pnpm add -g storybook-to-skills-md
 
 # Using yarn
-yarn global add @sergiocarracedo/storybook-to-skills-md
+yarn global add storybook-to-skills-md
 ```
 
 ## Prerequisites

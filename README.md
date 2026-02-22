@@ -1,18 +1,18 @@
 # Storybook to SKILL.md
 
-[![npm version](https://img.shields.io/npm/v/@sergiocarracedo/storybook-to-skills-md.svg)](https://www.npmjs.com/package/@sergiocarracedo/storybook-to-skills-md)
+[![npm version](https://img.shields.io/npm/v/storybook-to-skills-md.svg)](https://www.npmjs.com/package/storybook-to-skills-md)
 [![CI Status](https://github.com/sergiocarracedo/storybook-to-skill-md/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiocarracedo/storybook-to-skill-md/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
 
-> 📚 **[Full Documentation](https://storybook-to-skill-md.vercel.app)** | **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** | **[Quick Start](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)**
+> 📚 **[Full Documentation](https://storybook-to-skill-md.vercel.app)** | **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** | **[Quick Start](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)** | **[Security](./SECURITY.md)**
 
 ## Monorepo Structure
 
 This repository contains two packages:
 
-- **[`packages/cli`](./packages/cli/)** - The CLI tool (`@sergiocarracedo/storybook-to-skills-md`)
+- **[`packages/cli`](./packages/cli/)** - The CLI tool (`storybook-to-skills-md`)
 - **[`packages/web`](./packages/web/)** - Documentation website built with Astro + Starlight
 
 ## Features
@@ -32,11 +32,11 @@ This repository contains two packages:
 ## Installation
 
 ```bash
-npm install -g @sergiocarracedo/storybook-to-skills-md
+npm install -g storybook-to-skills-md
 # or
-pnpm add -g @sergiocarracedo/storybook-to-skills-md
+pnpm add -g storybook-to-skills-md
 # or
-yarn global add @sergiocarracedo/storybook-to-skills-md
+yarn global add storybook-to-skills-md
 ```
 
 ## Quick Start
@@ -115,7 +115,7 @@ For full configuration options, see the **[Configuration Guide](https://storyboo
 ## Programmatic Usage
 
 ```typescript
-import { generate, loadConfig } from '@sergiocarracedo/storybook-to-skills-md';
+import { generate, loadConfig } from 'storybook-to-skills-md';
 
 const config = await loadConfig({
   storybookUrl: 'https://your-storybook.com',
@@ -228,7 +228,7 @@ pnpm install
 pnpm build
 
 # Build specific package
-pnpm --filter "@sergiocarracedo/storybook-to-skills-md" build
+pnpm --filter "storybook-to-skills-md" build
 pnpm --filter web build
 
 # Run CLI in development
@@ -236,18 +236,32 @@ cd packages/cli
 pnpm dev generate --storybook-url https://example.com
 
 # Run tests
-pnpm --filter "@sergiocarracedo/storybook-to-skills-md" test
+pnpm --filter "storybook-to-skills-md" test
 
 # Type check
-pnpm --filter "@sergiocarracedo/storybook-to-skills-md" typecheck
+pnpm --filter "storybook-to-skills-md" typecheck
 
 # Lint & format
-pnpm --filter "@sergiocarracedo/storybook-to-skills-md" lint
-pnpm --filter "@sergiocarracedo/storybook-to-skills-md" fmt
+pnpm --filter "storybook-to-skills-md" lint
+pnpm --filter "storybook-to-skills-md" fmt
 
 # Run web dev server
 pnpm --filter web dev
+
+# Secret scanning
+pnpm secrets:detect        # Scan entire repo
+pnpm secrets:protect       # Scan staged files only
 ```
+
+## Security
+
+This project uses **Gitleaks** to prevent secrets (API keys, tokens) from being committed. 
+
+- **Pre-commit hook**: Scans staged files automatically
+- **Pre-push hook**: Full repository scan before push
+- **CI/CD**: Automated scanning on every push/PR
+
+See [SECURITY.md](./SECURITY.md) for details.
 
 ## License
 

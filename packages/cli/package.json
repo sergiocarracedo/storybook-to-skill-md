@@ -1,6 +1,6 @@
 {
-  "name": "@sergiocarracedo/storybook-to-skills-md",
-  "version": "0.1.0",
+  "name": "storybook-to-skills-md",
+  "version": "0.1.0-alpha.0",
   "description": "CLI tool that reads Storybook projects and generates SKILL.md files for AI agents using LLMs",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,0 +1,54 @@
+# Gitleaks configuration for detecting secrets
+title = "Gitleaks configuration for storybook-to-skills-md"
+
+[extend]
+# Use the default gitleaks configuration as a base
+useDefault = true
+
+# Additional custom rules for this project
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[a-zA-Z0-9]{48,}'''
+tags = ["key", "OpenAI"]
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API Key"
+regex = '''sk-ant-[a-zA-Z0-9\-]{95,}'''
+tags = ["key", "Anthropic"]
+
+[[rules]]
+id = "google-api-key"
+description = "Google API Key"
+regex = '''AIza[0-9A-Za-z\-_]{35}'''
+tags = ["key", "Google"]
+
+# Allowlist for false positives
+[allowlist]
+description = "Allowlisted files and patterns"
+paths = [
+  # Example files and documentation
+  '''.*\.md$''',
+  '''.*\.example$''',
+  '''.*\.sample$''',
+  # Test fixtures (if they contain fake keys)
+  '''.*/test/fixtures/.*''',
+  # Package lock files
+  '''pnpm-lock\.yaml''',
+  '''package-lock\.json''',
+]
+
+regexes = [
+  # Example API keys in docs (clearly marked as examples)
+  '''sk-your-api-key''',
+  '''sk-\.\.\.$''',
+  '''sk-ant-\.\.\.$''',
+  '''YOUR_API_KEY''',
+  '''OPENAI_API_KEY''',
+  '''ANTHROPIC_API_KEY''',
+  '''GOOGLE_API_KEY''',
+  # Placeholder patterns
+  '''sk-xxx''',
+  '''api-key-here''',
+]
