@@ -1,0 +1,87 @@
+{
+  "name": "@sergiocarracedo/storybook-to-skills-md",
+  "version": "0.1.0",
+  "description": "CLI tool that reads Storybook projects and generates SKILL.md files for AI agents using LLMs",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "storybook-to-skills-md": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx bin/cli.ts",
+    "start": "tsx bin/cli.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "prepublishOnly": "pnpm run typecheck && pnpm run build"
+  },
+  "keywords": [
+    "storybook",
+    "skill",
+    "ai",
+    "llm",
+    "documentation",
+    "agent",
+    "cli"
+  ],
+  "author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md/issues"
+  },
+  "homepage": "https://github.com/sergiocarracedo/storybook-to-skill-md#readme",
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.0.0",
+    "@ai-sdk/google": "^1.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@mdx-js/mdx": "^3.0.0",
+    "@storybook/csf-tools": "^8.0.0",
+    "ai": "^4.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "p-limit": "^6.0.0",
+    "playwright": "^1.58.2",
+    "react-docgen-typescript": "^2.2.0",
+    "remark-parse": "^11.0.0",
+    "tsx": "^4.0.0",
+    "unified": "^11.0.0",
+    "unist-util-visit": "^5.0.0",
+    "yaml": "^2.4.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/unist": "^3.0.3",
+    "oxfmt": "^0.3.0",
+    "oxlint": "^0.16.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -1,30 +1,18 @@
-# Getting Started
+---
+title: Quick Start
+description: Generate your first SKILL.md files in minutes
+---
 
-## Installation
+This guide will walk you through generating your first SKILL.md files from a Storybook project.
 
-```bash
-# Using npm
-npm install -g storybook-to-skill-md
+## Basic Usage
 
-# Using pnpm
-pnpm add -g storybook-to-skill-md
+### 1. Using a Deployed Storybook URL
 
-# Using yarn
-yarn global add storybook-to-skill-md
-```
-
-## Prerequisites
-
-- Node.js 20 or later
-- A Storybook project with accessible `index.json`
-- API key for an LLM provider (OpenAI, Anthropic, or Google)
-
-## Quick Start
-
-### 1. Basic Usage (with Storybook URL)
+If you have a publicly accessible Storybook deployment:
 
 ```bash
-storybook-to-skill-md generate \
+storybook-to-skills-md generate \
   --storybook-url https://your-storybook.com \
   --source-dir ./src/components \
   --output-dir ./skills \
@@ -33,14 +21,16 @@ storybook-to-skill-md generate \
   --api-key sk-your-api-key
 ```
 
-### 2. Offline Mode (with Local Build)
+### 2. Offline Mode (Local Build)
+
+For working with a local Storybook build:
 
 ```bash
-# Build your Storybook first
+# First, build your Storybook
 npm run build-storybook
 
-# Generate from local index.json
-storybook-to-skill-md generate \
+# Then generate from the local index.json
+storybook-to-skills-md generate \
   --index-file ./storybook-static/index.json \
   --source-dir ./src/components \
   --output-dir ./skills \
@@ -51,6 +41,8 @@ storybook-to-skill-md generate \
 
 ### 3. Using Environment Variables
 
+Simplify commands by setting environment variables:
+
 ```bash
 # Set environment variables
 export SKILLGEN_STORYBOOK_URL=https://your-storybook.com
@@ -59,14 +51,14 @@ export SKILLGEN_MODEL=gpt-4o
 export SKILLGEN_API_KEY=sk-your-api-key
 
 # Run with minimal flags
-storybook-to-skill-md generate \
+storybook-to-skills-md generate \
   --source-dir ./src/components \
   --output-dir ./skills
 ```
 
-### 4. Using Configuration File
+### 4. Using a Configuration File
 
-Create `.skillgenrc.json` in your project root:
+For the cleanest setup, create `.skillgenrc.json` in your project root:
 
 ```json
 {
@@ -81,10 +73,10 @@ Create `.skillgenrc.json` in your project root:
 }
 ```
 
-Then run:
+Then simply run:
 
 ```bash
-storybook-to-skill-md generate --api-key sk-your-api-key
+storybook-to-skills-md generate --api-key sk-your-api-key
 ```
 
 ## What Gets Generated?
@@ -105,15 +97,15 @@ skills/
 ```
 
 Each `SKILL.md` file includes:
-- Component description
+- Component description and purpose
 - Props/API documentation
-- Usage examples
+- Usage examples from your Storybook stories
 - Implementation guidelines
-- Links to Storybook stories
+- Links to your Storybook stories
 
 ## Next Steps
 
-- Learn about all [CLI options](./cli-reference.md)
-- Explore [configuration options](./configuration.md)
-- See [real-world use cases](./use-cases.md)
-- Set up [GitHub Action](./github-action.md) for CI/CD
+- Explore all [CLI commands and options](../cli/commands)
+- Learn about [configuration options](../cli/configuration)
+- Set up different [LLM providers](../providers/overview)
+- Integrate with [GitHub Actions](../guides/github-action) for CI/CD

@@ -29,17 +29,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Type check
-        run: pnpm typecheck
+      - name: Type check CLI
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" typecheck
 
-      - name: Lint
-        run: pnpm lint
+      - name: Lint CLI
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" lint
 
-      - name: Check formatting
-        run: pnpm fmt:check
+      - name: Check formatting CLI
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" fmt:check
 
-      - name: Run tests
-        run: pnpm test:run
+      - name: Run tests CLI
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" test:run
 
-      - name: Build
-        run: pnpm build
+      - name: Build CLI
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" build
+      
+      - name: Build web
+        run: pnpm --filter web build

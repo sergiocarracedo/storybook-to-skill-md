@@ -1,11 +1,19 @@
-# storybook-to-skill-md
+# Storybook to SKILL.md
 
-[![npm version](https://img.shields.io/npm/v/storybook-to-skill-md.svg)](https://www.npmjs.com/package/storybook-to-skill-md)
+[![npm version](https://img.shields.io/npm/v/@sergiocarracedo/storybook-to-skills-md.svg)](https://www.npmjs.com/package/@sergiocarracedo/storybook-to-skills-md)
 [![CI Status](https://github.com/sergiocarracedo/storybook-to-skill-md/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiocarracedo/storybook-to-skill-md/actions)
-[![npm downloads](https://img.shields.io/npm/dm/storybook-to-skill-md)](https://www.npmjs.com/package/storybook-to-skill-md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
+
+> 📚 **[Full Documentation](https://storybook-to-skill-md.vercel.app)** | **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** | **[Quick Start](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)**
+
+## Monorepo Structure
+
+This repository contains two packages:
+
+- **[`packages/cli`](./packages/cli/)** - The CLI tool (`@sergiocarracedo/storybook-to-skills-md`)
+- **[`packages/web`](./packages/web/)** - Documentation website built with Astro + Starlight
 
 ## Features
 
@@ -24,18 +32,20 @@ A CLI tool that reads Storybook projects and generates [SKILL.md](https://agents
 ## Installation
 
 ```bash
-npm install -g storybook-to-skill-md
+npm install -g @sergiocarracedo/storybook-to-skills-md
 # or
-pnpm add -g storybook-to-skill-md
+pnpm add -g @sergiocarracedo/storybook-to-skills-md
+# or
+yarn global add @sergiocarracedo/storybook-to-skills-md
 ```
 
 ## Quick Start
 
 ```bash
 # Generate SKILL.md files from a deployed Storybook
-storybook-to-skill-md generate \
+storybook-to-skills-md generate \
   --storybook-url https://your-storybook.com \
-  --source-dir ./src \
+  --source-dir ./src/components \
   --output-dir ./skills \
   --provider openai \
   --model gpt-4o \
@@ -43,44 +53,45 @@ storybook-to-skill-md generate \
 
 # Or use offline mode with local build
 npm run build-storybook
-storybook-to-skill-md generate \
+storybook-to-skills-md generate \
   --index-file ./storybook-static/index.json \
-  --source-dir ./src \
+  --source-dir ./src/components \
   --output-dir ./skills \
   --provider openai \
   --model gpt-4o \
   --api-key $OPENAI_API_KEY
 ```
 
+For detailed usage, see the **[Quick Start Guide](https://storybook-to-skill-md.vercel.app/getting-started/quick-start)**.
+
 ## CLI Usage
 
 ```bash
-storybook-to-skill-md generate [options]
-
-Options:
-  -u, --storybook-url <url>     Storybook URL (required)
-  -s, --source-dir <dir>        Source directory (default: ./src)
-  -o, --output-dir <dir>        Output directory (default: ./skills)
-  -p, --provider <provider>     LLM provider: openai, anthropic, google (default: openai)
-  -m, --model <model>           LLM model name (default: gpt-4o)
-  -k, --api-key <key>           API key for the LLM provider
-  -i, --include <patterns...>   Glob patterns to include
-  -e, --exclude <patterns...>   Glob patterns to exclude
-  -c, --concurrency <number>    Concurrent LLM requests (default: 3)
-  --config <path>               Path to config file
-  -v, --verbose                 Enable verbose logging
-  --dry-run                     Show what would be generated
-  --force                       Regenerate all files
+storybook-to-skills-md generate [options]
 ```
+
+**Key Options:**
+- `-u, --storybook-url <url>` - Storybook URL (OR use `--index-file`)
+- `--index-file <path>` - Local index.json path (offline mode)
+- `-s, --source-dir <dir>` - Source directory (default: ./src)
+- `-o, --output-dir <dir>` - Output directory (default: ./skills)
+- `-p, --provider <provider>` - LLM provider: openai, anthropic, google
+- `-m, --model <model>` - Model name (e.g., gpt-4o, claude-3-5-sonnet-20241022)
+- `-k, --api-key <key>` - API key for the LLM provider
+- `-c, --concurrency <number>` - Concurrent requests (default: 3)
+- `-v, --verbose` - Enable verbose logging
+- `--force` - Regenerate all files (ignore cache)
+
+For all options, see the **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)**.
 
 ## Configuration
 
-Create a `skillgen.config.json` or `skillgen.config.ts` in your project root:
+Create a `.skillgenrc.json` in your project root:
 
 ```json
 {
   "storybookUrl": "https://your-storybook.com",
-  "sourceDir": "./src",
+  "sourceDir": "./src/components",
   "outputDir": "./skills",
   "provider": "openai",
   "model": "gpt-4o",
@@ -90,7 +101,7 @@ Create a `skillgen.config.json` or `skillgen.config.ts` in your project root:
 }
 ```
 
-### Environment Variables
+**Environment Variables:**
 
 ```bash
 SKILLGEN_STORYBOOK_URL=https://your-storybook.com
@@ -99,17 +110,20 @@ SKILLGEN_MODEL=gpt-4o
 SKILLGEN_API_KEY=sk-...
 ```
 
+For full configuration options, see the **[Configuration Guide](https://storybook-to-skill-md.vercel.app/cli/configuration)**.
+
 ## Programmatic Usage
 
 ```typescript
-import { generate, loadConfig } from 'storybook-to-skill-md';
+import { generate, loadConfig } from '@sergiocarracedo/storybook-to-skills-md';
 
 const config = await loadConfig({
   storybookUrl: 'https://your-storybook.com',
-  sourceDir: './src',
+  sourceDir: './src/components',
   outputDir: './skills',
   provider: 'openai',
   model: 'gpt-4o',
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const results = await generate(config);
@@ -193,33 +207,46 @@ See [GitHub Action Repository](https://github.com/sergiocarracedo/storybook-to-s
 
 ## Documentation
 
-See the [docs](./docs/) folder for detailed documentation:
+Full documentation is available at **https://storybook-to-skill-md.vercel.app**:
 
-- [Getting Started](./docs/getting-started.md)
-- [CLI Reference](./docs/cli-reference.md)
-- [Configuration](./docs/configuration.md)
-- [Use Cases](./docs/use-cases.md)
+- **[Getting Started](https://storybook-to-skill-md.vercel.app/getting-started/installation)** - Installation and quick start
+- **[CLI Reference](https://storybook-to-skill-md.vercel.app/cli/commands)** - All CLI commands and options
+- **[Configuration](https://storybook-to-skill-md.vercel.app/cli/configuration)** - Config files, env vars, and best practices
+- **[LLM Providers](https://storybook-to-skill-md.vercel.app/providers/overview)** - OpenAI, Anthropic, Google setup
+- **[GitHub Action](https://storybook-to-skill-md.vercel.app/guides/github-action)** - CI/CD integration guide
+- **[Troubleshooting](https://storybook-to-skill-md.vercel.app/reference/troubleshooting)** - Common issues and solutions
 
 ## Development
 
+This is a monorepo managed with pnpm workspaces.
+
 ```bash
-# Install dependencies
+# Install all dependencies
 pnpm install
 
-# Run in development
+# Build all packages
+pnpm build
+
+# Build specific package
+pnpm --filter "@sergiocarracedo/storybook-to-skills-md" build
+pnpm --filter web build
+
+# Run CLI in development
+cd packages/cli
 pnpm dev generate --storybook-url https://example.com
 
 # Run tests
-pnpm test
+pnpm --filter "@sergiocarracedo/storybook-to-skills-md" test
 
 # Type check
-pnpm typecheck
+pnpm --filter "@sergiocarracedo/storybook-to-skills-md" typecheck
 
-# Lint
-pnpm lint
+# Lint & format
+pnpm --filter "@sergiocarracedo/storybook-to-skills-md" lint
+pnpm --filter "@sergiocarracedo/storybook-to-skills-md" fmt
 
-# Format
-pnpm fmt
+# Run web dev server
+pnpm --filter web dev
 ```
 
 ## License

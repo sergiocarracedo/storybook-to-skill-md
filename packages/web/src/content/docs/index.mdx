@@ -1,0 +1,79 @@
+---
+title: Documentation
+description: Generate AI-friendly SKILL.md files from your Storybook components
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What is Storybook to SKILL.md?
+
+`storybook-to-skills-md` is a CLI tool that automatically generates [SKILL.md](https://agentskills.io) files from your Storybook components. These files provide AI agents with structured knowledge about your components, enabling them to use your design system effectively.
+
+## Why Use This Tool?
+
+<CardGrid stagger>
+	<Card title="Automated Documentation" icon="rocket">
+		Generate component docs automatically from Storybook stories with zero manual work.
+	</Card>
+	<Card title="AI-Friendly Format" icon="star">
+		Optimized for AI agent consumption following the agentskills.io specification.
+	</Card>
+	<Card title="Always Up-to-Date" icon="refresh">
+		Regenerate on every change using smart caching to keep docs in sync.
+	</Card>
+	<Card title="Multiple LLM Providers" icon="puzzle">
+		Choose from OpenAI, Anthropic, or Google AI based on your needs.
+	</Card>
+	<Card title="Offline Mode" icon="laptop">
+		Work with local Storybook builds - no deployment required.
+	</Card>
+	<Card title="CI/CD Ready" icon="github">
+		GitHub Action available for automated generation in your pipeline.
+	</Card>
+</CardGrid>
+
+## Quick Start
+
+Install the CLI globally:
+
+```bash
+npm install -g @sergiocarracedo/storybook-to-skills-md
+```
+
+Generate SKILL.md files from your Storybook:
+
+```bash
+storybook-to-skills-md generate \
+  --storybook-url https://your-storybook.com \
+  --source-dir ./src/components \
+  --output-dir ./skills \
+  --provider openai \
+  --model gpt-4o \
+  --api-key sk-your-api-key
+```
+
+## What Gets Generated?
+
+Each component gets its own `SKILL.md` file with:
+- Component description and purpose
+- Props/API documentation
+- Usage examples from Storybook stories
+- Implementation guidelines
+- Links to your Storybook
+
+## Next Steps
+
+<CardGrid>
+	<Card title="Installation" icon="add-document">
+		[Install the CLI](/getting-started/installation) and set up your environment.
+	</Card>
+	<Card title="Quick Start" icon="rocket">
+		[Generate your first files](/getting-started/quick-start) in minutes.
+	</Card>
+	<Card title="CLI Reference" icon="setting">
+		Explore all [commands and options](/cli/commands) available.
+	</Card>
+	<Card title="LLM Providers" icon="puzzle">
+		Learn about [supported providers](/providers/overview) and how to configure them.
+	</Card>
+</CardGrid>

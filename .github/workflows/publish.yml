@@ -32,10 +32,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build package
-        run: pnpm build
+      - name: Build CLI package
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" build
 
-      - name: Publish to npm
-        run: pnpm publish --no-git-checks --access public --provenance
+      - name: Publish CLI to npm
+        run: pnpm --filter "@sergiocarracedo/storybook-to-skills-md" publish --no-git-checks --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
