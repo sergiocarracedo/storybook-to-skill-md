@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://sergiocarracedo.github.io',
+  base: '/storybook-to-skill-md',
+  
   integrations: [
     starlight({
       title: 'Storybook to SKILL.md',

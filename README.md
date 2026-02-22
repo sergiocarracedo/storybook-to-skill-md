@@ -189,21 +189,22 @@ The tool caches file hashes in `.skill-meta.json` to skip regeneration when sour
 
 ## GitHub Action
 
-Automate SKILL.md generation in your CI/CD pipeline:
+Automate SKILL.md generation in your CI/CD pipeline with the official GitHub Action:
 
 ```yaml
 - name: Generate SKILL.md files
   uses: sergiocarracedo/storybook-to-skill-md-action@v1
   with:
     storybook-url: 'https://your-storybook.com'
-    source-dir: './src'
+    source-dir: './src/components'
     output-dir: './skills'
     provider: 'openai'
     model: 'gpt-4o'
-    api-key: ${{ secrets.OPENAI_API_KEY }}
+  env:
+    API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-See [GitHub Action Repository](https://github.com/sergiocarracedo/storybook-to-skill-md-action) for more examples.
+See the [GitHub Action repository](https://github.com/sergiocarracedo/storybook-to-skill-md-action) for more examples and documentation.
 
 ## Documentation
 

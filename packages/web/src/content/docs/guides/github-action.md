@@ -1,13 +1,120 @@
 ---
 title: GitHub Action
-description: Automate SKILL.md generation in your CI/CD pipeline
+description: Automate SKILL.md generation in your CI/CD pipeline with the official GitHub Action
 ---
 
-Integrate `storybook-to-skills-md` into your GitHub Actions workflow to automatically generate SKILL.md files on every commit, PR, or release.
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Basic Setup
+You have two options to integrate `storybook-to-skills-md` into your GitHub Actions:
 
-Create `.github/workflows/generate-skills.yml`:
+<CardGrid>
+	<Card title="Use the GitHub Action (Recommended)" icon="rocket">
+		Use our official GitHub Action for the easiest setup:
+		
+		```yaml
+		- name: Generate SKILL.md
+		  uses: sergiocarracedo/storybook-to-skill-md-action@v1
+		```
+		
+		[View on GitHub →](https://github.com/sergiocarracedo/storybook-to-skill-md-action)
+	</Card>
+	<Card title="Use CLI Directly" icon="setting">
+		Install and run the CLI directly in your workflow:
+		
+		```yaml
+		- name: Install CLI
+		  run: npm install -g storybook-to-skills-md
+		```
+		
+		More control, requires more setup.
+	</Card>
+</CardGrid>
+
+---
+
+## Option 1: Using the GitHub Action (Recommended)
+
+The easiest way to integrate is using our official GitHub Action:
+
+```yaml
+name: Generate SKILL.md Files
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate SKILL.md files
+        uses: sergiocarracedo/storybook-to-skill-md-action@v1
+        with:
+          storybook-url: 'https://your-storybook.com'
+          source-dir: './src/components'
+          output-dir: './skills'
+          provider: 'openai'
+          model: 'gpt-4o'
+        env:
+          API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add skills/
+          git diff --quiet && git diff --staged --quiet || \
+            (git commit -m "chore: update SKILL.md files [skip ci]" && git push)
+```
+
+### Action Inputs
+
+| Input | Required | Description | Default |
+|-------|----------|-------------|---------|
+| `storybook-url` | No* | Storybook URL | - |
+| `index-file` | No* | Path to local index.json | - |
+| `source-dir` | No | Source directory | `./src` |
+| `output-dir` | No | Output directory | `./skills` |
+| `provider` | Yes | LLM provider: `openai`, `anthropic`, `google` | - |
+| `model` | Yes | Model name | - |
+| `api-key` | No | API key (use `api-key` input or `API_KEY` env var) | - |
+| `concurrency` | No | Concurrent requests | `3` |
+| `include` | No | Include patterns (comma-separated) | - |
+| `exclude` | No | Exclude patterns (comma-separated) | - |
+| `verbose` | No | Enable verbose logging | `false` |
+
+*Either `storybook-url` or `index-file` is required.
+
+### Action Outputs
+
+| Output | Description |
+|--------|-------------|
+| `changed` | Whether files were changed (`true`/`false`) |
+| `count` | Number of files generated |
+
+### Using Environment Variable for API Key
+
+```yaml
+- name: Generate SKILL.md
+  uses: sergiocarracedo/storybook-to-skill-md-action@v1
+  with:
+    storybook-url: 'https://your-storybook.com'
+    provider: 'openai'
+    model: 'gpt-4o'
+  env:
+    API_KEY: ${{ secrets.OPENAI_API_KEY }}
+```
+
+---
+
+## Option 2: Using CLI Directly
+
+If you need more control, you can install and run the CLI directly:
 
 ```yaml
 name: Generate SKILL.md Files
