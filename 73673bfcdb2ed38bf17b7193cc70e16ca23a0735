@@ -1,0 +1,25 @@
+.github/workflows/deploy-pages.yml
+  3f1cd165041b1628 46-47
+packages/web/astro.config.mjs
+  3f1cd165041b1628 6-7,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "73673bfcdb2ed38bf17b7193cc70e16ca23a0735",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 5,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
