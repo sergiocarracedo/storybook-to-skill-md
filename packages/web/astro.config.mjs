@@ -3,13 +3,13 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 
-const siteUrl = process.env.SITE_URL || process.env.PUBLIC_SITE_URL;
-const basePath = process.env.BASE_PATH || '/';
+const basePath = process.env.BASE_PATH || process.env.PUBLIC_BASE_PATH || '';
+const siteUrl = process.env.SITE_URL || process.env.PUBLIC_SITE_URL || 'https://sergiocarracedo.github.io';
 
 // https://astro.build/config
 export default defineConfig({
   site: siteUrl,
-  base: basePath === '/' ? undefined : basePath,
+  base: basePath || '/',
   
   integrations: [
     starlight({
