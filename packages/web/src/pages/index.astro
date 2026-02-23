@@ -5,6 +5,7 @@ import PackageManagerTabs from '../components/PackageManagerTabs.astro'
 import '../styles/custom.css'
 
 const packageName = 'storybook-to-skills-md'
+const basePath = import.meta.env.BASE_URL
 ---
 
 <!doctype html>
@@ -26,12 +27,12 @@ const packageName = 'storybook-to-skills-md'
         class="container mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center gap-2">
-          <img src="/logo.svg" alt="Logo" class="w-8 h-8" />
+          <img src={`${basePath}/logo.svg`} alt="Logo" class="w-8 h-8" />
           <span class="font-bold text-xl">Storybook to SKILL.md</span>
         </div>
         <div class="flex items-center gap-6">
           <a
-            href="/getting-started/installation"
+            href={`${basePath}/getting-started/installation`}
             class="hover:text-purple-600 transition-colors">Docs</a
           >
           <a
@@ -86,7 +87,7 @@ const packageName = 'storybook-to-skills-md'
 
         <div class="flex justify-center gap-4 mb-12">
           <a
-            href="/getting-started/installation"
+            href={`${basePath}/getting-started/installation`}
             class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
           >
             Get Started
@@ -327,7 +328,7 @@ const packageName = 'storybook-to-skills-md'
               View on GitHub
             </a>
             <a
-              href="/guides/github-action"
+              href={`${basePath}/getting-started/github-action`}
               class="px-6 py-3 border border-gray-300 dark:border-gray-700 hover:border-purple-600 dark:hover:border-purple-600 rounded-lg font-medium transition-colors"
             >
               View Docs →
@@ -349,7 +350,7 @@ const packageName = 'storybook-to-skills-md'
 
           <div class="mt-8 text-center">
             <a
-              href="/getting-started/quick-start"
+              href={`${basePath}/getting-started/quick-start`}
               class="text-purple-600 hover:text-purple-700 font-medium"
             >
               Read the quick start guide →
@@ -368,23 +369,23 @@ const packageName = 'storybook-to-skills-md'
             <ul class="space-y-2">
               <li>
                 <a
-                  href="/getting-started/installation"
+                  href={`${basePath}/getting-started/installation`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
                   >Documentation</a
                 >
               </li>
               <li>
                 <a
-                  href="/guides/github-action"
+                  href={`${basePath}/getting-started/github-action`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
                   >GitHub Action</a
                 >
               </li>
               <li>
                 <a
-                  href="/reference/use-cases"
+                  href={`${basePath}/getting-started/quick-start`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
-                  >Use Cases</a
+                  >Quick Start</a
                 >
               </li>
             </ul>
@@ -395,21 +396,21 @@ const packageName = 'storybook-to-skills-md'
             <ul class="space-y-2">
               <li>
                 <a
-                  href="/cli/commands"
+                  href={`${basePath}/cli/commands`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
                   >CLI Commands</a
                 >
               </li>
               <li>
                 <a
-                  href="/providers/openai"
+                  href={`${basePath}/providers/overview`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
                   >LLM Providers</a
                 >
               </li>
               <li>
                 <a
-                  href="/reference/troubleshooting"
+                  href={`${basePath}/reference/troubleshooting`}
                   class="text-gray-600 dark:text-gray-400 hover:text-purple-600"
                   >Troubleshooting</a
                 >
