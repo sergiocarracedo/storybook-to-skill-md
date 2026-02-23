@@ -37,13 +37,13 @@ export function DataCollection<T extends object>({
   data,
   columns,
   selectable = false,
-  pagination = false,
-  pageSize = 10,
-  sortable = false,
+  _pagination = false,
+  _pageSize = 10,
+  _sortable = false,
   loading = false,
   emptyMessage = 'No data available',
-  onSelectionChange,
-  onSortChange,
+  _onSelectionChange,
+  _onSortChange,
 }: DataCollectionProps<T>): React.ReactElement {
   if (loading) {
     return <div className="data-collection-loading">Loading...</div>;

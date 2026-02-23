@@ -133,6 +133,7 @@ function printRow(key: string, value: string, boxWidth: number): void {
  * Strip ANSI color codes to get actual string length
  */
 function stripAnsi(str: string): string {
+  // eslint-disable-next-line no-control-regex
   return str.replace(/\x1b\[[0-9;]*m/g, '');
 }
 
