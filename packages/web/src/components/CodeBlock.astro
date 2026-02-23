@@ -9,13 +9,13 @@ const { code, class: className = '', theme = 'dark' } = Astro.props
 const id = `code-${Math.random().toString(36).substring(2, 11)}`
 const themeClasses =
   theme === 'dark'
-    ? 'bg-gray-900 text-gray-100'
-    : 'bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100'
+    ? 'bg-[#1e1e20] border border-gray-800 text-gray-300'
+    : 'bg-gray-100 dark:bg-[#1e1e20] border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-300'
 ---
 
 <div class={`relative group ${className}`}>
   <pre
-    class={`${themeClasses} p-3 rounded text-sm overflow-x-auto pr-12 text-left`}
+    class={`${themeClasses} p-4 rounded-lg text-sm overflow-x-auto pr-12 text-left`}
     id={id}><code>{code}</code></pre>
   <button
     class="absolute top-2 right-2 p-2 rounded bg-gray-700 hover:bg-gray-600 text-white opacity-0 group-hover:opacity-100 transition-opacity"
