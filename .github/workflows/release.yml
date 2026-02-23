@@ -21,6 +21,5 @@ jobs:
         id: release
         with:
           release-type: node
-          package-name: 'storybook-to-skills-md'
           path: packages/cli
           merge: true
