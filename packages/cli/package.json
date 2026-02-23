@@ -20,7 +20,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "tsx bin/cli.ts",
@@ -78,7 +78,7 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/unist": "^3.0.3",
-    "oxfmt": "^0.3.0",
+    "oxfmt": "^0.34.0",
     "oxlint": "^0.16.0",
     "tsup": "^8.0.0",
     "typescript": "^5.7.0",
