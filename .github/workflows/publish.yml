@@ -8,6 +8,8 @@ jobs:
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
+    # Only publish if the release tag starts with 'v' (CLI releases)
+    if: startsWith(github.event.release.tag_name, 'v')
 
     permissions:
       contents: read
@@ -36,4 +38,6 @@ jobs:
         run: pnpm --filter "storybook-to-skills-md" build
 
       - name: Publish CLI to npm
+        # NOTE: Uses Trusted Publishing with provenance - no NODE_AUTH_TOKEN needed
+        # The id-token: write permission above enables OIDC authentication
         run: pnpm --filter "storybook-to-skills-md" publish --no-git-checks --access public
