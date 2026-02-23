@@ -1,0 +1,23 @@
+.github/workflows/auto-merge-release.yml
+  3f1cd165041b1628 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "7e6353fcd74c206b9ca8860a18586650e3aa312d",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 51,
+      "total_deletions": 0,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  }
+}
