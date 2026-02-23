@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.0...v1.0.1) (2026-02-23)
+
+
+### Bug Fixes
+
+* update oxfmt to 0.34.0 for Node 22 compatibility ([3d1ea27](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/3d1ea27ae5174dd8032bbcdd912adc774a579e27))
+
 ## 1.0.0 (2026-02-23)
 
 
