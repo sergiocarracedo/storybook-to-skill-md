@@ -1,0 +1,29 @@
+.github/workflows/publish.yml
+  3f1cd165041b1628 28
+.nvmrc
+  3f1cd165041b1628 1
+.github/workflows/deploy-pages.yml
+  3f1cd165041b1628 37
+.github/workflows/ci.yml
+  3f1cd165041b1628 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "272639a8c22e64902a84b24eb8633f93f82d9a32",
+  "prompts": {
+    "3f1cd165041b1628": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_388d8d792ffe93Ukc7PLdEdYPj",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
