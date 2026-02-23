@@ -1,6 +1,7 @@
+import type { StoryIndex } from '../types.js';
+
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { StoryIndex } from '../types.js';
 
 /**
  * Load index.json from a local file
@@ -88,10 +89,10 @@ export async function getStorybookIndex(
   if (indexFile) {
     return loadLocalIndex(indexFile);
   }
-  
+
   if (storybookUrl) {
     return await fetchStorybookIndexWithRetry(storybookUrl, fetchRetries);
   }
-  
+
   throw new Error('Either indexFile or storybookUrl must be provided');
 }

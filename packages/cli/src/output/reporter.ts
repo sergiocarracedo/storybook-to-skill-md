@@ -1,6 +1,6 @@
-import chalk from 'chalk';
-
 import type { GenerationResult, ProcessSummary } from '../types.js';
+
+import chalk from 'chalk';
 
 /**
  * Format duration in seconds
@@ -38,7 +38,9 @@ export function printExtractionStart(): void {
 export function printExtractionItem(name: string, duration: number, isLast = false): void {
   const prefix = isLast ? '   +--' : '   |--';
   const dots = '.'.repeat(Math.max(1, 30 - name.length));
-  console.log(`${prefix} ${name} ${chalk.dim(dots)} ${chalk.green('OK')} ${chalk.dim('(' + formatDuration(duration) + ')')}`);
+  console.log(
+    `${prefix} ${name} ${chalk.dim(dots)} ${chalk.green('OK')} ${chalk.dim('(' + formatDuration(duration) + ')')}`,
+  );
 }
 
 /**
@@ -58,24 +60,42 @@ export function printGenerationStart(): void {
 /**
  * Print generation item progress
  */
-export function printGenerationItem(name: string, duration: number, tokens: number, isLast = false): void {
+export function printGenerationItem(
+  name: string,
+  duration: number,
+  tokens: number,
+  isLast = false,
+): void {
   const prefix = isLast ? '   +--' : '   |--';
   const dots = '.'.repeat(Math.max(1, 30 - name.length));
-  console.log(`${prefix} ${name} ${chalk.dim(dots)} ${chalk.green('OK')} ${chalk.dim('(' + formatDuration(duration) + ', ' + formatTokens(tokens) + ' tokens)')}`);
+  console.log(
+    `${prefix} ${name} ${chalk.dim(dots)} ${chalk.green('OK')} ${chalk.dim('(' + formatDuration(duration) + ', ' + formatTokens(tokens) + ' tokens)')}`,
+  );
 }
 
 /**
  * Print generation total
  */
 export function printGenerationTotal(duration: number, tokens: number): void {
-  console.log(chalk.dim(`   +-- Total: ${formatDuration(duration)}, ${formatTokens(tokens)} tokens`));
+  console.log(
+    chalk.dim(`   +-- Total: ${formatDuration(duration)}, ${formatTokens(tokens)} tokens`),
+  );
 }
 
 /**
  * Print component completion
  */
-export function printComponentComplete(duration: number, tokens: number, stories: number, props: number): void {
-  console.log(chalk.green.bold(`\n[OK] Completed (${formatDuration(duration)}, ${formatTokens(tokens)} tokens, ${stories} stories, ${props} props)`));
+export function printComponentComplete(
+  duration: number,
+  tokens: number,
+  stories: number,
+  props: number,
+): void {
+  console.log(
+    chalk.green.bold(
+      `\n[OK] Completed (${formatDuration(duration)}, ${formatTokens(tokens)} tokens, ${stories} stories, ${props} props)`,
+    ),
+  );
 }
 
 /**
@@ -95,10 +115,17 @@ export function printComponentFailed(error: string): void {
 /**
  * Print generation item failure
  */
-export function printGenerationItemFailed(name: string, attempt: number, maxAttempts: number, isLast = false): void {
+export function printGenerationItemFailed(
+  name: string,
+  attempt: number,
+  maxAttempts: number,
+  isLast = false,
+): void {
   const prefix = isLast ? '   +--' : '   |--';
   const dots = '.'.repeat(Math.max(1, 30 - name.length));
-  console.log(`${prefix} ${name} ${chalk.dim(dots)} ${chalk.red('FAIL')} ${chalk.dim('(attempt ' + attempt + '/' + maxAttempts + ')')}`);
+  console.log(
+    `${prefix} ${name} ${chalk.dim(dots)} ${chalk.red('FAIL')} ${chalk.dim('(attempt ' + attempt + '/' + maxAttempts + ')')}`,
+  );
 }
 
 /**
@@ -106,7 +133,7 @@ export function printGenerationItemFailed(name: string, attempt: number, maxAtte
  */
 export function printSummary(summary: ProcessSummary): void {
   const { results, totalDuration, totalEstimatedTokens, extractionErrors } = summary;
-  
+
   console.log('\n' + chalk.bold('═'.repeat(60)));
   console.log(chalk.bold('                     Generation Summary'));
   console.log(chalk.bold('═'.repeat(60)) + '\n');
@@ -115,8 +142,10 @@ export function printSummary(summary: ProcessSummary): void {
   for (const result of results) {
     const status = getStatusLabel(result.status);
     const duration = result.duration ? formatDuration(result.duration).padStart(7) : '     --';
-    const tokens = result.estimatedTokens ? formatTokens(result.estimatedTokens).padStart(12) : '         --';
-    
+    const tokens = result.estimatedTokens
+      ? formatTokens(result.estimatedTokens).padStart(12)
+      : '         --';
+
     let statusLine: string;
     if (result.status === 'generated') {
       statusLine = `${status} ${chalk.dim(result.slug.padEnd(20))} generated ${chalk.dim(duration + '  ' + tokens)}`;
@@ -125,7 +154,7 @@ export function printSummary(summary: ProcessSummary): void {
     } else {
       statusLine = `${status} ${chalk.dim(result.slug.padEnd(20))} ${chalk.red(result.error || 'unknown error')} ${chalk.dim(duration + '  ' + tokens)}`;
     }
-    
+
     console.log(statusLine);
   }
 
@@ -137,8 +166,8 @@ export function printSummary(summary: ProcessSummary): void {
   console.log('\n' + chalk.dim('─'.repeat(60)));
   console.log(
     `Generated: ${chalk.bold(generated.length)}    ` +
-    `Skipped: ${chalk.bold(skipped.length)}    ` +
-    `Failed: ${chalk.bold(failed.length)}`,
+      `Skipped: ${chalk.bold(skipped.length)}    ` +
+      `Failed: ${chalk.bold(failed.length)}`,
   );
 
   // Print failed components list
@@ -163,7 +192,9 @@ export function printSummary(summary: ProcessSummary): void {
 
   console.log('\n' + chalk.dim('─'.repeat(60)));
   console.log(`${chalk.cyan('Total time:')}        ${chalk.bold(formatDuration(totalDuration))}`);
-  console.log(`${chalk.cyan('Total tokens:')}      ${chalk.bold(formatTokens(totalEstimatedTokens))}`);
+  console.log(
+    `${chalk.cyan('Total tokens:')}      ${chalk.bold(formatTokens(totalEstimatedTokens))}`,
+  );
   if (totalStories > 0 || totalProps > 0) {
     console.log(`${chalk.cyan('Total stories:')}     ${chalk.bold(totalStories)}`);
     console.log(`${chalk.cyan('Total props:')}       ${chalk.bold(totalProps)}`);

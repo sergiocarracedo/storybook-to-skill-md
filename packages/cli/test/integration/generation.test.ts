@@ -1,7 +1,8 @@
+import type { ComponentData } from '../../src/types.js';
+
 import { describe, expect, it } from 'vitest';
 
 import { buildPrompt, buildUserPrompt } from '../../src/generation/prompt-builder.js';
-import type { ComponentData } from '../../src/types.js';
 
 describe('Generation - Prompt Builder', () => {
   const mockComponentData: ComponentData = {
@@ -9,8 +10,20 @@ describe('Generation - Prompt Builder', () => {
     title: 'Button',
     hierarchyPath: 'Components/Button',
     props: [
-      { name: 'variant', type: "'primary' | 'secondary'", required: false, description: 'Button style', defaultValue: 'primary' },
-      { name: 'disabled', type: 'boolean', required: false, description: 'Disabled state', defaultValue: 'false' },
+      {
+        name: 'variant',
+        type: "'primary' | 'secondary'",
+        required: false,
+        description: 'Button style',
+        defaultValue: 'primary',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        required: false,
+        description: 'Disabled state',
+        defaultValue: 'false',
+      },
       { name: 'onClick', type: '() => void', required: false, description: 'Click handler' },
     ],
     argTypes: {
@@ -59,7 +72,13 @@ describe('Generation - Prompt Builder', () => {
         ...mockComponentData,
         props: [
           { name: 'id', type: 'string', required: true, description: 'Unique identifier' },
-          { name: 'variant', type: "'primary' | 'secondary'", required: false, description: 'Button style', defaultValue: 'primary' },
+          {
+            name: 'variant',
+            type: "'primary' | 'secondary'",
+            required: false,
+            description: 'Button style',
+            defaultValue: 'primary',
+          },
         ],
       };
       const prompt = buildUserPrompt(mockDataWithRequired);

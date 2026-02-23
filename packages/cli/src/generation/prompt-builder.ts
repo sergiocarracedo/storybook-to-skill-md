@@ -33,13 +33,13 @@ export function getSystemPrompt(customPromptFile?: string): string {
  */
 function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
-  
+
   const truncated = text.slice(0, maxLength);
   // Try to cut at a sentence or paragraph boundary
   const lastPeriod = truncated.lastIndexOf('.');
   const lastNewline = truncated.lastIndexOf('\n');
   const cutPoint = Math.max(lastPeriod, lastNewline);
-  
+
   if (cutPoint > maxLength * 0.7) {
     return truncated.slice(0, cutPoint + 1) + '\n[...]';
   }
@@ -53,7 +53,13 @@ export function buildUserPrompt(componentData: {
   slug: string;
   title: string;
   hierarchyPath: string;
-  props: Array<{ name: string; type: string; required: boolean; description: string; defaultValue?: string }>;
+  props: Array<{
+    name: string;
+    type: string;
+    required: boolean;
+    description: string;
+    defaultValue?: string;
+  }>;
   argTypes: Record<string, unknown>;
   defaultArgs: Record<string, unknown>;
   stories: Array<{ name: string; args: Record<string, unknown> }>;
@@ -75,7 +81,8 @@ export function buildUserPrompt(componentData: {
   // Props (component API)
   if (props.length > 0) {
     prompt += `## Props\n\n`;
-    for (const prop of props.slice(0, 50)) { // Limit to 50 props max
+    for (const prop of props.slice(0, 50)) {
+      // Limit to 50 props max
       prompt += `- **${prop.name}**`;
       if (prop.required) prompt += ' (required)';
       prompt += `: \`${prop.type}\``;
@@ -90,7 +97,7 @@ export function buildUserPrompt(componentData: {
   if (stories.length > 0) {
     prompt += `## Stories (${stories.length} total)\n\n`;
     const storiesToShow = stories.slice(0, Math.min(MAX_STORIES, stories.length));
-    
+
     for (const story of storiesToShow) {
       // Find and show Default story with full args
       if (story.name === 'Default' && Object.keys(story.args).length > 0) {
@@ -100,7 +107,7 @@ export function buildUserPrompt(componentData: {
         prompt += `- ${story.name}\n`;
       }
     }
-    
+
     if (stories.length > MAX_STORIES) {
       prompt += `\n... and ${stories.length - MAX_STORIES} more stories\n`;
     }
@@ -119,13 +126,13 @@ export function buildUserPrompt(componentData: {
   if (documentation.length > 0) {
     prompt += `## Documentation\n\n`;
     let totalDocsLength = 0;
-    
+
     for (const doc of documentation) {
       if (totalDocsLength >= MAX_TOTAL_DOCS) {
         prompt += `\n[Additional documentation omitted - total docs exceeded ${MAX_TOTAL_DOCS} chars]\n`;
         break;
       }
-      
+
       const content = truncateText(doc.textContent, MAX_DOCS_PER_COMPONENT);
       prompt += `### From ${doc.filePath}\n${content}\n\n`;
       totalDocsLength += content.length;
@@ -166,7 +173,7 @@ export function buildSubcomponentsPrompt(
   customPromptFile?: string,
 ): { system: string; user: string } {
   const systemPrompt = getSystemPrompt(customPromptFile);
-  
+
   let userPrompt = `# Component: ${componentData.title}\n\n`;
   userPrompt += `Generate separate reference documentation files for each of the following sub-pages.\n\n`;
   userPrompt += `Each reference file should:\n`;
@@ -175,18 +182,18 @@ export function buildSubcomponentsPrompt(
   userPrompt += `3. Include a separator: ---\n`;
   userPrompt += `4. Include the markdown content\n`;
   userPrompt += `5. End with [COMPONENT_END]\n\n`;
-  
+
   userPrompt += `## Sub-pages to generate:\n\n`;
   for (const page of componentData.subPages) {
     userPrompt += `- ${page}\n`;
   }
-  
+
   userPrompt += `\n## Source documentation:\n\n`;
   for (const doc of componentData.documentation) {
     const content = truncateText(doc.textContent, MAX_DOCS_PER_COMPONENT);
     userPrompt += `### From ${doc.filePath}\n${content}\n\n`;
   }
-  
+
   return {
     system: systemPrompt,
     user: userPrompt,

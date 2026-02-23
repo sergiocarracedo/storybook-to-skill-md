@@ -1,6 +1,6 @@
-import yaml from 'yaml';
-
 import type { ValidationResult } from '../types.js';
+
+import yaml from 'yaml';
 
 /**
  * Validate a generated SKILL.md file
@@ -55,9 +55,7 @@ export function validateSkillMd(content: string): ValidationResult {
 
     // Check if description mentions use case
     const useCaseKeywords = ['when', 'use', 'for', 'to', 'provides', 'enables', 'allows'];
-    const hasUseCase = useCaseKeywords.some((keyword) =>
-      desc.toLowerCase().includes(keyword),
-    );
+    const hasUseCase = useCaseKeywords.some((keyword) => desc.toLowerCase().includes(keyword));
     if (!hasUseCase) {
       warnings.push('Description should mention when/why to use this component');
     }

@@ -1,10 +1,15 @@
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 
 import { hashFile, hashFiles, hasFilesChanged } from '../../src/cache/hasher.js';
-import { createSkillMeta, needsRegeneration, readSkillMeta, writeSkillMeta } from '../../src/cache/meta.js';
+import {
+  createSkillMeta,
+  needsRegeneration,
+  readSkillMeta,
+  writeSkillMeta,
+} from '../../src/cache/meta.js';
 
 describe('Cache - Hasher', () => {
   let tempDir: string;
@@ -63,7 +68,7 @@ describe('Cache - Hasher', () => {
     fs.writeFileSync(file1, 'original');
 
     const hashes1 = hashFiles([file1]);
-    
+
     fs.writeFileSync(file1, 'modified');
     const hashes2 = hashFiles([file1]);
 
@@ -94,7 +99,7 @@ describe('Cache - Meta', () => {
 
   it('writes and reads skill meta', () => {
     const meta = createSkillMeta('openai', 'gpt-4o', { '/path/to/file.tsx': 'abc123' }, '1.0.0');
-    
+
     writeSkillMeta(tempDir, 'button', meta);
     const read = readSkillMeta(tempDir, 'button');
 

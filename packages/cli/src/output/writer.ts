@@ -21,7 +21,12 @@ export function writeSkillFile(outputDir: string, slug: string, content: string)
 /**
  * Write a reference file to the output directory
  */
-export function writeReferenceFile(outputDir: string, slug: string, filename: string, content: string): void {
+export function writeReferenceFile(
+  outputDir: string,
+  slug: string,
+  filename: string,
+  content: string,
+): void {
   const refDir = path.join(outputDir, slug, 'references', filename);
   const refDirPath = path.dirname(refDir);
 

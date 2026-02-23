@@ -327,7 +327,6 @@ scripts/package_skill.py <path/to/skill-folder> ./dist
 The packaging script will:
 
 1. **Validate** the skill automatically, checking:
-
    - YAML frontmatter format and required fields
    - Skill naming conventions and directory structure
    - Description completeness and quality
@@ -348,20 +347,17 @@ After testing the skill, users may request improvements. Often this happens righ
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again
 
-
-
-
-
-
-
 ## Storybook component or pattern SKILL generation
 
 ### Frontmatter (Required)
+
 The file MUST begin with YAML frontmatter containing:
+
 - \`name\`: The skill name (lowercase, hyphenated)
 - \`description\`: A concise description (50-200 chars) explaining WHEN to use this component and its primary purpose
 
 ### Body Content Guidelines
+
 1. Start with a brief overview of the component's purpose
 2. Include relevant sections based on complexity:
    - **Props/API**: Document important props with types and descriptions
@@ -371,13 +367,16 @@ The file MUST begin with YAML frontmatter containing:
    - **Accessibility**: Note any a11y considerations
 
 ### Content Rules
+
 - Focus on practical, actionable information
 - Use clear, concise language
 - Include code examples in TypeScript/TSX
 - Avoid: Installation instructions, Contributing guides, Changelogs, License info
 
 ### Cross-Component References (IMPORTANT)
+
 When the documentation mentions other components, hooks, or patterns:
+
 1. Include a note directing users to find the related skill
 2. Use format: "For [component/hook name], see the skill in ./[component-name]/SKILL.md"
 3. Example: "For the useDataCollection hook, see the skill in ./use-data-collection/SKILL.md"
@@ -385,11 +384,13 @@ When the documentation mentions other components, hooks, or patterns:
 This helps users discover and use related skills for a complete implementation.
 
 ### Quality Standards
+
 - The description MUST mention when/why to use the component, and when not use it
 - Props should include type information and default values
 - Code examples should be complete and runnable
 - Structure content for easy scanning by AI agents
 
 ## Output Format
+
 Generate ONLY the SKILL.md content. Do not include any explanations or meta-commentary.
 The output should be valid Markdown that starts with the YAML frontmatter.

@@ -1,6 +1,13 @@
 import type { ComponentData, GenerationResult, ProcessSummary, SkillgenConfig } from './types.js';
+
+import pLimit from 'p-limit';
+
 import { ensureLogDir, logStorybookIndex } from './debug/index.js';
-import { buildComponentGroups, getStorybookIndex, resolveAllComponentFiles } from './discovery/index.js';
+import {
+  buildComponentGroups,
+  getStorybookIndex,
+  resolveAllComponentFiles,
+} from './discovery/index.js';
 import { aggregateComponentData, createServerExtractor } from './extraction/index.js';
 import { generateForComponent } from './generation/orchestrator.js';
 import { printSummary } from './output/index.js';
@@ -15,7 +22,6 @@ import {
   printGenerationStart,
   printGenerationTotal,
 } from './output/reporter.js';
-import pLimit from 'p-limit';
 
 /**
  * Main entry point for programmatic usage
@@ -62,35 +68,35 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
   // Step 4 & 5: For each component, extract and generate (pipeline-per-component)
   for (const group of resolvedGroups) {
     printComponentHeader(group.hierarchyPath);
-    
+
     const componentStartTime = Date.now();
-    
+
     try {
       // Extract component data
       printExtractionStart();
-      
+
       const extractionStart = Date.now();
       const componentData = await aggregateComponentData(group, config.sourceDir);
       const extractionDuration = Date.now() - extractionStart;
-      
+
       printExtractionItem('Main component', extractionDuration, false);
-      
+
       // Track subcomponent extractions if verbose
       if (group.children.length > 0) {
         printExtractionItem(`${group.children.length} subcomponents`, 0, true);
       } else {
         printExtractionItem('Sources complete', 0, true);
       }
-      
+
       printExtractionTotal(extractionDuration);
-      
+
       // Generate SKILL.md
       printGenerationStart();
-      
+
       const generationStart = Date.now();
       const result = await generateForComponent(componentData, config);
       const generationDuration = Date.now() - generationStart;
-      
+
       // Print generation items
       if (result.referenceResults && result.referenceResults.length > 0) {
         for (let i = 0; i < result.referenceResults.length; i++) {
@@ -103,12 +109,12 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
       } else {
         printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
       }
-      
+
       const totalGenTokens = result.estimatedTokens ?? 0;
       printGenerationTotal(generationDuration, totalGenTokens);
-      
+
       const componentDuration = Date.now() - componentStartTime;
-      
+
       if (result.status === 'failed') {
         printComponentFailed(result.error ?? 'Unknown error');
       } else {
@@ -116,16 +122,16 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
           componentDuration,
           totalGenTokens,
           result.storiesCount ?? 0,
-          result.propsCount ?? 0
+          result.propsCount ?? 0,
         );
       }
-      
+
       results.push(result);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       extractionErrors.push(`${group.hierarchyPath}: ${errorMessage}`);
       printComponentFailed(errorMessage);
-      
+
       results.push({
         slug: group.slug,
         status: 'failed',
@@ -137,7 +143,7 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
   // Build process summary
   const totalDuration = Date.now() - processStartTime;
   const totalEstimatedTokens = results.reduce((sum, r) => sum + (r.estimatedTokens ?? 0), 0);
-  
+
   const summary: ProcessSummary = {
     results,
     totalDuration,
@@ -210,12 +216,12 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
 
     for (const group of groups) {
       printComponentHeader(group.hierarchyPath);
-      
+
       const componentStartTime = Date.now();
-      
+
       try {
         printExtractionStart();
-        
+
         // Collect all docs entries to extract from children only (avoid duplicates)
         const childDocsEntries: typeof group.docsEntries = [];
         for (const child of group.children) {
@@ -232,7 +238,7 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
         }
 
         const fullTitle = mainDocsEntry.title;
-        
+
         const extractionStart = Date.now();
 
         // Try API extraction first, fall back to DOM extraction for main component
@@ -240,7 +246,7 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
         if (!meta) {
           meta = await extractor.extractComponentMeta(mainDocsEntry.id, fullTitle);
         }
-        
+
         const mainExtractionDuration = Date.now() - extractionStart;
         printExtractionItem('Main component', mainExtractionDuration, false);
 
@@ -259,14 +265,14 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
 
         // Extract documentation from child pages in parallel
         const subPages: string[] = [];
-        
+
         if (group.children.length > 0) {
           const limit = pLimit(config.extractionConcurrency);
           const childExtractionStart = Date.now();
-          
+
           const childTasks = group.children.flatMap((child) => {
             subPages.push(child.title);
-            
+
             return child.docsEntries.map((childDocsEntry) =>
               limit(async () => {
                 if (config.verbose) {
@@ -276,7 +282,7 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
                 try {
                   const childMeta = await extractor.extractComponentMeta(
                     childDocsEntry.id,
-                    childDocsEntry.title
+                    childDocsEntry.title,
                   );
 
                   if (childMeta.docsContent) {
@@ -307,24 +313,29 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
                     }
                   }
                 } catch (childError) {
-                  const childErrorMsg = childError instanceof Error ? childError.message : String(childError);
+                  const childErrorMsg =
+                    childError instanceof Error ? childError.message : String(childError);
                   extractionErrors.push(`${childDocsEntry.title}: ${childErrorMsg}`);
                   if (config.verbose) {
                     console.warn(`      Warning: Failed to extract child ${childDocsEntry.title}`);
                   }
                 }
-              })
+              }),
             );
           });
-          
+
           await Promise.all(childTasks);
-          
+
           const childExtractionDuration = Date.now() - childExtractionStart;
-          printExtractionItem(`${group.children.length} subcomponents`, childExtractionDuration, true);
+          printExtractionItem(
+            `${group.children.length} subcomponents`,
+            childExtractionDuration,
+            true,
+          );
         } else {
           printExtractionItem('Sources complete', 0, true);
         }
-        
+
         const totalExtractionDuration = Date.now() - extractionStart;
         printExtractionTotal(totalExtractionDuration);
 
@@ -340,14 +351,14 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
           subPages,
           sourceFiles: [],
         };
-        
+
         // Generate SKILL.md
         printGenerationStart();
-        
+
         const generationStart = Date.now();
         const result = await generateForComponent(componentData, config);
         const generationDuration = Date.now() - generationStart;
-        
+
         // Print generation items
         if (result.referenceResults && result.referenceResults.length > 0) {
           for (let i = 0; i < result.referenceResults.length; i++) {
@@ -360,12 +371,12 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
         } else {
           printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
         }
-        
+
         const totalGenTokens = result.estimatedTokens ?? 0;
         printGenerationTotal(generationDuration, totalGenTokens);
-        
+
         const componentDuration = Date.now() - componentStartTime;
-        
+
         if (result.status === 'failed') {
           printComponentFailed(result.error ?? 'Unknown error');
         } else {
@@ -373,16 +384,16 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
             componentDuration,
             totalGenTokens,
             result.storiesCount ?? 0,
-            result.propsCount ?? 0
+            result.propsCount ?? 0,
           );
         }
-        
+
         results.push(result);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         extractionErrors.push(`${group.hierarchyPath}: ${errorMessage}`);
         printComponentFailed(errorMessage);
-        
+
         results.push({
           slug: group.slug,
           status: 'failed',
@@ -394,7 +405,7 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
     // Build process summary
     const totalDuration = Date.now() - processStartTime;
     const totalEstimatedTokens = results.reduce((sum, r) => sum + (r.estimatedTokens ?? 0), 0);
-    
+
     const summary: ProcessSummary = {
       results,
       totalDuration,

@@ -1,7 +1,7 @@
+import type { SkillMeta } from '../types.js';
+
 import fs from 'node:fs';
 import path from 'node:path';
-
-import type { SkillMeta } from '../types.js';
 
 const META_FILENAME = '.skill-meta.json';
 
@@ -33,11 +33,7 @@ export function readSkillMeta(outputDir: string, slug: string): SkillMeta | null
 /**
  * Write skill meta to disk
  */
-export function writeSkillMeta(
-  outputDir: string,
-  slug: string,
-  meta: SkillMeta,
-): void {
+export function writeSkillMeta(outputDir: string, slug: string, meta: SkillMeta): void {
   const componentDir = path.join(outputDir, slug);
   const metaPath = path.join(componentDir, META_FILENAME);
 

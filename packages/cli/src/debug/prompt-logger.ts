@@ -1,7 +1,7 @@
+import type { ComponentData, StoryIndex } from '../types.js';
+
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-
-import type { ComponentData, StoryIndex } from '../types.js';
 
 /**
  * Ensure the log directory exists
