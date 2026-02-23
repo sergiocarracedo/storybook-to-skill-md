@@ -1,6 +1,5 @@
-import type { Browser, Page } from 'playwright';
-
 import type { ArgTypeInfo, PropInfo, StoryInfo } from '../types.js';
+import type { Browser, Page } from 'playwright';
 
 /**
  * Component metadata extracted from Storybook server
@@ -76,19 +75,19 @@ interface ApiExtractionResult {
  * Filter out placeholder/template props that Storybook includes as examples
  * These are documentation scaffolding, not actual component props
  */
-function filterPlaceholderProps<T extends { name: string; type?: string; description?: string; defaultValue?: string }>(
-  props: T[]
-): T[] {
+function filterPlaceholderProps<
+  T extends { name: string; type?: string; description?: string; defaultValue?: string },
+>(props: T[]): T[] {
   return props.filter((prop) => {
     // Filter out obvious placeholder props
     if (prop.name === 'propertyName') return false;
     if (prop.type === 'summary') return false;
     if (prop.description === 'This is a short description') return false;
     if (prop.defaultValue === 'defaultValue') return false;
-    
+
     // Filter out props with placeholder-like patterns
     if (/^(propertyName|propName|prop\d+|example|sample)$/i.test(prop.name)) return false;
-    
+
     return true;
   });
 }
@@ -103,14 +102,14 @@ function cleanStoryName(name: string): string {
     /^(John|Jane|Bob|Alice|Dani|Eliseo|Maria|James|Mary)\s+[A-Z][a-z]+$/,
     /^[A-Z][a-z]+\s+(Doe|Smith|Williams|Johnson|Brown|Davis|Miller|Wilson|Moore|Taylor)$/,
   ];
-  
+
   for (const pattern of mockNamePatterns) {
     if (pattern.test(name)) {
       // If the name is just a mock name, return a generic "Example"
       return 'Example';
     }
   }
-  
+
   // If the name is a path (e.g., "Visualizations/John Doe"), clean the last part
   if (name.includes('/')) {
     const parts = name.split('/');
@@ -123,7 +122,7 @@ function cleanStoryName(name: string): string {
       }
     }
   }
-  
+
   return name;
 }
 
@@ -133,12 +132,12 @@ function cleanStoryName(name: string): string {
  */
 function deduplicateStories<T extends { name: string }>(stories: T[]): T[] {
   const seenNames = new Map<string, number>();
-  
+
   return stories.map((story) => {
     const cleanedName = cleanStoryName(story.name);
     const count = seenNames.get(cleanedName) || 0;
     seenNames.set(cleanedName, count + 1);
-    
+
     if (count > 0) {
       return { ...story, name: `${cleanedName} ${count + 1}` };
     }
@@ -161,19 +160,19 @@ function cleanDocsContent(content: string, maxLength: number = 8000): string {
   cleaned = cleaned.replace(/Show code/g, '');
   cleaned = cleaned.replace(/Hide code/g, '');
   cleaned = cleaned.replace(/Copy/g, '');
-  
+
   // Remove tab characters and normalize whitespace
   cleaned = cleaned.replace(/\t+/g, ' ');
-  
+
   // Remove lines that look like table data (email patterns, repeated short lines)
   const lines = cleaned.split('\n');
   const filteredLines: string[] = [];
   let consecutiveShortLines = 0;
   let lastLineWasData = false;
-  
+
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // Skip empty lines in sequences
     if (!trimmed) {
       if (filteredLines.length > 0 && filteredLines[filteredLines.length - 1] !== '') {
@@ -183,40 +182,50 @@ function cleanDocsContent(content: string, maxLength: number = 8000): string {
       lastLineWasData = false;
       continue;
     }
-    
+
     // Detect table data patterns:
     // - Lines that are just emails
     // - Lines that are just statuses (active, inactive, pending, etc.)
     // - Very short repeated patterns
     const isEmail = /^[\w.-]+@[\w.-]+\.\w+$/.test(trimmed);
     const isStatus = /^(active|inactive|pending|completed|draft|archived)$/i.test(trimmed);
-    const looksLikeTableCell = trimmed.length < 50 && !trimmed.endsWith('.') && !trimmed.endsWith(':');
-    
+    const looksLikeTableCell =
+      trimmed.length < 50 && !trimmed.endsWith('.') && !trimmed.endsWith(':');
+
     if (isEmail || isStatus) {
       lastLineWasData = true;
       consecutiveShortLines++;
       continue; // Skip these entirely
     }
-    
+
     if (looksLikeTableCell && lastLineWasData) {
       consecutiveShortLines++;
       if (consecutiveShortLines > 3) {
         continue; // Skip if we're in a run of table data
       }
     }
-    
+
     // Keep headings (lines that start with # or are all caps or end with specific patterns)
-    const isHeading = /^#{1,6}\s/.test(trimmed) || 
-                      /^[A-Z][A-Z\s]+$/.test(trimmed) ||
-                      trimmed.startsWith('TABLE OF CONTENTS') ||
-                      trimmed.startsWith('STORIES');
-    
+    const isHeading =
+      /^#{1,6}\s/.test(trimmed) ||
+      /^[A-Z][A-Z\s]+$/.test(trimmed) ||
+      trimmed.startsWith('TABLE OF CONTENTS') ||
+      trimmed.startsWith('STORIES');
+
     // Keep prose (sentences that end with punctuation)
-    const isProse = trimmed.endsWith('.') || trimmed.endsWith('!') || trimmed.endsWith('?') || trimmed.endsWith(':');
-    
+    const isProse =
+      trimmed.endsWith('.') ||
+      trimmed.endsWith('!') ||
+      trimmed.endsWith('?') ||
+      trimmed.endsWith(':');
+
     // Keep code-related content
-    const isCodeRelated = trimmed.startsWith('```') || trimmed.startsWith('import ') || trimmed.startsWith('const ') || trimmed.startsWith('export ');
-    
+    const isCodeRelated =
+      trimmed.startsWith('```') ||
+      trimmed.startsWith('import ') ||
+      trimmed.startsWith('const ') ||
+      trimmed.startsWith('export ');
+
     if (isHeading || isProse || isCodeRelated || trimmed.length > 60) {
       filteredLines.push(trimmed);
       consecutiveShortLines = 0;
@@ -231,12 +240,12 @@ function cleanDocsContent(content: string, maxLength: number = 8000): string {
       lastLineWasData = true;
     }
   }
-  
+
   cleaned = filteredLines.join('\n');
-  
+
   // Remove multiple consecutive empty lines
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-  
+
   // Truncate if still too long
   if (cleaned.length > maxLength) {
     cleaned = cleaned.slice(0, maxLength);
@@ -249,7 +258,7 @@ function cleanDocsContent(content: string, maxLength: number = 8000): string {
     }
     cleaned += '\n\n[Content truncated...]';
   }
-  
+
   return cleaned.trim();
 }
 
@@ -325,10 +334,11 @@ export class StorybookServerExtractor {
 
       // Extract props from the args table - improved extraction
       // Try multiple table selectors for different Storybook versions
-      const argsTable = document.querySelector('.docblock-argstable') || 
-                        document.querySelector('[class*="argstable"]') ||
-                        document.querySelector('table');
-      
+      const argsTable =
+        document.querySelector('.docblock-argstable') ||
+        document.querySelector('[class*="argstable"]') ||
+        document.querySelector('table');
+
       if (argsTable) {
         const rows = argsTable.querySelectorAll('tbody tr, .docblock-argstable-body tr');
         rows.forEach((row) => {
@@ -343,15 +353,19 @@ export class StorybookServerExtractor {
           if (nameCell) {
             // Get prop name - try multiple selectors
             const nameSpan = nameCell.querySelector('span[class*="name"], span:first-child, code');
-            const name = nameSpan?.textContent?.trim() || nameCell.textContent?.trim().split('\n')[0] || '';
+            const name =
+              nameSpan?.textContent?.trim() || nameCell.textContent?.trim().split('\n')[0] || '';
             if (!name || name.length > 50) return; // Skip invalid names
-            
-            const required = nameCell.querySelector('[title="Required"]') !== null ||
-                            nameCell.textContent?.includes('*') === true;
+
+            const required =
+              nameCell.querySelector('[title="Required"]') !== null ||
+              nameCell.textContent?.includes('*') === true;
 
             // Get type - look for code elements or type indicators
             let type = 'unknown';
-            const typeEl = descCell?.querySelector('code, [class*="type"], .sb-argstableBlock-code');
+            const typeEl = descCell?.querySelector(
+              'code, [class*="type"], .sb-argstableBlock-code',
+            );
             if (typeEl) {
               type = typeEl.textContent?.trim() || 'unknown';
             } else {
@@ -365,7 +379,7 @@ export class StorybookServerExtractor {
                 }
               });
             }
-            
+
             // If type is still unknown or just "union", try to extract from description cell text
             if (type === 'unknown' || type === 'union') {
               const fullCellText = descCell?.textContent?.trim() || '';
@@ -377,7 +391,7 @@ export class StorybookServerExtractor {
                 /\b(Array<[^>]+>)\b/,
                 /\b(\([^)]+\)\s*=>\s*[^;]+)\b/, // Function type
               ];
-              
+
               for (const pattern of typePatterns) {
                 const match = fullCellText.match(pattern);
                 if (match && match[1]) {
@@ -399,9 +413,14 @@ export class StorybookServerExtractor {
                 description = fullText.replace(type, '').trim();
               }
             }
-            
+
             // Clean up description - remove type if it ended up there
-            if (description === type || /^(string|number|boolean|object|array|function|union|enum|undefined)$/i.test(description)) {
+            if (
+              description === type ||
+              /^(string|number|boolean|object|array|function|union|enum|undefined)$/i.test(
+                description,
+              )
+            ) {
               description = '';
             }
 
@@ -427,7 +446,7 @@ export class StorybookServerExtractor {
                 controlType = 'number';
               }
             }
-            
+
             // Infer type from control type or default value if still unknown
             if (type === 'unknown') {
               if (controlType === 'boolean') {
@@ -512,20 +531,20 @@ export class StorybookServerExtractor {
       const docsContainer = document.querySelector('#storybook-docs');
       if (docsContainer) {
         const contentParts: string[] = [];
-        
+
         // Get the main description
         const mainDesc = docsContainer.querySelector('.sbdocs-description, .sbdocs-content > p');
         if (mainDesc) {
           contentParts.push(mainDesc.textContent?.trim() || '');
         }
-        
+
         // Get all headings and their following paragraphs
         const headings = docsContainer.querySelectorAll('h1, h2, h3, h4');
         headings.forEach((heading) => {
           const headingText = heading.textContent?.trim();
           if (headingText && !headingText.toLowerCase().includes('show code')) {
             contentParts.push(`\n### ${headingText}`);
-            
+
             // Get the next sibling paragraphs
             let sibling = heading.nextElementSibling;
             let siblingCount = 0;
@@ -543,7 +562,7 @@ export class StorybookServerExtractor {
             }
           }
         });
-        
+
         // Get any MDX content blocks
         const mdxBlocks = docsContainer.querySelectorAll('.sbdocs-content, [class*="mdx"]');
         mdxBlocks.forEach((block) => {
@@ -555,9 +574,9 @@ export class StorybookServerExtractor {
             }
           });
         });
-        
+
         result.docsContent = contentParts.filter(Boolean).join('\n\n');
-        
+
         // Fallback to innerText if we got nothing, but with length limit
         if (!result.docsContent || result.docsContent.length < 100) {
           result.docsContent = (docsContainer as HTMLElement).innerText?.slice(0, 10000) || '';
@@ -572,7 +591,7 @@ export class StorybookServerExtractor {
 
     // Filter out placeholder/template props
     meta.props = filterPlaceholderProps(meta.props);
-    
+
     // Clean story names (remove mock data names)
     meta.stories = deduplicateStories(meta.stories);
 
@@ -584,7 +603,7 @@ export class StorybookServerExtractor {
    */
   async extractViaStorybookApi(
     storyId: string,
-    title: string
+    title: string,
   ): Promise<ServerComponentMeta | null> {
     if (!this.page) {
       throw new Error('Browser not initialized. Call init() first.');
@@ -599,115 +618,112 @@ export class StorybookServerExtractor {
 
     // Try to extract data from Storybook's internal API
     // Note: This function runs in the browser context
-    const meta = await this.page.evaluate(
-      (componentTitle: string): ApiExtractionResult | null => {
-        // Access Storybook's API if available
-        type StorybookPreview = {
-          storyStore?: {
-            raw: () => Array<{
-              id: string;
-              name: string;
-              title: string;
-              argTypes?: Record<string, unknown>;
-              initialArgs?: Record<string, unknown>;
-              parameters?: {
-                docs?: {
-                  description?: { component?: string };
-                };
+    const meta = await this.page.evaluate((componentTitle: string): ApiExtractionResult | null => {
+      // Access Storybook's API if available
+      type StorybookPreview = {
+        storyStore?: {
+          raw: () => Array<{
+            id: string;
+            name: string;
+            title: string;
+            argTypes?: Record<string, unknown>;
+            initialArgs?: Record<string, unknown>;
+            parameters?: {
+              docs?: {
+                description?: { component?: string };
               };
-            }>;
-          };
-        };
-
-        const win = window as typeof window & {
-          __STORYBOOK_PREVIEW__?: StorybookPreview;
-        };
-
-        const preview = win.__STORYBOOK_PREVIEW__;
-        if (!preview?.storyStore) {
-          return null;
-        }
-
-        const stories = preview.storyStore.raw();
-        const componentStories = stories.filter((s) => s.title === componentTitle);
-
-        if (componentStories.length === 0) {
-          return null;
-        }
-
-        const firstStory = componentStories[0];
-        if (!firstStory) {
-          return null;
-        }
-        const argTypes = firstStory.argTypes || {};
-        const initialArgs = firstStory.initialArgs || {};
-        const description = firstStory.parameters?.docs?.description?.component || '';
-
-        const props: ApiExtractionResult['props'] = [];
-        const argTypeRecord: ApiExtractionResult['argTypes'] = {};
-
-        for (const [name, argType] of Object.entries(argTypes)) {
-          const at = argType as {
-            description?: string;
-            type?: { name?: string; required?: boolean };
-            control?: { type?: string; options?: string[] };
-            table?: { 
-              defaultValue?: { summary?: string };
-              type?: { summary?: string };
             };
-          };
-
-          // Get type from multiple possible locations
-          const typeName = at.type?.name || at.table?.type?.summary || 'unknown';
-          const required = at.type?.required || false;
-          const desc = at.description || '';
-          const defaultVal = at.table?.defaultValue?.summary;
-
-          const prop: ApiExtractionResult['props'][0] = {
-            name,
-            type: typeName,
-            required,
-            description: desc,
-          };
-          if (defaultVal) {
-            prop.defaultValue = defaultVal;
-          }
-          props.push(prop);
-
-          const argTypeEntry: ApiExtractionResult['argTypes'][string] = {
-            name,
-          };
-          if (desc) {
-            argTypeEntry.description = desc;
-          }
-          if (at.control) {
-            argTypeEntry.control = { type: at.control.type || 'text' };
-            if (at.control.options) {
-              argTypeEntry.control.options = at.control.options;
-            }
-          }
-          if (defaultVal !== undefined) {
-            argTypeEntry.defaultValue = defaultVal;
-          }
-          argTypeRecord[name] = argTypeEntry;
-        }
-
-        return {
-          title: componentTitle,
-          componentName: componentTitle.split('/').pop() || componentTitle,
-          description,
-          props,
-          argTypes: argTypeRecord,
-          defaultArgs: initialArgs as Record<string, unknown>,
-          stories: componentStories.map((s) => ({
-            name: s.name,
-            args: (s.initialArgs || {}) as Record<string, unknown>,
-          })),
-          docsContent: description,
+          }>;
         };
-      },
-      title
-    );
+      };
+
+      const win = window as typeof window & {
+        __STORYBOOK_PREVIEW__?: StorybookPreview;
+      };
+
+      const preview = win.__STORYBOOK_PREVIEW__;
+      if (!preview?.storyStore) {
+        return null;
+      }
+
+      const stories = preview.storyStore.raw();
+      const componentStories = stories.filter((s) => s.title === componentTitle);
+
+      if (componentStories.length === 0) {
+        return null;
+      }
+
+      const firstStory = componentStories[0];
+      if (!firstStory) {
+        return null;
+      }
+      const argTypes = firstStory.argTypes || {};
+      const initialArgs = firstStory.initialArgs || {};
+      const description = firstStory.parameters?.docs?.description?.component || '';
+
+      const props: ApiExtractionResult['props'] = [];
+      const argTypeRecord: ApiExtractionResult['argTypes'] = {};
+
+      for (const [name, argType] of Object.entries(argTypes)) {
+        const at = argType as {
+          description?: string;
+          type?: { name?: string; required?: boolean };
+          control?: { type?: string; options?: string[] };
+          table?: {
+            defaultValue?: { summary?: string };
+            type?: { summary?: string };
+          };
+        };
+
+        // Get type from multiple possible locations
+        const typeName = at.type?.name || at.table?.type?.summary || 'unknown';
+        const required = at.type?.required || false;
+        const desc = at.description || '';
+        const defaultVal = at.table?.defaultValue?.summary;
+
+        const prop: ApiExtractionResult['props'][0] = {
+          name,
+          type: typeName,
+          required,
+          description: desc,
+        };
+        if (defaultVal) {
+          prop.defaultValue = defaultVal;
+        }
+        props.push(prop);
+
+        const argTypeEntry: ApiExtractionResult['argTypes'][string] = {
+          name,
+        };
+        if (desc) {
+          argTypeEntry.description = desc;
+        }
+        if (at.control) {
+          argTypeEntry.control = { type: at.control.type || 'text' };
+          if (at.control.options) {
+            argTypeEntry.control.options = at.control.options;
+          }
+        }
+        if (defaultVal !== undefined) {
+          argTypeEntry.defaultValue = defaultVal;
+        }
+        argTypeRecord[name] = argTypeEntry;
+      }
+
+      return {
+        title: componentTitle,
+        componentName: componentTitle.split('/').pop() || componentTitle,
+        description,
+        props,
+        argTypes: argTypeRecord,
+        defaultArgs: initialArgs as Record<string, unknown>,
+        stories: componentStories.map((s) => ({
+          name: s.name,
+          args: (s.initialArgs || {}) as Record<string, unknown>,
+        })),
+        docsContent: description,
+      };
+    }, title);
 
     // Apply filtering to API-extracted data too
     if (meta) {

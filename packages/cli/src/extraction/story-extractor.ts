@@ -1,6 +1,6 @@
-import fs from 'node:fs';
-
 import type { ArgTypeInfo, StoryInfo, StoryMeta } from '../types.js';
+
+import fs from 'node:fs';
 
 /**
  * Extract story metadata from a .stories.tsx file using @storybook/csf-tools
@@ -219,9 +219,7 @@ function parseArgTypeObject(valueNode: unknown): Omit<ArgTypeInfo, 'name'> {
 /**
  * Parse control object from AST
  */
-function parseControlObject(
-  valueNode: unknown,
-): NonNullable<ArgTypeInfo['control']> | undefined {
+function parseControlObject(valueNode: unknown): NonNullable<ArgTypeInfo['control']> | undefined {
   if (!valueNode || typeof valueNode !== 'object') {
     return undefined;
   }
@@ -277,9 +275,7 @@ function parseControlObject(
 /**
  * Parse table object from AST
  */
-function parseTableObject(
-  valueNode: unknown,
-): NonNullable<ArgTypeInfo['table']> | undefined {
+function parseTableObject(valueNode: unknown): NonNullable<ArgTypeInfo['table']> | undefined {
   if (!valueNode || typeof valueNode !== 'object') {
     return undefined;
   }
@@ -325,10 +321,7 @@ function parseTableObject(
  * Parse args from AST annotation node to actual values
  * This is a simplified parser that handles common cases
  */
-function parseArgsFromAnnotation(
-  argsNode: unknown,
-  _sourceCode: string,
-): Record<string, unknown> {
+function parseArgsFromAnnotation(argsNode: unknown, _sourceCode: string): Record<string, unknown> {
   if (!argsNode || typeof argsNode !== 'object') {
     return {};
   }
@@ -374,9 +367,7 @@ function parseArgsFromAnnotation(
 /**
  * Parse a value node from the AST
  */
-function parseValueNode(
-  valueNode: unknown,
-): unknown {
+function parseValueNode(valueNode: unknown): unknown {
   if (!valueNode || typeof valueNode !== 'object') {
     return undefined;
   }

@@ -2,25 +2,42 @@
   "name": "storybook-to-skills-md",
   "version": "1.0.1",
   "description": "CLI tool that reads Storybook projects and generates SKILL.md files for AI agents using LLMs",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "keywords": [
+    "agent",
+    "ai",
+    "cli",
+    "documentation",
+    "llm",
+    "skill",
+    "storybook"
+  ],
+  "homepage": "https://github.com/sergiocarracedo/storybook-to-skill-md#readme",
+  "bugs": {
+    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md/issues"
+  },
+  "license": "MIT",
+  "author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md",
+    "directory": "packages/cli"
+  },
   "bin": {
     "storybook-to-skills-md": "./dist/cli.js"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
   },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
-  "engines": {
-    "node": ">=22"
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "dev": "tsx bin/cli.ts",
@@ -35,26 +52,6 @@
     "build": "tsup",
     "prepublishOnly": "pnpm run typecheck && pnpm run build"
   },
-  "keywords": [
-    "storybook",
-    "skill",
-    "ai",
-    "llm",
-    "documentation",
-    "agent",
-    "cli"
-  ],
-  "author": "Sergio Carracedo <hi@sergiocarracedo.es>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md",
-    "directory": "packages/cli"
-  },
-  "bugs": {
-    "url": "https://github.com/sergiocarracedo/storybook-to-skill-md/issues"
-  },
-  "homepage": "https://github.com/sergiocarracedo/storybook-to-skill-md#readme",
-  "license": "MIT",
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",
     "@ai-sdk/google": "^1.0.0",
@@ -83,5 +80,8 @@
     "tsup": "^8.0.0",
     "typescript": "^5.7.0",
     "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

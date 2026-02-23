@@ -1,4 +1,5 @@
 import type { LanguageModelV1 } from 'ai';
+
 import { generateText } from 'ai';
 
 /**
@@ -113,7 +114,7 @@ function cleanGeneratedContent(text: string): string {
 
   // Check if we already have valid frontmatter (--- ... ---)
   const hasValidFrontmatter = /^---\n[\s\S]*?\n---\n/.test(cleaned);
-  
+
   if (hasValidFrontmatter) {
     return cleaned.trim();
   }
@@ -122,17 +123,17 @@ function cleanGeneratedContent(text: string): string {
   const frontmatterOpenMatch = cleaned.match(/^---\n/);
   if (frontmatterOpenMatch) {
     const afterFrontmatterOpen = cleaned.slice(frontmatterOpenMatch[0].length);
-    
+
     // Check if there's a closing ---
     if (!afterFrontmatterOpen.match(/^---[\n\r]/)) {
       // Find where the body starts (first # heading or end of content)
       const bodyStartMatch = afterFrontmatterOpen.match(/\n#{1,6}\s+/);
       let bodyStartIndex = bodyStartMatch ? bodyStartMatch.index! : afterFrontmatterOpen.length;
-      
+
       // Insert closing --- before body
       const frontmatterContent = afterFrontmatterOpen.slice(0, bodyStartIndex);
       const bodyContent = afterFrontmatterOpen.slice(bodyStartIndex);
-      
+
       cleaned = '---\n' + frontmatterContent.trim() + '\n---\n' + bodyContent;
     }
   } else if (!cleaned.startsWith('---')) {

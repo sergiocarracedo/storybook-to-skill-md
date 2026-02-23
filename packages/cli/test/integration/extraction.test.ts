@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
 import path from 'node:path';
+import { describe, expect, it } from 'vitest';
 
-import { extractStoryMeta } from '../../src/extraction/story-extractor.js';
 import { extractMdxContent } from '../../src/extraction/mdx-extractor.js';
+import { extractStoryMeta } from '../../src/extraction/story-extractor.js';
 
 const fixturesDir = path.join(import.meta.dirname, '../fixtures');
 

@@ -1,7 +1,7 @@
+import type { SkillgenConfig } from '../types.js';
+
 import { cosmiconfig } from 'cosmiconfig';
 import process from 'node:process';
-
-import type { SkillgenConfig } from '../types.js';
 
 import { CONFIG_FILE_NAMES, DEFAULT_CONFIG, ENV_PREFIX } from './defaults.js';
 import { validateConfig } from './schema.js';

@@ -37,10 +37,7 @@ function matchesPatterns(title: string, patterns: string[]): boolean {
     }
 
     // Convert glob pattern to regex
-    const regexPattern = pattern
-      .replace(/\*\*/g, '.*')
-      .replace(/\*/g, '[^/]*')
-      .replace(/\?/g, '.');
+    const regexPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\?/g, '.');
     const regex = new RegExp(`^${regexPattern}$`, 'i');
     return regex.test(title);
   });
@@ -70,7 +67,9 @@ export function filterEntries(
 /**
  * Group entries by component title
  */
-export function groupEntriesByComponent(entries: StoryIndexEntry[]): Map<string, StoryIndexEntry[]> {
+export function groupEntriesByComponent(
+  entries: StoryIndexEntry[],
+): Map<string, StoryIndexEntry[]> {
   const groups = new Map<string, StoryIndexEntry[]>();
 
   for (const entry of entries) {

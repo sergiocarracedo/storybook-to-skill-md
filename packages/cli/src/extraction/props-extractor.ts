@@ -1,7 +1,7 @@
+import type { PropInfo } from '../types.js';
+
 import fs from 'node:fs';
 import path from 'node:path';
-
-import type { PropInfo } from '../types.js';
 
 /**
  * Extract props from a React component using react-docgen-typescript

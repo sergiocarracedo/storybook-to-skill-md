@@ -1,6 +1,5 @@
-import type { LanguageModelV1 } from 'ai';
-
 import type { ProviderType } from '../types.js';
+import type { LanguageModelV1 } from 'ai';
 
 /**
  * Create a language model instance based on provider and model name

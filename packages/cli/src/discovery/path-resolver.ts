@@ -1,7 +1,7 @@
+import type { ComponentGroup, ResolvedFile } from '../types.js';
+
 import fs from 'node:fs';
 import path from 'node:path';
-
-import type { ComponentGroup, ResolvedFile } from '../types.js';
 
 /**
  * Resolve Storybook importPath to absolute file path
@@ -30,8 +30,7 @@ export function extractComponentImports(storyFilePath: string): string[] {
   // Match: import { Component } from './path'
   // Match: import Component from './path'
   // Match: import * as Component from './path'
-  const importRegex =
-    /import\s+(?:(?:\{[^}]+\}|\*\s+as\s+\w+|\w+))\s+from\s+['"](\.[^'"]+)['"]/g;
+  const importRegex = /import\s+(?:(?:\{[^}]+\}|\*\s+as\s+\w+|\w+))\s+from\s+['"](\.[^'"]+)['"]/g;
 
   let match;
   while ((match = importRegex.exec(content)) !== null) {
@@ -108,10 +107,7 @@ export function findComponentByConvention(storyFilePath: string): string | null 
 /**
  * Resolve files for a component group
  */
-export function resolveComponentFiles(
-  group: ComponentGroup,
-  sourceDir: string,
-): ComponentGroup {
+export function resolveComponentFiles(group: ComponentGroup, sourceDir: string): ComponentGroup {
   const allEntries = [...group.storyEntries, ...group.docsEntries];
   const storyFiles = new Map<string, ResolvedFile>();
   const mdxFiles = new Map<string, ResolvedFile>();
@@ -126,10 +122,7 @@ export function resolveComponentFiles(
         absolutePath,
         type: 'mdx',
       });
-    } else if (
-      entry.importPath.includes('.stories.') ||
-      entry.type === 'story'
-    ) {
+    } else if (entry.importPath.includes('.stories.') || entry.type === 'story') {
       storyFiles.set(absolutePath, {
         relativePath: entry.importPath,
         absolutePath,
@@ -159,9 +152,7 @@ export function resolveComponentFiles(
   }
 
   // Recursively resolve children
-  const resolvedChildren = group.children.map((child) =>
-    resolveComponentFiles(child, sourceDir),
-  );
+  const resolvedChildren = group.children.map((child) => resolveComponentFiles(child, sourceDir));
 
   return {
     ...group,

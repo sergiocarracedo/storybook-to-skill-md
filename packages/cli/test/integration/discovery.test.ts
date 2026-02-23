@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import type { StoryIndex, StoryIndexEntry } from '../../src/types.js';
+
 import fs from 'node:fs';
 import path from 'node:path';
+import { describe, expect, it } from 'vitest';
 
 import {
   buildComponentGroups,
@@ -8,7 +10,6 @@ import {
   groupEntriesByComponent,
   titleToSlug,
 } from '../../src/discovery/grouper.js';
-import type { StoryIndex, StoryIndexEntry } from '../../src/types.js';
 
 const fixturesDir = path.join(import.meta.dirname, '../fixtures');
 
@@ -32,9 +33,30 @@ describe('Discovery - Grouper', () => {
   describe('groupEntriesByComponent', () => {
     it('groups flat components correctly', () => {
       const entries: StoryIndexEntry[] = [
-        { id: '1', title: 'Components/Button', name: 'Primary', importPath: './Button.stories.tsx', tags: [], type: 'story' },
-        { id: '2', title: 'Components/Button', name: 'Secondary', importPath: './Button.stories.tsx', tags: [], type: 'story' },
-        { id: '3', title: 'Components/Input', name: 'Default', importPath: './Input.stories.tsx', tags: [], type: 'story' },
+        {
+          id: '1',
+          title: 'Components/Button',
+          name: 'Primary',
+          importPath: './Button.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
+        {
+          id: '2',
+          title: 'Components/Button',
+          name: 'Secondary',
+          importPath: './Button.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
+        {
+          id: '3',
+          title: 'Components/Input',
+          name: 'Default',
+          importPath: './Input.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
       ];
 
       const groups = groupEntriesByComponent(entries);
@@ -46,9 +68,30 @@ describe('Discovery - Grouper', () => {
 
     it('groups complex components with sub-pages', () => {
       const entries: StoryIndexEntry[] = [
-        { id: '1', title: 'Components/Data Collection', name: 'Default', importPath: './DC.stories.tsx', tags: [], type: 'story' },
-        { id: '2', title: 'Components/Data Collection/Actions', name: 'Default', importPath: './Actions.stories.tsx', tags: [], type: 'story' },
-        { id: '3', title: 'Components/Data Collection/Filters', name: 'Default', importPath: './Filters.stories.tsx', tags: [], type: 'story' },
+        {
+          id: '1',
+          title: 'Components/Data Collection',
+          name: 'Default',
+          importPath: './DC.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
+        {
+          id: '2',
+          title: 'Components/Data Collection/Actions',
+          name: 'Default',
+          importPath: './Actions.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
+        {
+          id: '3',
+          title: 'Components/Data Collection/Filters',
+          name: 'Default',
+          importPath: './Filters.stories.tsx',
+          tags: [],
+          type: 'story',
+        },
       ];
 
       const groups = groupEntriesByComponent(entries);
@@ -60,9 +103,30 @@ describe('Discovery - Grouper', () => {
 
   describe('filterEntries', () => {
     const entries: StoryIndexEntry[] = [
-      { id: '1', title: 'Components/Button', name: 'Primary', importPath: '', tags: [], type: 'story' },
-      { id: '2', title: 'Components/Input', name: 'Default', importPath: '', tags: [], type: 'story' },
-      { id: '3', title: 'Internal/Debug', name: 'Default', importPath: '', tags: [], type: 'story' },
+      {
+        id: '1',
+        title: 'Components/Button',
+        name: 'Primary',
+        importPath: '',
+        tags: [],
+        type: 'story',
+      },
+      {
+        id: '2',
+        title: 'Components/Input',
+        name: 'Default',
+        importPath: '',
+        tags: [],
+        type: 'story',
+      },
+      {
+        id: '3',
+        title: 'Internal/Debug',
+        name: 'Default',
+        importPath: '',
+        tags: [],
+        type: 'story',
+      },
     ];
 
     it('filters by include patterns', () => {
@@ -90,7 +154,7 @@ describe('Discovery - Grouper', () => {
       const groups = buildComponentGroups(index);
 
       expect(groups.length).toBe(2); // Button and Data Collection
-      
+
       const button = groups.find((g) => g.slug === 'button');
       expect(button).toBeDefined();
       expect(button?.storyEntries.length).toBe(3);

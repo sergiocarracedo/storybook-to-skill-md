@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { describe, expect, it } from 'vitest';
 
 import { loadLocalIndex, getStorybookIndex } from '../../src/discovery/index-fetcher.js';
 
@@ -30,13 +30,13 @@ describe('Discovery - Local Index Loading', () => {
 
     it('throws error for non-existent file', () => {
       const indexPath = join(fixturesDir, 'non-existent.json');
-      
+
       expect(() => loadLocalIndex(indexPath)).toThrow();
     });
 
     it('throws error for invalid JSON format', () => {
       const indexPath = join(fixturesDir, 'invalid-index.json');
-      
+
       // Create a test file with invalid content (we'll just test with missing file for now)
       expect(() => loadLocalIndex(indexPath)).toThrow();
     });
@@ -52,7 +52,9 @@ describe('Discovery - Local Index Loading', () => {
     });
 
     it('throws error when neither indexFile nor storybookUrl is provided', async () => {
-      await expect(getStorybookIndex()).rejects.toThrow('Either indexFile or storybookUrl must be provided');
+      await expect(getStorybookIndex()).rejects.toThrow(
+        'Either indexFile or storybookUrl must be provided',
+      );
     });
   });
 });

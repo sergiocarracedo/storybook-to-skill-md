@@ -1,8 +1,7 @@
-import fs from 'node:fs';
-
+import type { MdxContent } from '../types.js';
 import type { Node } from 'unist';
 
-import type { MdxContent } from '../types.js';
+import fs from 'node:fs';
 
 interface MdastNode extends Node {
   type: string;
