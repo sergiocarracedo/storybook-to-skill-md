@@ -1,0 +1,33 @@
+packages/cli/package.json
+  7c02bfcb85fec246 26
+package.json
+  7c02bfcb85fec246 9-10
+README.md
+  7c02bfcb85fec246 1,3,27,29,31,39,55,72,97,103,203,224,236,247
+.github/workflows/ci.yml
+  7c02bfcb85fec246 50,53,56,59,62
+.github/workflows/publish.yml
+  7c02bfcb85fec246 39
+.gitleaks.toml
+  7c02bfcb85fec246 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "981359ec415bc5ba82280b73c18aeb36bb9dcb42",
+  "prompts": {
+    "7c02bfcb85fec246": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a72ffbb1-5ca5-49e2-a77f-af6fd997f633",
+        "model": "copilot/claude-sonnet-4.5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 28,
+      "accepted_lines": 27,
+      "overriden_lines": 0
+    }
+  }
+}
