@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.5...v1.1.0) (2026-02-24)
+
+
+### Features
+
+* add .skillgenrc.toml as supported config file name ([a544c6d](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/a544c6d849cee7acb25b7dd2357e121353a85a43))
+
 ## [1.0.5](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.4...v1.0.5) (2026-02-24)
 
 
