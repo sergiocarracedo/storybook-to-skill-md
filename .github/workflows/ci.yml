@@ -47,19 +47,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Type check CLI
-        run: pnpm --filter "storybook-to-skills-md" typecheck
+        run: pnpm --filter "storybook-to-skill-md" typecheck
 
       - name: Lint CLI
-        run: pnpm --filter "storybook-to-skills-md" lint
+        run: pnpm --filter "storybook-to-skill-md" lint
 
       - name: Check formatting CLI
-        run: pnpm --filter "storybook-to-skills-md" fmt:check
+        run: pnpm --filter "storybook-to-skill-md" fmt:check
 
       - name: Run tests CLI
-        run: pnpm --filter "storybook-to-skills-md" test:run
+        run: pnpm --filter "storybook-to-skill-md" test:run
 
       - name: Build CLI
-        run: pnpm --filter "storybook-to-skills-md" build
+        run: pnpm --filter "storybook-to-skill-md" build
       
       - name: Build web
         run: pnpm --filter web build

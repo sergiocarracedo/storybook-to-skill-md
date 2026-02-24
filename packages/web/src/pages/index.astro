@@ -1,10 +1,10 @@
 ---
 import { ViewTransitions } from 'astro:transitions'
-import CodeBlock from '../components/CodeBlock.astro'
-import PackageManagerTabs from '../components/PackageManagerTabs.astro'
-import HeroShader from '../components/HeroShader.astro'
 import ActionShader from '../components/ActionShader.astro'
+import CodeBlock from '../components/CodeBlock.astro'
+import HeroShader from '../components/HeroShader.astro'
 import Logo from '../components/Logo.astro'
+import PackageManagerTabs from '../components/PackageManagerTabs.astro'
 import '../styles/custom.css'
 
 const packageName = 'storybook-to-skills-md'
@@ -25,11 +25,14 @@ const basePath = import.meta.env.BASE_URL
   </head>
   <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
     <!-- Shared SVG gradient for icons (position:absolute avoids display:none breaking cross-SVG url() refs) -->
-    <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+    <svg
+      style="position:absolute;width:0;height:0;overflow:hidden;"
+      aria-hidden="true"
+    >
       <defs>
         <linearGradient id="feat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#9333ea"/>
-          <stop offset="100%" stop-color="#06b6d4"/>
+          <stop offset="0%" stop-color="#9333ea"></stop>
+          <stop offset="100%" stop-color="#06b6d4"></stop>
         </linearGradient>
       </defs>
     </svg>
@@ -89,7 +92,9 @@ const basePath = import.meta.env.BASE_URL
           </a>
         </div>
 
-        <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.6)]">
+        <h1
+          class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.6)]"
+        >
           Generate AI-ready component docs<br />
           <span
             class="bg-gradient-to-r from-primary-300 to-secondary-300 bg-clip-text text-transparent"
@@ -128,37 +133,42 @@ const basePath = import.meta.env.BASE_URL
             <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
             <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
             <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
-            <span class="ml-2 text-xs text-gray-500 font-mono">storybook-to-skills-md</span>
+            <span class="ml-2 text-xs text-gray-500 font-mono"
+              >storybook-to-skills-md</span
+            >
           </div>
-          <div class="bg-[#1a1a1c] text-gray-100 p-6 font-mono text-sm text-left"
-        >
-          <div class="mb-2">
-            <span class="text-green-400">$</span> pnpm add -g {packageName}
+          <div
+            class="bg-[#1a1a1c] text-gray-100 p-6 font-mono text-sm text-left"
+          >
+            <div class="mb-2">
+              <span class="text-green-400">$</span> pnpm add -g {packageName}
+            </div>
+            <div class="mb-2 text-gray-300">
+              ✓ Package installed successfully
+            </div>
+            <div class="mb-2">
+              <span class="text-green-400">$</span> storybook-to-skills-md generate
+              \
+            </div>
+            <div class="mb-2">
+              &nbsp;&nbsp;--storybook-url https://your-storybook.com \
+            </div>
+            <div class="mb-2">&nbsp;&nbsp;--provider openai \</div>
+            <div class="mb-2">&nbsp;&nbsp;--model gpt-5.2</div>
+            <div class="mb-2 text-gray-300 mt-2">
+              ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            </div>
+            <div class="mb-2 text-gray-300">[COMPONENT] Button</div>
+            <div class="mb-2 text-gray-300">
+              [EXTRACT] Fetching sources... OK (1.2s)
+            </div>
+            <div class="mb-2 text-gray-300">
+              [GENERATE] Creating skill files... OK (8.5s, ~4,200 tokens)
+            </div>
+            <div class="mb-2 text-green-400">
+              [OK] Completed (10.5s, ~4,200 tokens)
+            </div>
           </div>
-          <div class="mb-2 text-gray-300">✓ Package installed successfully</div>
-          <div class="mb-2">
-            <span class="text-green-400">$</span> storybook-to-skills-md generate
-            \
-          </div>
-          <div class="mb-2">
-            &nbsp;&nbsp;--storybook-url https://your-storybook.com \
-          </div>
-          <div class="mb-2">&nbsp;&nbsp;--provider openai \</div>
-          <div class="mb-2">&nbsp;&nbsp;--model gpt-5.2</div>
-          <div class="mb-2 text-gray-300 mt-2">
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          </div>
-          <div class="mb-2 text-gray-300">[COMPONENT] Button</div>
-          <div class="mb-2 text-gray-300">
-            [EXTRACT] Fetching sources... OK (1.2s)
-          </div>
-          <div class="mb-2 text-gray-300">
-            [GENERATE] Creating skill files... OK (8.5s, ~4,200 tokens)
-          </div>
-          <div class="mb-2 text-green-400">
-            [OK] Completed (10.5s, ~4,200 tokens)
-          </div>
-        </div>
         </div>
       </div>
     </section>
@@ -240,7 +250,9 @@ const basePath = import.meta.env.BASE_URL
     </section>
 
     <!-- Features Grid -->
-    <section class="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30">
+    <section
+      class="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30"
+    >
       <div class="container mx-auto px-4">
         <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
           Built for modern workflows
@@ -250,10 +262,19 @@ const basePath = import.meta.env.BASE_URL
           <div
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="10" rx="2"/>
-              <circle cx="12" cy="5" r="2"/>
-              <path d="M12 7v4M8 15h.01M16 15h.01"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+              <circle cx="12" cy="5" r="2"></circle>
+              <path d="M12 7v4M8 15h.01M16 15h.01"></path>
             </svg>
             <h3 class="text-lg font-bold mb-2">Multiple LLM Providers</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -265,10 +286,22 @@ const basePath = import.meta.env.BASE_URL
           <div
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="2" y1="2" x2="22" y2="22"/>
-              <path d="M8.5 16.5a5 5 0 017 0M2 8.82a15 15 0 0112.33-3.72M5.46 12.12a10 10 0 015.54-2.62"/>
-              <circle cx="12" cy="20" r=".5" fill="url(#feat-gradient)"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="2" y1="2" x2="22" y2="22"></line>
+              <path
+                d="M8.5 16.5a5 5 0 017 0M2 8.82a15 15 0 0112.33-3.72M5.46 12.12a10 10 0 015.54-2.62"
+              ></path>
+              <circle cx="12" cy="20" r=".5" fill="url(#feat-gradient)"
+              ></circle>
             </svg>
             <h3 class="text-lg font-bold mb-2">Offline Mode</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -279,8 +312,20 @@ const basePath = import.meta.env.BASE_URL
           <div
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="url(#feat-gradient)" fill-opacity="0.15"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polygon
+                points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+                fill="url(#feat-gradient)"
+                fill-opacity="0.15"></polygon>
             </svg>
             <h3 class="text-lg font-bold mb-2">Incremental Generation</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -295,10 +340,19 @@ const basePath = import.meta.env.BASE_URL
             rel="noopener noreferrer"
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm block"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="6"/>
-              <circle cx="12" cy="12" r="2" fill="url(#feat-gradient)"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2" fill="url(#feat-gradient)"></circle>
             </svg>
             <h3 class="text-lg font-bold mb-2">GitHub Action</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -310,9 +364,18 @@ const basePath = import.meta.env.BASE_URL
           <div
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/>
-              <path d="M1 14h6M9 8h6M17 16h6"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"></path>
+              <path d="M1 14h6M9 8h6M17 16h6"></path>
             </svg>
             <h3 class="text-lg font-bold mb-2">Customizable Prompts</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -324,9 +387,18 @@ const basePath = import.meta.env.BASE_URL
           <div
             class="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-500 transition-colors shadow-sm"
           >
-            <svg class="w-8 h-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="url(#feat-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="16 18 22 12 16 6"/>
-              <polyline points="8 6 2 12 8 18"/>
+            <svg
+              class="w-8 h-8 mb-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#feat-gradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
             </svg>
             <h3 class="text-lg font-bold mb-2">TypeScript Native</h3>
             <p class="text-gray-600 dark:text-gray-400">
@@ -342,15 +414,21 @@ const basePath = import.meta.env.BASE_URL
       <ActionShader />
       <div class="relative z-10 container mx-auto px-4">
         <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.6)]">
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-6 text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.6)]"
+          >
             CI/CD with GitHub Action
           </h2>
-          <p class="text-xl text-white/70 mb-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.5)]">
-            Automate SKILL.md generation in your GitHub Actions workflow.
-            Run it on every push, PR, or release.
+          <p
+            class="text-xl text-white/70 mb-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.5)]"
+          >
+            Automate SKILL.md generation in your GitHub Actions workflow. Run it
+            on every push, PR, or release.
           </p>
 
-          <div class="bg-black/40 backdrop-blur-sm text-gray-100 p-6 rounded-lg text-left font-mono text-sm overflow-x-auto mb-8 border border-white/10">
+          <div
+            class="bg-black/40 backdrop-blur-sm text-gray-100 p-6 rounded-lg text-left font-mono text-sm overflow-x-auto mb-8 border border-white/10"
+          >
             <CodeBlock
               code={`- name: Generate SKILL.md
   uses: sergiocarracedo/storybook-to-skill-md-action@v1
@@ -374,7 +452,9 @@ const basePath = import.meta.env.BASE_URL
               style="background: linear-gradient(135deg, #9333ea, #06b6d4)"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                ></path>
               </svg>
               View on GitHub
             </a>

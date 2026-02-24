@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
-    "test": "pnpm --filter storybook-to-skills-md test",
-    "test:run": "pnpm --filter storybook-to-skills-md test:run",
+    "test": "pnpm --filter storybook-to-skill-md test",
+    "test:run": "pnpm --filter storybook-to-skill-md test:run",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "clean": "pnpm -r exec rm -rf node_modules dist .astro",

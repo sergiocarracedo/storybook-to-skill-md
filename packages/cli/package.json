@@ -1,5 +1,5 @@
 {
-  "name": "storybook-to-skills-md",
+  "name": "storybook-to-skill-md",
   "version": "1.0.2",
   "description": "CLI tool that reads Storybook projects and generates SKILL.md files for AI agents using LLMs",
   "keywords": [
@@ -23,7 +23,7 @@
     "directory": "packages/cli"
   },
   "bin": {
-    "storybook-to-skills-md": "./dist/cli.js"
+    "storybook-to-skill-md": "./dist/cli.js"
   },
   "files": [
     "dist",

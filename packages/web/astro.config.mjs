@@ -1,7 +1,7 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'astro/config';
 
 const repoName = process.env.BASE_PATH || process.env.PUBLIC_BASE_PATH || 'storybook-to-skill-md';
 const basePath = repoName.startsWith('/') ? repoName : `/${repoName}`;
@@ -46,7 +46,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Storybook to SKILL.md',
-      description: 'Generate AI-ready component docs from Storybook',
+      description: 'Generate AI-ready component SKILL.md from Storybook',
       logo: {
         src: './src/assets/logo.svg',
       },

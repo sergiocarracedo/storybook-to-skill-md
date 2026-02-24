@@ -1,6 +1,6 @@
-# storybook-to-skills-md
+# storybook-to-skill-md
 
-[![npm version](https://img.shields.io/npm/v/storybook-to-skills-md.svg)](https://www.npmjs.com/package/storybook-to-skills-md)
+[![npm version](https://img.shields.io/npm/v/storybook-to-skill-md.svg)](https://www.npmjs.com/package/storybook-to-skill-md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
@@ -24,11 +24,11 @@ A CLI tool that reads Storybook projects and generates [SKILL.md](https://agents
 ## Installation
 
 ```bash
-npm install -g storybook-to-skills-md
+npm install -g storybook-to-skill-md
 # or
-pnpm add -g storybook-to-skills-md
+pnpm add -g storybook-to-skill-md
 # or
-yarn global add storybook-to-skills-md
+yarn global add storybook-to-skill-md
 ```
 
 ## Quick Start
@@ -36,7 +36,7 @@ yarn global add storybook-to-skills-md
 ### Using a Deployed Storybook
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --source-dir ./src/components \
   --output-dir ./skills \
@@ -52,7 +52,7 @@ storybook-to-skills-md generate \
 npm run build-storybook
 
 # Generate from local index.json
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --index-file ./storybook-static/index.json \
   --source-dir ./src/components \
   --output-dir ./skills \
@@ -69,7 +69,7 @@ export SKILLGEN_PROVIDER=openai
 export SKILLGEN_MODEL=gpt-4o
 export SKILLGEN_API_KEY=sk-...
 
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --source-dir ./src/components \
   --output-dir ./skills
 ```
@@ -94,13 +94,13 @@ Create `.skillgenrc.json`:
 Then run:
 
 ```bash
-storybook-to-skills-md generate --api-key $OPENAI_API_KEY
+storybook-to-skill-md generate --api-key $OPENAI_API_KEY
 ```
 
 ## CLI Options
 
 ```bash
-storybook-to-skills-md generate [options]
+storybook-to-skill-md generate [options]
 
 Index Source (choose one):
   -u, --storybook-url <url>     Storybook URL
@@ -200,7 +200,7 @@ See the [GitHub Action repository](https://github.com/sergiocarracedo/storybook-
 ## Programmatic Usage
 
 ```typescript
-import { generate, loadConfig } from 'storybook-to-skills-md';
+import { generate, loadConfig } from 'storybook-to-skill-md';
 
 const config = await loadConfig({
   storybookUrl: 'https://your-storybook.com',
@@ -221,7 +221,7 @@ console.log(`Generated ${results.filter(r => r.status === 'generated').length} f
 ### Filter by Pattern
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --include "Components/**" "Patterns/**" \
   --exclude "**/Internal/**" "**/Deprecated/**" \
@@ -233,7 +233,7 @@ storybook-to-skills-md generate \
 ### Custom Prompt
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --prompt-file ./custom-prompt.md \
   --provider anthropic \
@@ -244,7 +244,7 @@ storybook-to-skills-md generate \
 ### Debug Mode
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --verbose \
   --log-prompts ./debug-logs \
