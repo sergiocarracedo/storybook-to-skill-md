@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'packages/cli/**'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -31,8 +32,8 @@ jobs:
   publish:
     name: Publish
     needs: release
-    # Only publish when release-please actually created a new GitHub Release
-    if: ${{ needs.release.outputs.release_created == 'true' }}
+    # Publish when release-please created a release, or when triggered manually
+    if: ${{ needs.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
     uses: ./.github/workflows/publish.yml
     permissions:
       contents: read
