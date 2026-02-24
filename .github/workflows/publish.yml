@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write  # required for npm OIDC Trusted Publishing
 
 jobs:
   publish:
@@ -25,8 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          # Node 24 ships with npm 11.x which supports OIDC Trusted Publishing
-          node-version: '24'
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -38,3 +37,5 @@ jobs:
       - name: Publish CLI to npm
         working-directory: packages/cli
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
