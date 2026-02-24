@@ -1,0 +1,23 @@
+.github/workflows/publish.yml
+  e344febd8b68915b 45-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "495c53af281918b77f814ebb07aa43d2adc62415",
+  "prompts": {
+    "e344febd8b68915b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d702dc0e-982d-42ae-a0bd-5b5565c864e2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 4,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
