@@ -43,8 +43,9 @@ jobs:
 
       - name: Publish CLI to npm
         working-directory: packages/cli
-        run: npm publish
-        env:
-          # Clear the GITHUB_TOKEN that setup-node injects via registry-url,
-          # so npm uses OIDC Trusted Publishing instead.
-          NODE_AUTH_TOKEN: ""
+        run: |
+          # Unset NODE_AUTH_TOKEN so npm uses OIDC Trusted Publishing.
+          # setup-node injects it with GITHUB_TOKEN via registry-url, which
+          # conflicts with the OIDC exchange (empty string != unset).
+          unset NODE_AUTH_TOKEN
+          npm publish
