@@ -1,0 +1,23 @@
+packages/cli/README.md
+  22ce60d2fa2e50fc 1-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "1e0b4e4045252c5ade338e5ca574ad4d1383a8f6",
+  "prompts": {
+    "22ce60d2fa2e50fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22c565b8-6d72-4acd-a29a-e5b6e671e2fd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 98,
+      "total_deletions": 0,
+      "accepted_lines": 98,
+      "overriden_lines": 0
+    }
+  }
+}
