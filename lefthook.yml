@@ -3,8 +3,14 @@
 
 pre-commit:
   parallel: true
-  
+
   commands:
+    # Format check - prevent committing unformatted files
+    fmt:
+      glob: "packages/cli/**/*.{ts,tsx,js,jsx,md,json}"
+      run: pnpm --filter storybook-to-skill-md fmt:check
+      tags: quality
+
     # Secret scanning - prevent committing secrets (optional if gitleaks not installed)
     secrets:
       run: pnpm secrets:protect

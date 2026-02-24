@@ -22,28 +22,28 @@ storybook-to-skill-md generate [options]
 
 ### Options
 
-| Option | Description |
-|---|---|
-| `-u, --storybook-url <url>` | Storybook URL (e.g. `https://ds.example.com`) |
-| `--index-file <path>` | Path to local `index.json` file (alternative to `--storybook-url`) |
-| `-s, --source-dir <dir>` | Source directory containing components (default: `./src`) |
-| `-o, --output-dir <dir>` | Output directory for SKILL.md files (default: `./skills`) |
-| `-p, --provider <provider>` | LLM provider (`openai`, `anthropic`, `google`) |
-| `-m, --model <model>` | LLM model name |
-| `-k, --api-key <key>` | API key for the LLM provider |
-| `-i, --include <patterns...>` | Glob patterns to include (matched against title) |
-| `-e, --exclude <patterns...>` | Glob patterns to exclude (matched against title) |
-| `-c, --concurrency <number>` | Number of concurrent LLM requests (default: `3`) |
-| `--server-only` | Extract metadata from Storybook server only (no local source files) |
-| `--config <path>` | Path to config file |
-| `-v, --verbose` | Enable verbose logging |
-| `--dry-run` | Show what would be generated without making changes |
-| `--force` | Regenerate all files even if unchanged |
-| `--prompt-file <path>` | Path to custom system prompt file |
-| `--log-prompts <path>` | Save prompts and extracted data to directory for debugging |
-| `--timeout <ms>` | Timeout for LLM calls in milliseconds (default: `60000`) |
-| `--retries <number>` | Number of retries for failed LLM calls (default: `2`) |
-| `--fetch-retries <number>` | Number of retries for fetching Storybook index (default: `3`) |
+| Option                              | Description                                                         |
+| ----------------------------------- | ------------------------------------------------------------------- |
+| `-u, --storybook-url <url>`         | Storybook URL (e.g. `https://ds.example.com`)                       |
+| `--index-file <path>`               | Path to local `index.json` file (alternative to `--storybook-url`)  |
+| `-s, --source-dir <dir>`            | Source directory containing components (default: `./src`)           |
+| `-o, --output-dir <dir>`            | Output directory for SKILL.md files (default: `./skills`)           |
+| `-p, --provider <provider>`         | LLM provider (`openai`, `anthropic`, `google`)                      |
+| `-m, --model <model>`               | LLM model name                                                      |
+| `-k, --api-key <key>`               | API key for the LLM provider                                        |
+| `-i, --include <patterns...>`       | Glob patterns to include (matched against title)                    |
+| `-e, --exclude <patterns...>`       | Glob patterns to exclude (matched against title)                    |
+| `-c, --concurrency <number>`        | Number of concurrent LLM requests (default: `3`)                    |
+| `--server-only`                     | Extract metadata from Storybook server only (no local source files) |
+| `--config <path>`                   | Path to config file                                                 |
+| `-v, --verbose`                     | Enable verbose logging                                              |
+| `--dry-run`                         | Show what would be generated without making changes                 |
+| `--force`                           | Regenerate all files even if unchanged                              |
+| `--prompt-file <path>`              | Path to custom system prompt file                                   |
+| `--log-prompts <path>`              | Save prompts and extracted data to directory for debugging          |
+| `--timeout <ms>`                    | Timeout for LLM calls in milliseconds (default: `60000`)            |
+| `--retries <number>`                | Number of retries for failed LLM calls (default: `2`)               |
+| `--fetch-retries <number>`          | Number of retries for fetching Storybook index (default: `3`)       |
 | `--extraction-concurrency <number>` | Number of concurrent extractions in server-only mode (default: `3`) |
 
 ### Extraction modes

@@ -18,12 +18,39 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
+      release_created: ${{ steps.release.outputs.release_created || steps.release-after-merge.outputs.release_created }}
 
     steps:
       - name: Run release-please
         uses: googleapis/release-please-action@v4
         id: release
+        with:
+          release-type: node
+          path: packages/cli
+
+      # When release-please creates a PR (but no release yet), auto-merge it
+      # and re-run release-please to create the actual release.
+      # This is needed because GITHUB_TOKEN events don't trigger other workflows,
+      # so a separate auto-merge workflow cannot be triggered by release-please PRs.
+      - name: Auto-merge release PR
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=$(echo '${{ steps.release.outputs.prs }}' | jq -r '.[0].number')
+          echo "Merging release PR #${PR_NUMBER}"
+          gh pr merge "$PR_NUMBER" --squash --repo "${{ github.repository }}"
+
+      - name: Checkout updated main
+        if: steps.release.outputs.prs_created == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Create release after merge
+        if: steps.release.outputs.prs_created == 'true'
+        uses: googleapis/release-please-action@v4
+        id: release-after-merge
         with:
           release-type: node
           path: packages/cli
