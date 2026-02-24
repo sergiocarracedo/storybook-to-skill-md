@@ -1,0 +1,132 @@
+---
+// Hero background shader using shaders.com components
+---
+
+<canvas
+  id="hero-shader-canvas"
+  aria-hidden="true"
+  style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;"
+></canvas>
+
+<script>
+  import { shaderRenderer, createUniformsMap } from 'shaders/core'
+  import { vec4 } from 'three/tsl'
+  import LinearGradient from 'shaders/core/LinearGradient'
+  import Blob from 'shaders/core/Blob'
+  import DotGrid from 'shaders/core/DotGrid'
+  import Liquify from 'shaders/core/Liquify'
+  import FilmGrain from 'shaders/core/FilmGrain'
+
+  async function initShader() {
+    const canvas = document.getElementById('hero-shader-canvas') as HTMLCanvasElement
+    if (!canvas) { console.error('[HeroShader] canvas not found'); return }
+
+    const renderer = shaderRenderer()
+    await renderer.initialize({ canvas, colorSpace: 'p3-linear' })
+
+    // Note: node IDs must use underscores — hyphens become invalid GLSL uniform names
+    const rootId = 'hero_root'
+    renderer.registerNode(
+      rootId,
+      ({ childNode }: { childNode: any }) => childNode || vec4(0, 0, 0, 0),
+      null,
+      null,
+      {}
+    )
+
+    // LinearGradient — base layer (dark purples/blues)
+    const lgId = 'hero_lg'
+    const lgUniforms = createUniformsMap(
+      LinearGradient,
+      {
+        colorA: '#2d0045',
+        colorB: '#0a006b',
+        colorSpace: 'oklch',
+        edges: 'mirror',
+        start: { x: 0.23, y: 0.7 },
+        end: { x: 0.67, y: 0.28 },
+      },
+      lgId
+    )
+    renderer.registerNode(
+      lgId,
+      LinearGradient.fragmentNode,
+      rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 0 },
+      lgUniforms,
+      LinearGradient
+    )
+
+    // Blob — animated color blobs (dark purple/magenta)
+    const blobId = 'hero_blob'
+    const blobUniforms = createUniformsMap(
+      Blob,
+      {
+        colorA: '#4a1a9e',
+        colorB: '#7a0488',
+        colorSpace: 'oklch',
+        deformation: 0.9,
+        size: 1,
+        softness: 2,
+        speed: 1,
+      },
+      blobId
+    )
+    renderer.registerNode(
+      blobId,
+      Blob.fragmentNode,
+      rootId,
+      { blendMode: 'normal-oklch', visible: true, renderOrder: 1 },
+      blobUniforms,
+      Blob
+    )
+
+    // DotGrid — subtle dot texture overlay
+    const dotId = 'hero_dotgrid'
+    const dotUniforms = createUniformsMap(
+      DotGrid,
+      { density: 40, dotSize: 0.05 },
+      dotId
+    )
+    renderer.registerNode(
+      dotId,
+      DotGrid.fragmentNode,
+      rootId,
+      { blendMode: 'linearDodge', visible: true, renderOrder: 2 },
+      dotUniforms,
+      DotGrid
+    )
+
+    // Liquify — warping distortion
+    const liquifyId = 'hero_liquify'
+    const liquifyUniforms = createUniformsMap(
+      Liquify,
+      { decay: 1, edges: 'mirror', intensity: 2, radius: 2 },
+      liquifyId
+    )
+    renderer.registerNode(
+      liquifyId,
+      Liquify.fragmentNode,
+      rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 3 },
+      liquifyUniforms,
+      Liquify
+    )
+
+    // FilmGrain — subtle noise
+    const grainId = 'hero_grain'
+    const grainUniforms = createUniformsMap(FilmGrain, { strength: 0.09 }, grainId)
+    renderer.registerNode(
+      grainId,
+      FilmGrain.fragmentNode,
+      rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 4 },
+      grainUniforms,
+      FilmGrain
+    )
+
+    renderer.startAnimation()
+  }
+
+  initShader().catch(err => console.error('[HeroShader] init failed:', err))
+</script>
