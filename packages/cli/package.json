@@ -1,6 +1,6 @@
 {
   "name": "storybook-to-skill-md",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI tool that reads Storybook projects and generates SKILL.md files for AI agents using LLMs",
   "keywords": [
     "agent",
