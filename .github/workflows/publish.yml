@@ -42,7 +42,8 @@ jobs:
         run: pnpm --filter "storybook-to-skills-md" build
 
       - name: Publish CLI to npm
-        # Uses Trusted Publishing (OIDC provenance) — no NODE_AUTH_TOKEN needed.
-        # Requires the npm package to have GitHub Actions configured as a
-        # trusted publisher on npmjs.com.
-        run: pnpm --filter "storybook-to-skills-md" publish --no-git-checks --access public
+        # pnpm does not perform the npm OIDC token exchange required for
+        # Trusted Publishing. Use `npm publish` directly so the npm CLI
+        # handles the OIDC handshake. --provenance activates the flow.
+        working-directory: packages/cli
+        run: npm publish --access public --provenance
