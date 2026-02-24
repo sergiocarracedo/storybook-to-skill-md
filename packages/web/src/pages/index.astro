@@ -4,6 +4,7 @@ import CodeBlock from '../components/CodeBlock.astro'
 import PackageManagerTabs from '../components/PackageManagerTabs.astro'
 import HeroShader from '../components/HeroShader.astro'
 import ActionShader from '../components/ActionShader.astro'
+import Logo from '../components/Logo.astro'
 import '../styles/custom.css'
 
 const packageName = 'storybook-to-skills-md'
@@ -38,7 +39,7 @@ const basePath = import.meta.env.BASE_URL
         class="container mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center gap-2">
-          <img src={`${basePath}/logo.svg`} alt="Logo" class="w-8 h-8" />
+          <Logo class="w-12 h-12" />
           <span class="font-bold text-xl">Storybook to SKILL.md</span>
         </div>
         <div class="flex items-center gap-6">
@@ -58,6 +59,9 @@ const basePath = import.meta.env.BASE_URL
     <section class="relative py-20 overflow-hidden" style="background:#1a0535">
       <HeroShader />
       <div class="relative z-10 container mx-auto px-4 text-center">
+        <div class="flex justify-center mb-6">
+          <Logo color="white" class="w-20 h-20" />
+        </div>
         <div class="mb-4 flex justify-center gap-3">
           <a
             href="https://github.com/sergiocarracedo/storybook-to-skill-md"
