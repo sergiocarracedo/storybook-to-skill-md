@@ -27,7 +27,6 @@ jobs:
         with:
           # Node 24 ships with npm 11.x which supports OIDC Trusted Publishing
           node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
       - name: Install dependencies
