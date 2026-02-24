@@ -1,0 +1,23 @@
+packages/web/src/pages/index.astro
+  e344febd8b68915b 42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "55fb6a5107bc6f51ec2e7aff1282cf75c07e806b",
+  "prompts": {
+    "e344febd8b68915b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d702dc0e-982d-42ae-a0bd-5b5565c864e2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
