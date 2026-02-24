@@ -27,7 +27,6 @@ jobs:
         with:
           release-type: node
           path: packages/cli
-          merge: true
 
   publish:
     name: Publish
