@@ -6,8 +6,7 @@ on:
   # chain via workflow_call instead of relying on the 'release: published' event.)
   workflow_call:
 
-  # Keep workflow_dispatch so it can be triggered manually from the GitHub UI
-  # when needed (e.g. to re-publish after a failed run).
+  # Allows manual re-publish from the GitHub Actions UI when needed.
   workflow_dispatch:
 
 jobs:
@@ -17,7 +16,7 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # required for npm provenance signing
 
     steps:
       - name: Checkout code
@@ -32,9 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          # Do NOT set registry-url here: setup-node would create an .npmrc
-          # that sets NODE_AUTH_TOKEN (GITHUB_TOKEN), which npm then uses
-          # instead of the OIDC token exchange required for Trusted Publishing.
+          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -44,9 +41,9 @@ jobs:
         run: pnpm --filter "storybook-to-skills-md" build
 
       - name: Publish CLI to npm
-        # Uses npm Trusted Publishing (OIDC) — no NODE_AUTH_TOKEN needed.
-        # npm CLI automatically exchanges the GitHub Actions OIDC token for a
-        # temporary npm publish token when id-token: write is granted and the
-        # package has GitHub Actions configured as a Trusted Publisher on npmjs.com.
         working-directory: packages/cli
-        run: npm publish --registry https://registry.npmjs.org --access public --provenance
+        run: npm publish --access public --provenance
+        env:
+          # Create a Granular Access Token on npmjs.com (Packages → Publish)
+          # and store it as NPM_TOKEN in the repository secrets.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
