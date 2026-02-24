@@ -32,7 +32,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          # Do NOT set registry-url here: setup-node would create an .npmrc
+          # that sets NODE_AUTH_TOKEN (GITHUB_TOKEN), which npm then uses
+          # instead of the OIDC token exchange required for Trusted Publishing.
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -42,8 +44,9 @@ jobs:
         run: pnpm --filter "storybook-to-skills-md" build
 
       - name: Publish CLI to npm
-        # pnpm does not perform the npm OIDC token exchange required for
-        # Trusted Publishing. Use `npm publish` directly so the npm CLI
-        # handles the OIDC handshake. --provenance activates the flow.
+        # Uses npm Trusted Publishing (OIDC) — no NODE_AUTH_TOKEN needed.
+        # npm CLI automatically exchanges the GitHub Actions OIDC token for a
+        # temporary npm publish token when id-token: write is granted and the
+        # package has GitHub Actions configured as a Trusted Publisher on npmjs.com.
         working-directory: packages/cli
-        run: npm publish --access public --provenance
+        run: npm publish --registry https://registry.npmjs.org --access public --provenance
