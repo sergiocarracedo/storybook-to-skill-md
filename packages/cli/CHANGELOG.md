@@ -2,17 +2,15 @@
 
 ## [1.0.4](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.3...v1.0.4) (2026-02-24)
 
-
 ### Bug Fixes
 
-* fix README formatting, auto-merge release in single workflow run ([6895119](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/68951199ca4f70e1e8f94267b00aff5f61308fd9))
+- fix README formatting, auto-merge release in single workflow run ([6895119](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/68951199ca4f70e1e8f94267b00aff5f61308fd9))
 
 ## [1.0.3](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.2...v1.0.3) (2026-02-24)
 
-
 ### Bug Fixes
 
-* add missing README.md to published npm package ([1e0b4e4](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/1e0b4e4045252c5ade338e5ca574ad4d1383a8f6))
+- add missing README.md to published npm package ([1e0b4e4](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/1e0b4e4045252c5ade338e5ca574ad4d1383a8f6))
 
 ## [1.0.2](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.1...v1.0.2) (2026-02-24)
 
