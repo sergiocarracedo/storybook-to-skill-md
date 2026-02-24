@@ -1,0 +1,25 @@
+.github/workflows/release.yml
+  22ce60d2fa2e50fc 21,31-53
+lefthook.yml
+  22ce60d2fa2e50fc 6,8-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "3a8854f589886596eeeb1d7172fe39b12b837bfb",
+  "prompts": {
+    "22ce60d2fa2e50fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22c565b8-6d72-4acd-a29a-e5b6e671e2fd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 35,
+      "total_deletions": 2,
+      "accepted_lines": 35,
+      "overriden_lines": 0
+    }
+  }
+}
