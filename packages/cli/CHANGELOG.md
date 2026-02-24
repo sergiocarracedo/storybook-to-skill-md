@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.1...v1.0.2) (2026-02-24)
+
+### Bug Fixes
+
+- fix CI publish workflow to use npm publish for OIDC Trusted Publishing ([495c53a](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/495c53a))
+- chain release→publish via workflow_call to bypass GITHUB_TOKEN trigger block ([5014790](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/5014790))
+
 ## [1.0.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.0...v1.0.1) (2026-02-23)
 
 ### Bug Fixes
