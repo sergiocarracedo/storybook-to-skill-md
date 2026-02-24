@@ -25,6 +25,8 @@
     await renderer.initialize({ canvas, colorSpace: 'p3-linear' })
 
     // Note: node IDs must use underscores — hyphens become invalid GLSL uniform names
+    // Note: ALL props must be passed explicitly — createUniformsMap calls transform(undefined)
+    //       before falling back to defaults, which throws for color/angle/position transforms
     const rootId = 'hero_root'
     renderer.registerNode(
       rootId,
@@ -34,7 +36,7 @@
       {}
     )
 
-    // LinearGradient — base layer (dark purples/blues)
+    // LinearGradient — dark purple-to-indigo base layer
     const lgId = 'hero_lg'
     const lgUniforms = createUniformsMap(
       LinearGradient,
@@ -45,6 +47,7 @@
         edges: 'mirror',
         start: { x: 0.23, y: 0.7 },
         end: { x: 0.67, y: 0.28 },
+        angle: 0,
       },
       lgId
     )
@@ -57,7 +60,7 @@
       LinearGradient
     )
 
-    // Blob — animated color blobs (dark purple/magenta)
+    // Blob — animated dark purple/magenta blobs
     const blobId = 'hero_blob'
     const blobUniforms = createUniformsMap(
       Blob,
@@ -65,10 +68,17 @@
         colorA: '#4a1a9e',
         colorB: '#7a0488',
         colorSpace: 'oklch',
-        deformation: 0.9,
         size: 1,
+        deformation: 0.9,
         softness: 2,
         speed: 1,
+        highlightIntensity: 0.3,
+        highlightX: 0.3,
+        highlightY: -0.3,
+        highlightZ: 0.4,
+        highlightColor: '#9333ea',
+        seed: 1,
+        center: { x: 0.5, y: 0.5 },
       },
       blobId
     )
@@ -85,7 +95,7 @@
     const dotId = 'hero_dotgrid'
     const dotUniforms = createUniformsMap(
       DotGrid,
-      { density: 40, dotSize: 0.05 },
+      { color: '#ffffff', density: 40, dotSize: 0.05, twinkle: 0 },
       dotId
     )
     renderer.registerNode(
@@ -97,11 +107,11 @@
       DotGrid
     )
 
-    // Liquify — warping distortion
+    // Liquify — warping distortion (edges must be explicit — compileTime prop)
     const liquifyId = 'hero_liquify'
     const liquifyUniforms = createUniformsMap(
       Liquify,
-      { decay: 1, edges: 'mirror', intensity: 2, radius: 2 },
+      { intensity: 2, decay: 1, radius: 2, edges: 'mirror' },
       liquifyId
     )
     renderer.registerNode(
@@ -126,6 +136,7 @@
     )
 
     renderer.startAnimation()
+    console.log('[HeroShader] animation started')
   }
 
   initShader().catch(err => console.error('[HeroShader] init failed:', err))

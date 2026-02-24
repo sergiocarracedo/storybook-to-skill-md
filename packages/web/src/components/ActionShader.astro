@@ -1,0 +1,109 @@
+---
+// Background shader for the GitHub Action section
+---
+
+<canvas
+  id="action-shader-canvas"
+  aria-hidden="true"
+  style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;"
+></canvas>
+
+<script>
+  import { shaderRenderer, createUniformsMap } from 'shaders/core'
+  import { vec4 } from 'three/tsl'
+  import LinearGradient from 'shaders/core/LinearGradient'
+  import Blob from 'shaders/core/Blob'
+  import DotGrid from 'shaders/core/DotGrid'
+  import Liquify from 'shaders/core/Liquify'
+  import FilmGrain from 'shaders/core/FilmGrain'
+
+  async function initShader() {
+    const canvas = document.getElementById('action-shader-canvas') as HTMLCanvasElement
+    if (!canvas) return
+
+    const renderer = shaderRenderer()
+    await renderer.initialize({ canvas, colorSpace: 'p3-linear' })
+
+    const rootId = 'action_root'
+    renderer.registerNode(
+      rootId,
+      ({ childNode }: { childNode: any }) => childNode || vec4(0, 0, 0, 0),
+      null,
+      null,
+      {}
+    )
+
+    // LinearGradient — very dark base (darker than hero)
+    const lgId = 'action_lg'
+    const lgUniforms = createUniformsMap(
+      LinearGradient,
+      {
+        colorA: '#150022',
+        colorB: '#06003a',
+        colorSpace: 'oklch',
+        edges: 'mirror',
+        start: { x: 0.23, y: 0.7 },
+        end: { x: 0.67, y: 0.28 },
+        angle: 0,
+      },
+      lgId
+    )
+    renderer.registerNode(lgId, LinearGradient.fragmentNode, rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 0 }, lgUniforms, LinearGradient)
+
+    // Blob — very dark purple/magenta
+    const blobId = 'action_blob'
+    const blobUniforms = createUniformsMap(
+      Blob,
+      {
+        colorA: '#2a0a60',
+        colorB: '#4a025c',
+        colorSpace: 'oklch',
+        size: 1,
+        deformation: 0.9,
+        softness: 2,
+        speed: 1,
+        highlightIntensity: 0.2,
+        highlightX: 0.3,
+        highlightY: -0.3,
+        highlightZ: 0.4,
+        highlightColor: '#6b21a8',
+        seed: 42,
+        center: { x: 0.5, y: 0.5 },
+      },
+      blobId
+    )
+    renderer.registerNode(blobId, Blob.fragmentNode, rootId,
+      { blendMode: 'normal-oklch', visible: true, renderOrder: 1 }, blobUniforms, Blob)
+
+    // DotGrid — subtle dots
+    const dotId = 'action_dotgrid'
+    const dotUniforms = createUniformsMap(
+      DotGrid,
+      { color: '#ffffff', density: 40, dotSize: 0.05, twinkle: 0 },
+      dotId
+    )
+    renderer.registerNode(dotId, DotGrid.fragmentNode, rootId,
+      { blendMode: 'linearDodge', visible: true, renderOrder: 2 }, dotUniforms, DotGrid)
+
+    // Liquify — warping
+    const liquifyId = 'action_liquify'
+    const liquifyUniforms = createUniformsMap(
+      Liquify,
+      { intensity: 2, decay: 1, radius: 2, edges: 'mirror' },
+      liquifyId
+    )
+    renderer.registerNode(liquifyId, Liquify.fragmentNode, rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 3 }, liquifyUniforms, Liquify)
+
+    // FilmGrain
+    const grainId = 'action_grain'
+    const grainUniforms = createUniformsMap(FilmGrain, { strength: 0.09 }, grainId)
+    renderer.registerNode(grainId, FilmGrain.fragmentNode, rootId,
+      { blendMode: 'normal', visible: true, renderOrder: 4 }, grainUniforms, FilmGrain)
+
+    renderer.startAnimation()
+  }
+
+  initShader().catch(err => console.error('[ActionShader] init failed:', err))
+</script>
