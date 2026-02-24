@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.3...v1.0.4) (2026-02-24)
+
+
+### Bug Fixes
+
+* fix README formatting, auto-merge release in single workflow run ([6895119](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/68951199ca4f70e1e8f94267b00aff5f61308fd9))
+
 ## [1.0.3](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.2...v1.0.3) (2026-02-24)
 
 
