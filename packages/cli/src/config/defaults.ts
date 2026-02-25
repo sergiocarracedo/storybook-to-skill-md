@@ -23,6 +23,5 @@ export const CONFIG_FILE_NAMES = [
   '.skillgenrc.json',
   '.skillgenrc.yaml',
   '.skillgenrc.yml',
-  '.skillgenrc.toml',
   '.skillgenrc',
 ];
