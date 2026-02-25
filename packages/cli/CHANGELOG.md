@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.3...v1.2.4) (2026-02-25)
+
+
+### Bug Fixes
+
+* **cli:** resolve config paths relative to config file and show cached metadata on skip ([d53ef65](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/d53ef655619830c04e45d797bf67d76371da6e30))
+
 ## [1.2.3](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.2...v1.2.3) (2026-02-25)
 
 
