@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sergiocarracedo/storybook-to-skill-md/main/packages/web/src/assets/logo.svg" alt="storybook-to-skill-md" width="100" />
+</p>
+
 # storybook-to-skill-md
 
 CLI tool that reads Storybook projects and generates `SKILL.md` files for AI agents using LLMs.

@@ -4,6 +4,7 @@ description: Generate AI-friendly SKILL.md files from your Storybook components
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import PackageManagerTabs from '../../components/PackageManagerTabs.astro'
 
 ## What is Storybook to SKILL.md?
 
@@ -36,9 +37,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 Install the CLI globally:
 
-```bash
-npm install -g storybook-to-skills-md
-```
+<PackageManagerTabs command="{pm} install -g storybook-to-skills-md" />
 
 Generate SKILL.md files from your Storybook:
 
