@@ -1,0 +1,25 @@
+packages/web/src/components/PackageManagerTabs.astro
+  cd7d46e5ed36b741 22
+packages/web/src/components/CodeBlock.astro
+  cd7d46e5ed36b741 18,53-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "931002695f289c0774a378e925a7d804e0871b1e",
+  "prompts": {
+    "cd7d46e5ed36b741": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3a7efb3c-057c-471a-8f8e-503142c33c12",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 21,
+      "total_deletions": 2,
+      "accepted_lines": 21,
+      "overriden_lines": 0
+    }
+  }
+}
