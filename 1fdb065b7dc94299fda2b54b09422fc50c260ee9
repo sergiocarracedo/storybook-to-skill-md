@@ -1,0 +1,23 @@
+packages/cli/src/generation/orchestrator.ts
+  afbbb2df76531987 4,250-253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "1fdb065b7dc94299fda2b54b09422fc50c260ee9",
+  "prompts": {
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 1,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
