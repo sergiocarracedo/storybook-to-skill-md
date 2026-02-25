@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.0...v1.2.1) (2026-02-25)
+
+
+### Bug Fixes
+
+* **cli:** remove .skillgenrc.toml from search places (no loader in cosmiconfig v9) ([451f430](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/451f430efae925a4a3379c94b7ee3c57bd3ec705))
+* **web:** add not-content class to PackageManagerTabs to prevent Starlight style overrides ([451f430](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/451f430efae925a4a3379c94b7ee3c57bd3ec705))
+
 ## [1.2.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.1.1...v1.2.0) (2026-02-25)
 
 
