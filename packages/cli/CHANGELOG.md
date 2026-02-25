@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.1.1...v1.2.0) (2026-02-25)
+
+
+### Features
+
+* generate deterministic index SKILL.md with optional custom template ([43f3e4e](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/43f3e4e22bbc83bdb8217c46b2a49f36288d6a08))
+
 ## [1.1.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.1.0...v1.1.1) (2026-02-25)
 
 
