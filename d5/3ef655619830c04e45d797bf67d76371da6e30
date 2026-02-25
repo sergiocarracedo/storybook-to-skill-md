@@ -1,0 +1,29 @@
+packages/cli/src/generation/orchestrator.ts
+  0f8ab3626a5e54d7 14,275-276,283
+packages/cli/src/config/loader.ts
+  0f8ab3626a5e54d7 4,119-148,157-160,168-169,173,175
+packages/cli/src/types.ts
+  0f8ab3626a5e54d7 187
+packages/cli/src/index.ts
+  0f8ab3626a5e54d7 19,100-110,112-113,115-126,128-129,131,376-386,388-389,391-398,400-401,404-405,407
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "d53ef655619830c04e45d797bf67d76371da6e30",
+  "prompts": {
+    "0f8ab3626a5e54d7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_3690488d0ffePliyxfkDsXCz8P",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 104,
+      "total_deletions": 41,
+      "accepted_lines": 103,
+      "overriden_lines": 0
+    }
+  }
+}
