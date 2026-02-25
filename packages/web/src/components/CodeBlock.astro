@@ -15,7 +15,7 @@ const themeClasses =
 
 <div class={`relative group ${className}`}>
   <pre
-    class={`${themeClasses} p-4 rounded-lg text-sm overflow-x-auto pr-12 text-left`}
+    class={`${themeClasses} p-4 rounded-lg text-sm overflow-x-auto pr-12 text-left dark-scrollbar`}
     id={id}><code>{code}</code></pre>
   <button
     class="absolute top-2 right-2 p-2 rounded bg-gray-700 hover:bg-gray-600 text-white opacity-0 group-hover:opacity-100 transition-opacity"
@@ -49,6 +49,25 @@ const themeClasses =
     </svg>
   </button>
 </div>
+
+<style>
+  .dark-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+  .dark-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+  .dark-scrollbar {
+    scrollbar-color: #4b5563 transparent;
+  }
+</style>
 
 <script>
   document.addEventListener('click', async (e) => {

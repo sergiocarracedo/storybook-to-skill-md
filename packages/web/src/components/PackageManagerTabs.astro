@@ -19,7 +19,7 @@ const activeTabClass = "flex items-center gap-2 px-4 py-3 text-sm font-medium te
 const inactiveTabClass = "flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 border-b-2 border-transparent transition-colors"
 ---
 
-<div class={`rounded-lg overflow-hidden bg-[#1e1e20] border border-gray-800 ${className}`} data-tabs-container={id}>
+<div class={`rounded-lg overflow-hidden bg-[#1e1e20] border border-gray-800 max-w-full ${className}`} data-tabs-container={id}>
   <div class="flex items-center bg-[#252529] px-2 border-b border-gray-800 overflow-x-auto hide-scrollbar">
     <button
       class={activeTabClass}
