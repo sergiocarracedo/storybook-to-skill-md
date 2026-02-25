@@ -1,0 +1,77 @@
+packages/cli/src/generation/orchestrator.ts
+  afbbb2df76531987 252,254-256,260
+  067ae431612c398f 7,23
+  0f8ab3626a5e54d7 8,253,257
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "5b0c9413ac75cf860c40d3f97a610b3b17e72723",
+  "prompts": {
+    "067ae431612c398f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_3690f2e0affe6hS6zeHCjaEK3P-986e5bf9-9482-4713-b13e-317983c5b20b",
+        "model": "unknown"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "0f8ab3626a5e54d7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_3690488d0ffePliyxfkDsXCz8P",
+        "model": "opencode/minimax-m2.5-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "4372f2e21cf3c604": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_3690f2e0affe6hS6zeHCjaEK3P-9397f7f9-fbb4-4741-a02a-eae0846932bb",
+        "model": "unknown"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 8,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    },
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 2,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "f9c40b4a3dca5e6d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_3690f2e0affe6hS6zeHCjaEK3P-737e55a4-8352-4e2a-9efb-128e837b9b29",
+        "model": "unknown"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
