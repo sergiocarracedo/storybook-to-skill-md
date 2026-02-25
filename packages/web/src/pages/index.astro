@@ -23,7 +23,7 @@ const basePath = import.meta.env.BASE_URL
     />
     <ViewTransitions />
   </head>
-  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-x-hidden">
     <!-- Shared SVG gradient for icons (position:absolute avoids display:none breaking cross-SVG url() refs) -->
     <svg
       style="position:absolute;width:0;height:0;overflow:hidden;"
@@ -185,7 +185,7 @@ const basePath = import.meta.env.BASE_URL
 
         <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <!-- Step 1 -->
-          <div class="text-center">
+          <div class="text-center min-w-0">
             <div
               class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -202,7 +202,7 @@ const basePath = import.meta.env.BASE_URL
           </div>
 
           <!-- Step 2 -->
-          <div class="text-center">
+          <div class="text-center min-w-0">
             <div
               class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -224,7 +224,7 @@ const basePath = import.meta.env.BASE_URL
           </div>
 
           <!-- Step 3 -->
-          <div class="text-center">
+          <div class="text-center min-w-0">
             <div
               class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
             >
