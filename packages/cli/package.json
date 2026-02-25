@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/sergiocarracedo/storybook-to-skill-md/issues"
   },
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "author": "Sergio Carracedo <hi@sergiocarracedo.es>",
   "repository": {
     "type": "git",

@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "Sergio Carracedo <hi@sergiocarracedo.es>",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
