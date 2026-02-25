@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.1...v1.2.2) (2026-02-25)
+
+
+### Bug Fixes
+
+* **cli:** store file paths in .skill-meta.json relative to outputDir ([1fdb065](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/1fdb065b7dc94299fda2b54b09422fc50c260ee9))
+
 ## [1.2.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.0...v1.2.1) (2026-02-25)
 
 
