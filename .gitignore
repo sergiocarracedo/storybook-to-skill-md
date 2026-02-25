@@ -38,5 +38,6 @@ pnpm-debug.log*
 package-lock.json
 yarn.lock
 
-# plans
+# Plans (Prometheus planning tool)
 plans/
+.sisyphus/

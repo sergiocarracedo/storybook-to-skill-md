@@ -4,6 +4,8 @@ import type { LanguageModelV1 } from 'ai';
 import path from 'node:path';
 import pLimit from 'p-limit';
 
+// Import version from package.json
+import packageJson from '../../package.json' with { type: 'json' };
 import {
   createSkillMeta,
   hashContents,
@@ -18,7 +20,7 @@ import { generateSkillMd } from './generator.js';
 import { createModel } from './model-factory.js';
 import { buildPrompt, buildSubcomponentsPrompt } from './prompt-builder.js';
 
-const TOOL_VERSION = '0.1.0';
+const TOOL_VERSION = packageJson.version;
 
 /**
  * Parse reference files from the generated content
@@ -247,10 +249,15 @@ export async function generateComponentSkill(
         ...component.sourceFiles,
         ...component.documentation.map((d) => d.filePath),
       ];
-      const resolvedOutputDir = path.resolve(config.outputDir);
+      // Use the index-file's directory as the base for relative paths so that
+      // cache keys are stable and portable. Fall back to sourceDir when running
+      // against a remote Storybook URL (no local index file).
+      const relativeBase = config.indexFile
+        ? path.dirname(path.resolve(config.indexFile))
+        : path.resolve(config.sourceDir);
       const absoluteHashes = hashFiles(allFiles);
       fileHashes = Object.fromEntries(
-        Object.entries(absoluteHashes).map(([k, v]) => [path.relative(resolvedOutputDir, k), v]),
+        Object.entries(absoluteHashes).map(([k, v]) => [path.relative(relativeBase, k), v]),
       );
     }
 
