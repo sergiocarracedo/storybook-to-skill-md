@@ -1,0 +1,25 @@
+packages/cli/package.json
+  2f32a31c70f8b08d 18
+package.json
+  2f32a31c70f8b08d 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "4e4cf392ff3f8ade3a2f06863f4fa570f9f11c36",
+  "prompts": {
+    "2f32a31c70f8b08d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b863ff01-6bd2-4beb-8600-effa4a0b3e83",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
