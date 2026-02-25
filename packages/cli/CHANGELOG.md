@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.2...v1.2.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* **cli:** use sourceDir as fallback for relative paths and read version from package.json ([5b0c941](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/5b0c9413ac75cf860c40d3f97a610b3b17e72723))
+
 ## [1.2.2](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.1...v1.2.2) (2026-02-25)
 
 
