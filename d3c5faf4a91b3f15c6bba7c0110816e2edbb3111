@@ -1,0 +1,29 @@
+packages/web/src/content/docs/getting-started/installation.mdx
+  afbbb2df76531987 13-16
+packages/web/src/pages/index.astro
+  afbbb2df76531987 204-207,488-491
+packages/web/src/content/docs/index.mdx
+  afbbb2df76531987 41-44
+packages/web/src/components/PackageManagerTabs.astro
+  afbbb2df76531987 3-8,12,15,17-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "d3c5faf4a91b3f15c6bba7c0110816e2edbb3111",
+  "prompts": {
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 11,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    }
+  }
+}
