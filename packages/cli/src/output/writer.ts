@@ -60,6 +60,19 @@ export function skillFileExists(outputDir: string, slug: string): boolean {
 }
 
 /**
+ * Write the index SKILL.md file to the output directory
+ */
+export function writeIndexSkill(outputDir: string, content: string): void {
+  const indexDir = path.join(outputDir, '_index');
+
+  if (!fs.existsSync(indexDir)) {
+    fs.mkdirSync(indexDir, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(indexDir, SKILL_FILENAME), content, 'utf-8');
+}
+
+/**
  * Get the path to the SKILL.md file
  */
 export function getSkillFilePath(outputDir: string, slug: string): string {

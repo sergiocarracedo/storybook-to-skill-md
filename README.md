@@ -1,7 +1,7 @@
 # storybook-to-skill-md
 
 [![npm version](https://img.shields.io/npm/v/storybook-to-skill-md.svg)](https://www.npmjs.com/package/storybook-to-skill-md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://opensource.org/license/gpl-3-0)
 
 A CLI tool that reads Storybook projects and generates [SKILL.md](https://agentskills.io) files for AI agents using LLMs.
 
@@ -131,6 +131,8 @@ Other:
   --dry-run                     Show what would be generated
   --force                       Regenerate all files (ignore cache)
   --server-only                 Server-only extraction (no local files)
+  --no-index-skill              Skip generating the index SKILL.md
+  --index-skill-template <path> Custom template file for the index SKILL.md (list is appended)
 ```
 
 ## Supported LLM Providers
@@ -145,6 +147,8 @@ Other:
 
 ```
 skills/
+├── _index/
+│   └── SKILL.md          # Index of all component skills (auto-generated)
 ├── button/
 │   ├── SKILL.md          # AI-friendly component documentation
 │   └── .skill-meta.json  # Metadata for caching

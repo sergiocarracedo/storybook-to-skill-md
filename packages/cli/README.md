@@ -45,6 +45,8 @@ storybook-to-skill-md generate [options]
 | `--retries <number>`                | Number of retries for failed LLM calls (default: `2`)               |
 | `--fetch-retries <number>`          | Number of retries for fetching Storybook index (default: `3`)       |
 | `--extraction-concurrency <number>` | Number of concurrent extractions in server-only mode (default: `3`) |
+| `--no-index-skill`                  | Skip generating the index SKILL.md                                  |
+| `--index-skill-template <path>`     | Custom template file for the index SKILL.md (list is appended)      |
 
 ### Extraction modes
 
@@ -95,4 +97,4 @@ const results = await generate(config);
 
 ## License
 
-MIT
+GPLv3

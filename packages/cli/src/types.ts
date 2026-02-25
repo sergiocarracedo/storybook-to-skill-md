@@ -158,6 +158,8 @@ export interface SkillgenConfig {
   retries: number;
   fetchRetries: number;
   extractionConcurrency: number;
+  indexSkill?: boolean;
+  indexSkillTemplate?: string;
 }
 
 /**

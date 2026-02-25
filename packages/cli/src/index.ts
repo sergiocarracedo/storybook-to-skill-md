@@ -9,6 +9,7 @@ import {
   resolveAllComponentFiles,
 } from './discovery/index.js';
 import { aggregateComponentData, createServerExtractor } from './extraction/index.js';
+import { generateIndexSkill } from './generation/index-skill.js';
 import { generateForComponent } from './generation/orchestrator.js';
 import { printSummary } from './output/index.js';
 import {
@@ -138,6 +139,11 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
         error: errorMessage,
       });
     }
+  }
+
+  // Generate index SKILL.md
+  if (config.indexSkill !== false) {
+    generateIndexSkill(config.outputDir, results, config);
   }
 
   // Build process summary
@@ -402,6 +408,11 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
       }
     }
 
+    // Generate index SKILL.md
+    if (config.indexSkill !== false) {
+      generateIndexSkill(config.outputDir, results, config);
+    }
+
     // Build process summary
     const totalDuration = Date.now() - processStartTime;
     const totalEstimatedTokens = results.reduce((sum, r) => sum + (r.estimatedTokens ?? 0), 0);
@@ -441,4 +452,4 @@ export type {
 export { loadConfig } from './config/index.js';
 export { fetchStorybookIndex, fetchStorybookIndexWithRetry } from './discovery/index.js';
 export { validateSkillMd } from './validation/index.js';
-export { createModel, getDefaultModel } from './generation/index.js';
+export { createModel, getDefaultModel, generateIndexSkill } from './generation/index.js';

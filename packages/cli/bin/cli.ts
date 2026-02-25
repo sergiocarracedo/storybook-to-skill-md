@@ -195,6 +195,8 @@ program
     '--extraction-concurrency <number>',
     'Number of concurrent extractions (server-only mode)',
   )
+  .option('--no-index-skill', 'Skip generating the index SKILL.md')
+  .option('--index-skill-template <path>', 'Path to a custom template file for the index SKILL.md')
   .action(async (options) => {
     try {
       const isServerOnly = options.serverOnly || !options.sourceDir;
@@ -227,6 +229,9 @@ program
         cliConfig.fetchRetries = parseInt(options.fetchRetries, 10);
       if (options.extractionConcurrency !== undefined)
         cliConfig.extractionConcurrency = parseInt(options.extractionConcurrency, 10);
+      if (options.indexSkill === false) cliConfig.indexSkill = false;
+      if (options.indexSkillTemplate !== undefined)
+        cliConfig.indexSkillTemplate = options.indexSkillTemplate;
 
       const { config, configFilePath } = await loadConfig(cliConfig, options.config);
 

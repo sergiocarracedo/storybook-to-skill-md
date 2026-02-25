@@ -144,6 +144,15 @@ storybook-to-skills-md generate [options]
 - **Description:** Extract metadata from Storybook server only (no local source files)
 - **Default:** `false` (uses local files if `--source-dir` provided)
 
+### `--no-index-skill`
+- **Description:** Skip generating the index `SKILL.md` file. By default, an index is generated at `{outputDir}/_index/SKILL.md` listing all processed components with descriptions and links.
+- **Default:** Index generation is enabled
+
+### `--index-skill-template <path>`
+- **Description:** Path to a custom template file used as the header/preamble of the index `SKILL.md`. The component list is always appended after the template content, so the template should contain the frontmatter and any introductory text you want.
+- **Example:** `--index-skill-template ./templates/index-skill.md`
+- **Default:** Built-in template with `name: _index` frontmatter and an overview paragraph
+
 ## Examples
 
 ### Minimal Command

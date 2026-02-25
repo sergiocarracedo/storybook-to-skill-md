@@ -11,6 +11,7 @@ export const DEFAULT_CONFIG: SkillgenConfig = {
   retries: 2,
   fetchRetries: 3,
   extractionConcurrency: 3,
+  indexSkill: true,
 };
 
 export const ENV_PREFIX = 'SKILLGEN_';

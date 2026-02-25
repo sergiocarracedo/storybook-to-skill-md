@@ -29,6 +29,8 @@ Create a `.skillgenrc.json` file in your project root:
   "dryRun": false,
   "force": false,
   "serverOnly": false,
+  "indexSkill": true,
+  "indexSkillTemplate": "./templates/index-skill.md",
   "promptFile": "./prompts/custom.md",
   "logPrompts": "./debug-logs"
 }

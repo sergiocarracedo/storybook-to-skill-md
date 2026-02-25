@@ -23,6 +23,8 @@ export const configSchema = z
     retries: z.number().int().min(0).max(10).default(2),
     fetchRetries: z.number().int().min(1).max(10).default(3),
     extractionConcurrency: z.number().int().min(1).max(10).default(3),
+    indexSkill: z.boolean().default(true),
+    indexSkillTemplate: z.string().optional(),
   })
   .refine((data) => data.storybookUrl || data.indexFile, {
     message: 'Either storybookUrl or indexFile must be provided',
