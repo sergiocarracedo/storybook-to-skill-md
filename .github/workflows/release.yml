@@ -18,7 +18,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created || steps.release-after-merge.outputs.release_created }}
+      release_created: ${{ steps.check-release.outputs.release_created }}
 
     steps:
       - name: Run release-please
@@ -54,6 +54,19 @@ jobs:
         with:
           release-type: node
           path: packages/cli
+
+      - name: Check if release was created
+        id: check-release
+        run: |
+          RELEASED="false"
+          if [ "${{ steps.release.outputs.release_created }}" = "true" ] || \
+             [ "${{ steps.release.outputs.releases_created }}" = "true" ] || \
+             [ "${{ steps.release-after-merge.outputs.release_created }}" = "true" ] || \
+             [ "${{ steps.release-after-merge.outputs.releases_created }}" = "true" ]; then
+            RELEASED="true"
+          fi
+          echo "release_created=${RELEASED}" >> "$GITHUB_OUTPUT"
+          echo "Release created: ${RELEASED}"
 
   publish:
     name: Publish
