@@ -1,18 +1,23 @@
 ---
 interface Props {
-  command: string
+  npm?: string
+  pnpm?: string
+  yarn?: string
+  bun?: string
+  /** @deprecated Use per-PM props instead (npm, pnpm, yarn, bun) */
+  command?: string
   class?: string
 }
 
-const { command, class: className = '' } = Astro.props
+const { npm, pnpm, yarn, bun, command, class: className = '' } = Astro.props
 const id = `tabs-${Math.random().toString(36).substring(2, 11)}`
 
-// Generate commands for each package manager
+// Per-PM commands — explicit props take priority over template fallback
 const commands = {
-  npm: command.replace(/\{pm\}/g, 'npm'),
-  pnpm: command.replace(/\{pm\}/g, 'pnpm'),
-  yarn: command.replace(/\{pm\}/g, 'yarn'),
-  bun: command.replace(/\{pm\}/g, 'bun'),
+  npm: npm ?? command?.replace(/\{pm\}/g, 'npm') ?? '',
+  pnpm: pnpm ?? command?.replace(/\{pm\}/g, 'pnpm') ?? '',
+  yarn: yarn ?? command?.replace(/\{pm\}/g, 'yarn') ?? '',
+  bun: bun ?? command?.replace(/\{pm\}/g, 'bun') ?? '',
 }
 
 const activeTabClass = "flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-200 border-b-2 border-emerald-500 transition-colors"

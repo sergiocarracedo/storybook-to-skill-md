@@ -9,7 +9,12 @@ import PackageManagerTabs from '../../../components/PackageManagerTabs.astro'
 
 Install the CLI globally using your preferred package manager:
 
-<PackageManagerTabs command="{pm} install -g storybook-to-skills-md" />
+<PackageManagerTabs
+  npm="npm install -g storybook-to-skills-md"
+  pnpm="pnpm add -g storybook-to-skills-md"
+  yarn="yarn global add storybook-to-skills-md"
+  bun="bun add -g storybook-to-skills-md"
+/>
 
 ## Prerequisites
 

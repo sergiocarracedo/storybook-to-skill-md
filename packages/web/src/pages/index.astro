@@ -200,7 +200,12 @@ const basePath = import.meta.env.BASE_URL
             <p class="text-gray-600 dark:text-gray-400 mb-4">
               Install the CLI globally using your favorite package manager.
             </p>
-            <PackageManagerTabs command={`{pm} install -g ${packageName}`} />
+            <PackageManagerTabs
+              npm={`npm install -g ${packageName}`}
+              pnpm={`pnpm add -g ${packageName}`}
+              yarn={`yarn global add ${packageName}`}
+              bun={`bun add -g ${packageName}`}
+            />
           </div>
 
           <!-- Step 2 -->
@@ -479,7 +484,12 @@ const basePath = import.meta.env.BASE_URL
         </h2>
 
         <div class="max-w-3xl mx-auto">
-          <PackageManagerTabs command={`{pm} install -g ${packageName}`} />
+          <PackageManagerTabs
+            npm={`npm install -g ${packageName}`}
+            pnpm={`pnpm add -g ${packageName}`}
+            yarn={`yarn global add ${packageName}`}
+            bun={`bun add -g ${packageName}`}
+          />
 
           <div class="mt-8 text-center">
             <a
