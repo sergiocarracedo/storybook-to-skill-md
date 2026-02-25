@@ -1,0 +1,45 @@
+packages/cli/bin/cli.ts
+  afbbb2df76531987 198-199,232-234
+packages/web/src/content/docs/cli/commands.md
+  afbbb2df76531987 147-155
+packages/cli/src/config/schema.ts
+  afbbb2df76531987 27
+packages/cli/src/types.ts
+  afbbb2df76531987 162
+README.md
+  afbbb2df76531987 134-135,150-151
+packages/web/src/content/docs/cli/configuration.md
+  afbbb2df76531987 32-33
+packages/cli/src/output/writer.ts
+  afbbb2df76531987 63-74
+packages/cli/README.md
+  afbbb2df76531987 48-49
+packages/cli/src/output/index.ts
+  afbbb2df76531987 5-6
+packages/cli/src/generation/index-skill.ts
+  afbbb2df76531987 1-77
+packages/cli/src/generation/index.ts
+  afbbb2df76531987 5
+packages/cli/src/index.ts
+  afbbb2df76531987 12,144-148,411-415,455
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "43f3e4e22bbc83bdb8217c46b2a49f36288d6a08",
+  "prompts": {
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 155,
+      "total_deletions": 23,
+      "accepted_lines": 129,
+      "overriden_lines": 0
+    }
+  }
+}
