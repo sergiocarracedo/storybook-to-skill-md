@@ -1,0 +1,27 @@
+packages/web/public/favicon.svg
+  afbbb2df76531987 1-9
+packages/web/public/site.webmanifest
+  afbbb2df76531987 1-11
+packages/web/astro.config.mjs
+  afbbb2df76531987 64-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "6eaf88d6292d56edbbf56877df347ae0f25edea9",
+  "prompts": {
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 27,
+      "total_deletions": 1,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    }
+  }
+}
