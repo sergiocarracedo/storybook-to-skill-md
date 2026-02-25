@@ -1,6 +1,7 @@
 import type { ComponentData, GenerationResult, SkillgenConfig, ReferenceResult } from '../types.js';
 import type { LanguageModelV1 } from 'ai';
 
+import path from 'node:path';
 import pLimit from 'p-limit';
 
 import {
@@ -246,7 +247,11 @@ export async function generateComponentSkill(
         ...component.sourceFiles,
         ...component.documentation.map((d) => d.filePath),
       ];
-      fileHashes = hashFiles(allFiles);
+      const resolvedOutputDir = path.resolve(config.outputDir);
+      const absoluteHashes = hashFiles(allFiles);
+      fileHashes = Object.fromEntries(
+        Object.entries(absoluteHashes).map(([k, v]) => [path.relative(resolvedOutputDir, k), v]),
+      );
     }
 
     // Check if regeneration is needed
