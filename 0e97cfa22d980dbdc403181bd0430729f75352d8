@@ -1,0 +1,23 @@
+packages/web/src/components/PackageManagerTabs.astro
+  afbbb2df76531987 10,12,14,16-18,21-23,26-35,39-47,49,51-52,56-76,80-81,85-86,88-89,91-92,94-105,111-112,121-122,126,141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "0e97cfa22d980dbdc403181bd0430729f75352d8",
+  "prompts": {
+    "afbbb2df76531987": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05712a20-7579-4718-9a45-c8fac5b45545",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 94,
+      "total_deletions": 109,
+      "accepted_lines": 79,
+      "overriden_lines": 0
+    }
+  }
+}
