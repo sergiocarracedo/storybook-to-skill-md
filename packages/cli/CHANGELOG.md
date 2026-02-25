@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.1.0...v1.1.1) (2026-02-25)
+
+
+### Bug Fixes
+
+* propagate release_created output reliably to publish job ([ae397d1](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/ae397d1bbf3053f3a36a6e0d346211589889987a))
+
 ## [1.1.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.0.5...v1.1.0) (2026-02-24)
 
 ### Features
