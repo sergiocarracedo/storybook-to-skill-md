@@ -184,6 +184,7 @@ export interface GenerationResult {
   duration?: number;
   estimatedTokens?: number;
   referenceResults?: ReferenceResult[];
+  cachedMeta?: SkillMeta | undefined;
 }
 
 /**

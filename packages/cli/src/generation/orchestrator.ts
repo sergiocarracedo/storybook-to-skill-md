@@ -11,6 +11,7 @@ import {
   hashContents,
   hashFiles,
   needsRegeneration,
+  readSkillMeta,
   writeSkillMeta,
 } from '../cache/index.js';
 import { logExtractedData, logResponse, logSystemPrompt, logUserPrompt } from '../debug/index.js';
@@ -271,12 +272,15 @@ export async function generateComponentSkill(
     );
 
     if (!needsRegen) {
+      // Read cached metadata to include in the result
+      const cachedMeta = readSkillMeta(config.outputDir, slug);
       return {
         slug,
         status: 'skipped',
         message: 'unchanged',
         storiesCount: stories.length,
         propsCount: props.length,
+        cachedMeta: cachedMeta || undefined,
       };
     }
 

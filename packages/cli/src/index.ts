@@ -16,6 +16,7 @@ import {
   printComponentComplete,
   printComponentFailed,
   printComponentHeader,
+  printComponentSkipped,
   printExtractionItem,
   printExtractionStart,
   printExtractionTotal,
@@ -92,33 +93,42 @@ export async function generate(config: SkillgenConfig): Promise<GenerationResult
       printExtractionTotal(extractionDuration);
 
       // Generate SKILL.md
-      printGenerationStart();
-
       const generationStart = Date.now();
       const result = await generateForComponent(componentData, config);
       const generationDuration = Date.now() - generationStart;
 
-      // Print generation items
-      if (result.referenceResults && result.referenceResults.length > 0) {
-        for (let i = 0; i < result.referenceResults.length; i++) {
-          const ref = result.referenceResults[i];
-          const isLast = i === result.referenceResults.length - 1;
-          if (ref) {
-            printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
-          }
-        }
-      } else {
-        printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
-      }
-
-      const totalGenTokens = result.estimatedTokens ?? 0;
-      printGenerationTotal(generationDuration, totalGenTokens);
-
-      const componentDuration = Date.now() - componentStartTime;
-
-      if (result.status === 'failed') {
+      // Handle different result statuses
+      if (result.status === 'skipped' && result.cachedMeta) {
+        // Component was skipped - show cached metadata instead of generation output
+        const { generatedAt, toolVersion, provider, model } = result.cachedMeta;
+        const date = new Date(generatedAt).toLocaleDateString();
+        printComponentSkipped(`cached from ${date}, tool v${toolVersion}, ${provider}/${model}`);
+      } else if (result.status === 'skipped') {
+        // Skipped but no cached metadata (dry run or other reason)
+        printComponentSkipped(result.message || 'skipped');
+      } else if (result.status === 'failed') {
         printComponentFailed(result.error ?? 'Unknown error');
       } else {
+        // Successfully generated - print generation details
+        printGenerationStart();
+
+        // Print generation items
+        if (result.referenceResults && result.referenceResults.length > 0) {
+          for (let i = 0; i < result.referenceResults.length; i++) {
+            const ref = result.referenceResults[i];
+            const isLast = i === result.referenceResults.length - 1;
+            if (ref) {
+              printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
+            }
+          }
+        } else {
+          printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
+        }
+
+        const totalGenTokens = result.estimatedTokens ?? 0;
+        printGenerationTotal(generationDuration, totalGenTokens);
+
+        const componentDuration = Date.now() - componentStartTime;
         printComponentComplete(
           componentDuration,
           totalGenTokens,
@@ -359,33 +369,42 @@ export async function generateServerOnly(config: SkillgenConfig): Promise<Genera
         };
 
         // Generate SKILL.md
-        printGenerationStart();
-
         const generationStart = Date.now();
         const result = await generateForComponent(componentData, config);
         const generationDuration = Date.now() - generationStart;
 
-        // Print generation items
-        if (result.referenceResults && result.referenceResults.length > 0) {
-          for (let i = 0; i < result.referenceResults.length; i++) {
-            const ref = result.referenceResults[i];
-            const isLast = i === result.referenceResults.length - 1;
-            if (ref) {
-              printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
-            }
-          }
-        } else {
-          printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
-        }
-
-        const totalGenTokens = result.estimatedTokens ?? 0;
-        printGenerationTotal(generationDuration, totalGenTokens);
-
-        const componentDuration = Date.now() - componentStartTime;
-
-        if (result.status === 'failed') {
+        // Handle different result statuses
+        if (result.status === 'skipped' && result.cachedMeta) {
+          // Component was skipped - show cached metadata instead of generation output
+          const { generatedAt, toolVersion, provider, model } = result.cachedMeta;
+          const date = new Date(generatedAt).toLocaleDateString();
+          printComponentSkipped(`cached from ${date}, tool v${toolVersion}, ${provider}/${model}`);
+        } else if (result.status === 'skipped') {
+          // Skipped but no cached metadata (dry run or other reason)
+          printComponentSkipped(result.message || 'skipped');
+        } else if (result.status === 'failed') {
           printComponentFailed(result.error ?? 'Unknown error');
         } else {
+          // Successfully generated - print generation details
+          printGenerationStart();
+
+          // Print generation items
+          if (result.referenceResults && result.referenceResults.length > 0) {
+            for (let i = 0; i < result.referenceResults.length; i++) {
+              const ref = result.referenceResults[i];
+              const isLast = i === result.referenceResults.length - 1;
+              if (ref) {
+                printGenerationItem(ref.name, ref.duration, ref.estimatedTokens, isLast);
+              }
+            }
+          } else {
+            printGenerationItem('SKILL.md', generationDuration, result.estimatedTokens ?? 0, true);
+          }
+
+          const totalGenTokens = result.estimatedTokens ?? 0;
+          printGenerationTotal(generationDuration, totalGenTokens);
+
+          const componentDuration = Date.now() - componentStartTime;
           printComponentComplete(
             componentDuration,
             totalGenTokens,

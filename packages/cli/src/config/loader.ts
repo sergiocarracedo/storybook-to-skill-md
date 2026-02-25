@@ -1,6 +1,7 @@
 import type { SkillgenConfig } from '../types.js';
 
 import { cosmiconfig } from 'cosmiconfig';
+import path from 'node:path';
 import process from 'node:process';
 
 import { CONFIG_FILE_NAMES, DEFAULT_CONFIG, ENV_PREFIX } from './defaults.js';
@@ -115,6 +116,37 @@ export interface LoadConfigResult {
 }
 
 /**
+ * Resolve relative paths in config relative to the config file's directory
+ */
+function resolveConfigPaths(
+  config: Partial<SkillgenConfig>,
+  configFilePath: string | null,
+): Partial<SkillgenConfig> {
+  const resolved = { ...config };
+
+  // Determine the base directory for resolving relative paths
+  // Use config file's directory if available, otherwise use process.cwd()
+  const baseDir = configFilePath ? path.dirname(configFilePath) : process.cwd();
+
+  // Resolve sourceDir if it's relative
+  if (resolved.sourceDir && !path.isAbsolute(resolved.sourceDir)) {
+    resolved.sourceDir = path.resolve(baseDir, resolved.sourceDir);
+  }
+
+  // Resolve outputDir if it's relative
+  if (resolved.outputDir && !path.isAbsolute(resolved.outputDir)) {
+    resolved.outputDir = path.resolve(baseDir, resolved.outputDir);
+  }
+
+  // Resolve indexFile if it's relative
+  if (resolved.indexFile && !path.isAbsolute(resolved.indexFile)) {
+    resolved.indexFile = path.resolve(baseDir, resolved.indexFile);
+  }
+
+  return resolved;
+}
+
+/**
  * Merge configs with precedence: defaults < config file < env vars < CLI flags
  */
 export async function loadConfig(
@@ -122,6 +154,10 @@ export async function loadConfig(
   configPath?: string,
 ): Promise<LoadConfigResult> {
   const { config: fileConfig, filepath: configFilePath } = await loadConfigFile(configPath);
+
+  // Resolve relative paths in file config before merging
+  const resolvedFileConfig = resolveConfigPaths(fileConfig, configFilePath);
+
   const envConfig = loadEnvConfig();
 
   // Remove undefined values from CLI options
@@ -129,11 +165,14 @@ export async function loadConfig(
     Object.entries(cliOptions).filter(([, v]) => v !== undefined),
   );
 
+  // Resolve relative paths in CLI options relative to process.cwd()
+  const resolvedCliOptions = resolveConfigPaths(cleanCliOptions, null);
+
   const merged = {
     ...DEFAULT_CONFIG,
-    ...fileConfig,
+    ...resolvedFileConfig,
     ...envConfig,
-    ...cleanCliOptions,
+    ...resolvedCliOptions,
   };
 
   return {
