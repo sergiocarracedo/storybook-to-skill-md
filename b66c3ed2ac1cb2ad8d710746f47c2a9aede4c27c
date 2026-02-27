@@ -1,0 +1,51 @@
+packages/cli/src/generation/generator.ts
+  66b8f9b0efe65831 34
+packages/cli/src/types.ts
+  f6a65a1c271b23b4 208-255
+  66b8f9b0efe65831 136
+packages/cli/src/config/schema.ts
+  66b8f9b0efe65831 3
+packages/cli/package.json
+  66b8f9b0efe65831 58
+packages/cli/src/config/loader.ts
+  66b8f9b0efe65831 33-34
+packages/cli/src/generation/model-factory.ts
+  66b8f9b0efe65831 11,38-41,61-63,78-79
+packages/web/src/content/docs/providers/overview.md
+  66b8f9b0efe65831 3,6,38-49,58
+README.md
+  66b8f9b0efe65831 17,145,203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "b66c3ed2ac1cb2ad8d710746f47c2a9aede4c27c",
+  "prompts": {
+    "66b8f9b0efe65831": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_360894e7affeYSUS9vEauR4QYv",
+        "model": "opencode-go/kimi-k2.5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 34,
+      "total_deletions": 9,
+      "accepted_lines": 34,
+      "overriden_lines": 0
+    },
+    "f6a65a1c271b23b4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_366ec9391ffekjsC24wKsJ56Hm",
+        "model": "opencode-go/glm-5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 339,
+      "total_deletions": 23,
+      "accepted_lines": 318,
+      "overriden_lines": 1
+    }
+  }
+}
