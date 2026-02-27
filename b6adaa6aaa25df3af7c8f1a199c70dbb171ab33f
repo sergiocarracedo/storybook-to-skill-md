@@ -1,0 +1,23 @@
+packages/cli/src/domain-validation.ts
+  f6a65a1c271b23b4 1-59,61-208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "b6adaa6aaa25df3af7c8f1a199c70dbb171ab33f",
+  "prompts": {
+    "f6a65a1c271b23b4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_366ec9391ffekjsC24wKsJ56Hm",
+        "model": "opencode-go/glm-5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 269,
+      "overriden_lines": 0
+    }
+  }
+}
