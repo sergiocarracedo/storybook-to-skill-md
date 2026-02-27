@@ -1,0 +1,506 @@
+-- allium: 1
+-- storybook-skill-generator.allium
+
+-- Scope: Storybook-to-SKILL.md CLI tool
+-- Includes: Index fetching, component grouping, extraction (local + server), 
+--            caching, LLM generation, validation, output writing
+-- Excludes:
+--   - CLI argument parsing (implementation detail)
+--   - Specific LLM provider APIs (use LLM library spec)
+--   - Playwright browser automation details (implementation)
+
+-- ============================================================================
+-- External Entities
+-- ============================================================================
+
+external entity Storybook {
+    url: URL
+    index: StoryIndex
+}
+
+external entity StoryIndex {
+    version: Integer
+    entries: Map<String, StoryIndexEntry>
+}
+
+external entity StoryIndexEntry {
+    id: String
+    title: String
+    name: String
+    importPath: String
+    tags: Set<String>
+    type: story | docs
+}
+
+external entity LLM {
+    provider: String
+    model: String
+}
+
+-- ============================================================================
+-- Domain Entities
+-- ============================================================================
+
+entity ComponentGroup {
+    slug: String
+    title: String
+    hierarchyPath: String
+    storyEntries: List<StoryIndexEntry>
+    docsEntries: List<StoryIndexEntry>
+    children: List<ComponentGroup>
+    
+    is_valid: storyEntries.isNotEmpty | docsEntries.isNotEmpty
+}
+
+entity ComponentData {
+    slug: String
+    title: String
+    hierarchyPath: String
+    props: List<PropInfo>
+    argTypes: Map<String, ArgTypeInfo>
+    defaultArgs: Map<String, Any>
+    stories: List<StoryInfo>
+    documentation: List<DocumentationContent>
+    subPages: List<String>
+    sourceFiles: List<String>
+    
+    has_subcomponents: subPages.isNotEmpty
+}
+
+entity PropInfo {
+    name: String
+    type: String
+    required: Boolean
+    description: String
+    defaultValue: String?
+}
+
+entity ArgTypeInfo {
+    name: String
+    description: String?
+    control: ControlInfo?
+    defaultValue: Any?
+}
+
+entity ControlInfo {
+    type: String
+    options: List<String>?
+}
+
+entity StoryInfo {
+    name: String
+    args: Map<String, Any>
+}
+
+entity DocumentationContent {
+    filePath: String
+    textContent: String
+    codeExamples: List<String>
+    headings: List<Heading>
+}
+
+entity Heading {
+    level: Integer
+    text: String
+}
+
+entity SkillFile {
+    slug: String
+    content: String
+    frontmatter: Frontmatter
+    body: String
+    
+    is_valid: frontmatter.isValid
+}
+
+entity Frontmatter {
+    name: String
+    description: String
+}
+
+entity ReferenceFile {
+    name: String
+    content: String
+    parentSlug: String
+}
+
+entity SkillMeta {
+    generatedAt: Timestamp
+    toolVersion: String
+    provider: String
+    model: String
+    fileHashes: Map<String, String>
+}
+
+entity GenerationResult {
+    slug: String
+    status: generated | skipped | failed
+    message: String?
+    error: String?
+    storiesCount: Integer?
+    propsCount: Integer?
+    estimatedTokens: Integer?
+    referenceResults: List<ReferenceResult>?
+    cachedMeta: SkillMeta?
+}
+
+entity ReferenceResult {
+    name: String
+    duration: Integer
+    estimatedTokens: Integer
+}
+
+entity Config {
+    storybookUrl: URL?
+    indexFile: String?
+    sourceDir: String
+    outputDir: String
+    provider: String?
+    model: String?
+    apiKey: String?
+    include: List<String>?
+    exclude: List<String>?
+    concurrency: Integer
+    verbose: Boolean
+    dryRun: Boolean
+    force: Boolean
+    timeout: Integer
+    retries: Integer
+    fetchRetries: Integer
+    extractionConcurrency: Integer
+    indexSkill: Boolean
+}
+
+-- ============================================================================
+-- Rules: Index & Discovery
+-- ============================================================================
+
+rule FetchStorybookIndex {
+    when: FetchIndexRequested(url | file)
+    
+    requires: url | file
+    
+    ensures: StoryIndex.loaded(
+        from: url | file,
+        entries: all stories and docs from Storybook
+    )
+}
+
+rule BuildComponentGroups {
+    when: StoryIndex.loaded(index)
+    
+    ensures:
+        for entry in index.entries:
+            entry grouped under ComponentGroup(
+                hierarchyPath: root title of entry
+            )
+    ensures:
+        for group in ComponentGroups:
+            group.storyEntries = entries where type = story
+            group.docsEntries = entries where type = docs
+            group.children = detected sub-pages
+}
+
+rule FilterEntries {
+    when: FilterRequested(entries, include, exclude)
+    
+    ensures:
+        if include:
+            entries filtered to match include patterns
+    ensures:
+        if exclude:
+            entries filtered to not match exclude patterns
+}
+
+-- ============================================================================
+-- Rules: Extraction (Local Mode)
+-- ============================================================================
+
+rule ExtractLocalComponentData {
+    when: ExtractRequested(group, sourceDir, mode = local)
+    
+    requires: sourceDir exists
+    
+    ensures: ComponentData.created(
+        slug: group.slug,
+        title: group.title,
+        props: extracted from TypeScript source files,
+        argTypes: extracted from .stories files,
+        defaultArgs: extracted from .stories files,
+        stories: extracted from .stories files,
+        documentation: extracted from .mdx files,
+        subPages: from group.children,
+        sourceFiles: resolved file paths
+    )
+}
+
+rule ExtractPropsFromSource {
+    when: SourceFilesFound(filePaths, tsConfig)
+    
+    ensures: PropInfo.extracted(
+        from: TypeScript types and interfaces,
+        enriched: with JSDoc descriptions
+    )
+}
+
+rule ExtractStoryMeta {
+    when: StoryFilesFound(filePaths)
+    
+    ensures:
+        for storyFile in filePaths:
+            StoryMeta.extracted(
+                argTypes: from meta.argTypes,
+                args: from meta.args,
+                stories: from exported story functions
+            )
+}
+
+rule ExtractMdxDocumentation {
+    when: MdxFilesFound(filePaths)
+    
+    ensures: DocumentationContent.extracted(
+        textContent: prose from MDX,
+        codeExamples: code blocks from MDX,
+        headings: structure from MDX
+    )
+}
+
+-- ============================================================================
+-- Rules: Extraction (Server-Only Mode)
+-- ============================================================================
+
+rule ExtractServerComponentData {
+    when: ExtractRequested(group, storybookUrl, mode = server)
+    
+    requires: storybookUrl
+    
+    ensures: ComponentData.created(
+        slug: group.slug,
+        title: group.title,
+        props: extracted from Storybook args table via browser,
+        argTypes: extracted from Storybook API or DOM,
+        defaultArgs: extracted from Storybook,
+        stories: extracted from Storybook,
+        documentation: extracted from docs pages via browser,
+        subPages: from group.children,
+        sourceFiles: empty
+    )
+}
+
+rule ExtractViaStorybookApi {
+    when: ApiExtractionAttempted(storyId, title)
+    
+    ensures:
+        if Storybook API available:
+            ServerComponentMeta extracted from __STORYBOOK_PREVIEW__
+        else:
+            fall back to DOM extraction
+}
+
+rule ExtractViaDom {
+    when: DomExtractionRequested(storyId, title)
+    
+    ensures: ServerComponentMeta.extracted(
+        from: rendered Storybook docs page,
+        props: from args table DOM,
+        stories: from story blocks,
+        docsContent: from docs container
+    )
+}
+
+-- ============================================================================
+-- Rules: Caching
+-- ============================================================================
+
+rule CheckCache {
+    when: GenerationRequested(componentData, config)
+    
+    ensures:
+        if config.force:
+            regeneration required (reason: forced)
+        else if no existing SkillMeta:
+            regeneration required (reason: no cache)
+        else if toolVersion changed:
+            regeneration required (reason: version change)
+        else if sourceHashes changed:
+            regeneration required (reason: content change)
+        else:
+            skip generation (use cached)
+}
+
+rule ComputeSourceHashes {
+    when: HashComputationRequested(componentData, mode)
+    
+    ensures:
+        if mode = local:
+            hashes = hash of all source files
+        if mode = server:
+            hashes = hash of extracted content (docs, props, stories)
+}
+
+-- ============================================================================
+-- Rules: LLM Generation
+-- ============================================================================
+
+rule GenerateSkillMd {
+    when: LLMGenerationRequested(componentData, llm, config)
+    
+    requires: llm.provider
+    requires: llm.model
+    requires: config.apiKey (unless dryRun)
+    
+    ensures: SkillFile.generated(
+        frontmatter: with name and description,
+        body: structured markdown documentation,
+        references: if has_subcomponents
+    )
+}
+
+rule BuildGenerationPrompt {
+    when: PromptBuildRequested(componentData)
+    
+    ensures: Prompt.created(
+        system: skill documentation guidelines,
+        user: component data formatted for LLM:
+            - description from docs
+            - props with types and defaults
+            - stories (Default with args, others listed)
+            - documentation content (truncated if large)
+            - sub-pages if present
+    )
+}
+
+rule GenerateReferenceFiles {
+    when: SubcomponentsDetected(componentData)
+    
+    ensures:
+        for subPage in componentData.subPages:
+            ReferenceFile.generated(
+                name: slugified subPage,
+                content: documentation for subcomponent,
+                parentSlug: componentData.slug
+            )
+}
+
+rule CreateLeanMainSkill {
+    when: ReferencesGenerated(skillMd, subPages)
+    
+    ensures: SkillMd.transformed(
+        body: truncated to essentials,
+        subComponents section: list of references,
+        relatedSkills section: links to references
+    )
+}
+
+-- ============================================================================
+-- Rules: Validation
+-- ============================================================================
+
+rule ValidateSkillMd {
+    when: SkillMdGenerated(content)
+    
+    ensures: ValidationResult.created(
+        valid: true if all required fields present,
+        errors: missing frontmatter, missing name/description,
+        warnings: 
+            - description too short (<50 chars) or too long (>200 chars)
+            - description lacks use-case keywords
+            - body has no headings
+            - body too long (>500 lines)
+            - disallowed sections (installation, contributing, changelog)
+    )
+}
+
+-- ============================================================================
+-- Rules: Output
+-- ============================================================================
+
+rule WriteSkillFiles {
+    when: GenerationCompleted(skillFile, references, meta, config)
+    
+    requires: not config.dryRun
+    
+    ensures: File.written(
+        path: config.outputDir / slug / SKILL.md,
+        content: skillFile.content
+    )
+    ensures: SkillMeta.written(
+        path: config.outputDir / slug / .skill-meta.json
+    )
+    ensures:
+        for ref in references:
+            File.written(
+                path: config.outputDir / slug / references / ref.name.md
+            )
+}
+
+rule GenerateIndexSkill {
+    when: AllComponentsProcessed(results, config)
+    
+    requires: config.indexSkill = true
+    
+    ensures: IndexSkillFile.created(
+        path: config.outputDir / _index / SKILL.md,
+        content: summary of all generated skills
+    )
+}
+
+-- ============================================================================
+-- Rules: Orchestration
+-- ============================================================================
+
+rule RunGeneration {
+    when: GenerateCommand(config)
+    
+    requires: config.storybookUrl | config.indexFile
+    
+    ensures: StoryIndex.fetched(from: url | file)
+    ensures: ComponentGroups.built(from: index, filtered: by include/exclude)
+    ensures:
+        for group in ComponentGroups:
+            ComponentData.extracted(from: group, mode: local | server)
+            GenerationResult.created(
+                based on: cache check,
+                if skipped: with cached metadata,
+                if generated: with token estimates,
+                if failed: with error message
+            )
+    ensures: IndexSkill.generated(if enabled)
+    ensures: SummaryPrinted(results: all GenerationResults)
+}
+
+rule DryRunGeneration {
+    when: GenerateCommand(config, dryRun = true)
+    
+    ensures: prompts logged (if logPromptsDir)
+    ensures: no files written
+    ensures: GenerationResult.status = skipped (reason: dry run)
+}
+
+-- ============================================================================
+-- Domain Invariants
+-- ============================================================================
+
+invariant ComponentGroupValidity {
+    all g: ComponentGroup | g.is_valid implies (
+        g.storyEntries.isNotEmpty or g.docsEntries.isNotEmpty
+    )
+}
+
+invariant SkillFileValidity {
+    all s: SkillFile | s.is_valid implies (
+        s.frontmatter.name.isNotEmpty and
+        s.frontmatter.description.isNotEmpty and
+        s.frontmatter.description.length >= 50 and
+        s.frontmatter.description.length <= 200
+    )
+}
+
+invariant CacheConsistency {
+    all m: SkillMeta | m.fileHashes.keys = source files used for generation
+}
+
+invariant ExtractionModeConsistency {
+    all c: ComponentData | 
+        c.sourceFiles.isEmpty iff extraction was server mode
+}
