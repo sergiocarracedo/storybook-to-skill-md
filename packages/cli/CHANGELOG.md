@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.4...v1.3.0) (2026-02-27)
+
+
+### Features
+
+* add Groq as LLM provider ([056b2e7](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/056b2e79e0488ecea6d7ddf8914cfc8fe2f72e01))
+
 ## [1.2.4](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.3...v1.2.4) (2026-02-25)
 
 
