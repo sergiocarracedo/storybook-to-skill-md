@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.3.0...v1.4.0) (2026-02-27)
+
+
+### Features
+
+* **cli:** add domain validation utilities per Allium spec ([b6adaa6](https://github.com/sergiocarracedo/storybook-to-skill-md/commit/b6adaa6aaa25df3af7c8f1a199c70dbb171ab33f))
+
 ## [1.3.0](https://github.com/sergiocarracedo/storybook-to-skill-md/compare/v1.2.4...v1.3.0) (2026-02-27)
 
 
