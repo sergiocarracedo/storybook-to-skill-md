@@ -133,7 +133,7 @@ export interface SkillMeta {
 /**
  * Provider types supported by AI SDK
  */
-export type ProviderType = 'openai' | 'anthropic' | 'google';
+export type ProviderType = 'openai' | 'anthropic' | 'google' | 'groq';
 
 /**
  * CLI/Config options
@@ -204,4 +204,52 @@ export interface ValidationResult {
   valid: boolean;
   errors: string[];
   warnings: string[];
+}
+
+/**
+ * Frontmatter extracted from SKILL.md
+ */
+export interface Frontmatter {
+  name: string;
+  description: string;
+}
+
+/**
+ * Reference file for sub-components
+ */
+export interface ReferenceFile {
+  name: string;
+  content: string;
+  parentSlug: string;
+}
+
+/**
+ * Skill file with parsed components
+ */
+export interface SkillFile {
+  slug: string;
+  content: string;
+  frontmatter: Frontmatter;
+  body: string;
+}
+
+/**
+ * Extraction mode indicator
+ */
+export type ExtractionMode = 'local' | 'server';
+
+/**
+ * Domain-specific error types
+ */
+export type GenerationErrorCode =
+  | 'EXTRACTION_FAILED'
+  | 'GENERATION_FAILED'
+  | 'VALIDATION_FAILED'
+  | 'CACHE_ERROR'
+  | 'FILE_WRITE_ERROR';
+
+export interface GenerationError {
+  code: GenerationErrorCode;
+  message: string;
+  componentSlug?: string;
 }

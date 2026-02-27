@@ -1,9 +1,9 @@
 ---
 title: LLM Providers
-description: Configure storybook-to-skills-md with OpenAI, Anthropic, or Google AI
+description: Configure storybook-to-skills-md with OpenAI, Anthropic, Google AI, or Groq
 ---
 
-storybook-to-skills-md supports three LLM providers: OpenAI, Anthropic, and Google AI.
+storybook-to-skills-md supports four LLM providers: OpenAI, Anthropic, Google AI, and Groq.
 
 ## OpenAI
 
@@ -35,6 +35,18 @@ Get your API key from [Google AI Studio](https://makersuite.google.com/app/apike
 --provider google --model <model> --api-key ...
 ```
 
+## Groq
+
+**API Reference:** `groq`
+
+Get your API key from [Groq Console](https://console.groq.com/keys).
+
+```bash
+--provider groq --model <model> --api-key gsk-...
+```
+
+Groq provides high-performance inference with models like `llama-3.3-70b-versatile`, `deepseek-r1-distill-llama-70b`, and third-party models like `moonshotai/kimi-k2-instruct-0905`.
+
 ## API Key Security
 
 Never commit API keys to version control. Use environment variables:
@@ -43,6 +55,7 @@ Never commit API keys to version control. Use environment variables:
 export OPENAI_API_KEY=sk-...
 export ANTHROPIC_API_KEY=sk-ant-...
 export GOOGLE_API_KEY=...
+export GROQ_API_KEY=gsk-...
 ```
 
 Or use CI secrets (GitHub Actions → Settings → Secrets and variables → Actions).

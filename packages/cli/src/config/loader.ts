@@ -30,8 +30,8 @@ function loadEnvConfig(): Partial<SkillgenConfig> {
   if (outputDir) env.outputDir = outputDir;
 
   const provider = process.env[`${ENV_PREFIX}PROVIDER`];
-  if (provider && ['openai', 'anthropic', 'google'].includes(provider)) {
-    env.provider = provider as 'openai' | 'anthropic' | 'google';
+  if (provider && ['openai', 'anthropic', 'google', 'groq'].includes(provider)) {
+    env.provider = provider as 'openai' | 'anthropic' | 'google' | 'groq';
   }
 
   const model = process.env[`${ENV_PREFIX}MODEL`];

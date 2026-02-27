@@ -14,7 +14,7 @@ A CLI tool that reads Storybook projects and generates [SKILL.md](https://agents
 - ✅ Extracts props using `react-docgen-typescript`
 - ✅ Parses story files with `@storybook/csf-tools`
 - ✅ Extracts documentation from MDX files
-- ✅ Generates SKILL.md files using AI SDK (OpenAI, Anthropic, Google)
+- ✅ Generates SKILL.md files using AI SDK (OpenAI, Anthropic, Google, Groq)
 - ✅ Caches results to skip unchanged components
 - ✅ Supports include/exclude patterns for filtering
 - ✅ Detailed progress output with timing and token estimates
@@ -142,6 +142,7 @@ Other:
 | **OpenAI** | `gpt-4o`, `gpt-4-turbo`, `gpt-3.5-turbo` |
 | **Anthropic** | `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`, `claude-3-haiku-20240307` |
 | **Google** | `gemini-2.0-flash-exp`, `gemini-1.5-pro`, `gemini-1.5-flash` |
+| **Groq** | `llama-3.3-70b-versatile`, `deepseek-r1-distill-llama-70b`, `moonshotai/kimi-k2-instruct-0905` |
 
 ## Output Structure
 
@@ -199,7 +200,7 @@ See the [GitHub Action repository](https://github.com/sergiocarracedo/storybook-
 
 - Node.js 20 or later
 - A Storybook project with accessible `index.json`
-- API key for your chosen LLM provider (OpenAI, Anthropic, or Google)
+- API key for your chosen LLM provider (OpenAI, Anthropic, Google, or Groq)
 
 ## Programmatic Usage
 

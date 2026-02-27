@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const providerSchema = z.enum(['openai', 'anthropic', 'google']);
+export const providerSchema = z.enum(['openai', 'anthropic', 'google', 'groq']);
 
 export const configSchema = z
   .object({

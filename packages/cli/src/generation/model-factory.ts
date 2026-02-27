@@ -8,6 +8,7 @@ import type { LanguageModelV1 } from 'ai';
  * - OPENAI_API_KEY for OpenAI
  * - ANTHROPIC_API_KEY for Anthropic
  * - GOOGLE_GENERATIVE_AI_API_KEY for Google
+ * - GROQ_API_KEY for Groq
  *
  * If an apiKey is passed, it will be set in the environment for this process.
  */
@@ -34,6 +35,10 @@ export async function createModel(
       const { google } = await import('@ai-sdk/google');
       return google(modelName);
     }
+    case 'groq': {
+      const { groq } = await import('@ai-sdk/groq');
+      return groq(modelName);
+    }
     default:
       throw new Error(`Unsupported provider: ${provider}`);
   }
@@ -53,6 +58,9 @@ function setApiKeyInEnv(provider: ProviderType, apiKey: string): void {
     case 'google':
       process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
       break;
+    case 'groq':
+      process.env.GROQ_API_KEY = apiKey;
+      break;
   }
 }
 
@@ -67,6 +75,8 @@ export function getDefaultModel(provider: ProviderType): string {
       return 'claude-3-5-sonnet-20241022';
     case 'google':
       return 'gemini-3-flash-preview';
+    case 'groq':
+      return 'llama-3.3-70b-versatile';
     default:
       return 'gpt-4o';
   }
