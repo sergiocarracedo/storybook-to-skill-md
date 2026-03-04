@@ -41,7 +41,7 @@ const sidebarConfig = [
 // https://astro.build/config
 export default defineConfig({
   site: siteUrl,
-  base: basePath,
+  ...(basePath && { base: basePath }),
   
   integrations: [
     starlight({
