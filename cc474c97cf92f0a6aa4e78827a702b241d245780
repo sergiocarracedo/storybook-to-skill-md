@@ -1,0 +1,25 @@
+packages/web/src/pages/index.astro
+  f6a65a1c271b23b4 11-12
+packages/web/astro.config.mjs
+  f6a65a1c271b23b4 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "cc474c97cf92f0a6aa4e78827a702b241d245780",
+  "prompts": {
+    "f6a65a1c271b23b4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_366ec9391ffekjsC24wKsJ56Hm",
+        "model": "opencode-go/glm-5"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 2,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
