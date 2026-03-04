@@ -3,9 +3,9 @@ import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 
-const repoName = process.env.BASE_PATH || process.env.PUBLIC_BASE_PATH || 'storybook-to-skill-md';
-const basePath = repoName.startsWith('/') ? repoName : `/${repoName}`;
-const siteUrl = (process.env.SITE_URL || process.env.PUBLIC_SITE_URL || 'https://sergiocarracedo.github.io') + basePath;
+const repoName = process.env.BASE_PATH || process.env.PUBLIC_BASE_PATH || '';
+const basePath = repoName.startsWith('/') ? repoName : (repoName ? `/${repoName}` : '/');
+const siteUrl = process.env.SITE_URL || process.env.PUBLIC_SITE_URL || 'https://storybook-to-skill-md.xyz';
 
 const sidebarConfig = [
   {
