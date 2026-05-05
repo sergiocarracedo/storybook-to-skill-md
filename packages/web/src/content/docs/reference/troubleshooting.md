@@ -230,7 +230,7 @@ If you can't resolve your issue:
 3. **Create a new issue:** [New Issue](https://github.com/sergiocarracedo/storybook-to-skill-md/issues/new)
 
 Include in your issue:
-- CLI version (`storybook-to-skills-md --version`)
+- CLI version (`storybook-to-skill-md --version`)
 - Node version (`node --version`)
 - Operating system
 - Full command you ran

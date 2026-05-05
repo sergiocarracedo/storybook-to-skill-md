@@ -1,6 +1,6 @@
 ---
 title: CLI Commands
-description: Complete reference for all storybook-to-skills-md commands
+description: Complete reference for all storybook-to-skill-md commands
 ---
 
 ## Command: `generate`
@@ -8,7 +8,7 @@ description: Complete reference for all storybook-to-skills-md commands
 Generate SKILL.md files from a Storybook project.
 
 ```bash
-storybook-to-skills-md generate [options]
+storybook-to-skill-md generate [options]
 ```
 
 ## Index Source Options
@@ -157,7 +157,7 @@ storybook-to-skills-md generate [options]
 
 ### Minimal Command
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   -u https://storybook.example.com \
   -p openai \
   -m gpt-4o \
@@ -166,7 +166,7 @@ storybook-to-skills-md generate \
 
 ### Production Use
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --index-file ./storybook-static/index.json \
   --source-dir ./src \
   --output-dir ./skills \
@@ -182,7 +182,7 @@ storybook-to-skills-md generate \
 
 ### Debug Mode
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   -u https://storybook.example.com \
   -p openai \
   -m gpt-4o \

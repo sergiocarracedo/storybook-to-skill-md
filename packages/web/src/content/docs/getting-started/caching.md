@@ -1,9 +1,9 @@
 ---
 title: Caching
-description: Understand how storybook-to-skills-md caches generated files
+description: Understand how storybook-to-skill-md caches generated files
 ---
 
-storybook-to-skills-md caches generated SKILL.md files to avoid regenerating unchanged components.
+storybook-to-skill-md caches generated SKILL.md files to avoid regenerating unchanged components.
 
 ## How It Works
 

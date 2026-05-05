@@ -1,9 +1,9 @@
 ---
 title: Configuration
-description: Configure storybook-to-skills-md with files, environment variables, or CLI flags
+description: Configure storybook-to-skill-md with files, environment variables, or CLI flags
 ---
 
-There are three ways to configure `storybook-to-skills-md`: configuration files, environment variables, and CLI flags. They are prioritized in that order (CLI flags override everything).
+There are three ways to configure `storybook-to-skill-md`: configuration files, environment variables, and CLI flags. They are prioritized in that order (CLI flags override everything).
 
 ## Configuration File
 
@@ -41,7 +41,7 @@ Create a `.skillgenrc.json` file in your project root:
 You can specify a custom config file path:
 
 ```bash
-storybook-to-skills-md generate --config ./config/custom.json
+storybook-to-skill-md generate --config ./config/custom.json
 ```
 
 ## Environment Variables
@@ -104,7 +104,7 @@ export SKILLGEN_API_KEY=sk-...
 
 **Command:**
 ```bash
-storybook-to-skills-md generate --storybook-url https://storybook.example.com
+storybook-to-skill-md generate --storybook-url https://storybook.example.com
 ```
 
 This keeps sensitive data (API keys) in environment variables, common settings in the config file, and variable options (like URLs) in CLI flags.

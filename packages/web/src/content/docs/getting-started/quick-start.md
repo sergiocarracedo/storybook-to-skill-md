@@ -54,7 +54,7 @@ Use when you only have component source files (no Storybook needed).
 ### Minimal Command
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --provider openai \
   --model gpt-5.2 \
@@ -66,7 +66,7 @@ storybook-to-skills-md generate \
 ```bash
 npm run build-storybook
 
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --index-file ./storybook-static/index.json \
   --source-dir ./src/components \
   --provider anthropic \
@@ -81,7 +81,7 @@ export OPENAI_API_KEY=sk-...
 export SKILLGEN_PROVIDER=openai
 export SKILLGEN_MODEL=gpt-5.2
 
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com
 ```
 
@@ -102,7 +102,7 @@ Create `.skillgenrc.json` for reusable config:
 Run with just the API key:
 
 ```bash
-storybook-to-skills-md generate --api-key $OPENAI_API_KEY
+storybook-to-skill-md generate --api-key $OPENAI_API_KEY
 ```
 
 ## Output

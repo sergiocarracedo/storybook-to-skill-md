@@ -1,9 +1,9 @@
 ---
 title: LLM Providers
-description: Configure storybook-to-skills-md with OpenAI, Anthropic, Google AI, or Groq
+description: Configure storybook-to-skill-md with OpenAI, Anthropic, Google AI, or Groq
 ---
 
-storybook-to-skills-md supports four LLM providers: OpenAI, Anthropic, Google AI, and Groq.
+storybook-to-skill-md supports four LLM providers: OpenAI, Anthropic, Google AI, and Groq.
 
 ## OpenAI
 

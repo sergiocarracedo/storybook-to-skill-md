@@ -8,7 +8,7 @@ import PackageManagerTabs from '../../components/PackageManagerTabs.astro'
 
 ## What is Storybook to SKILL.md?
 
-`storybook-to-skills-md` is a CLI tool that automatically generates [SKILL.md](https://agentskills.io) files from your Storybook components. These files provide AI agents with structured knowledge about your components, enabling them to use your design system effectively.
+`storybook-to-skill-md` is a CLI tool that automatically generates [SKILL.md](https://agentskills.io) files from your Storybook components. These files provide AI agents with structured knowledge about your components, enabling them to use your design system effectively.
 
 ## Why Use This Tool?
 
@@ -38,16 +38,16 @@ import PackageManagerTabs from '../../components/PackageManagerTabs.astro'
 Install the CLI globally:
 
 <PackageManagerTabs
-  npm="npm install -g storybook-to-skills-md"
-  pnpm="pnpm add -g storybook-to-skills-md"
-  yarn="yarn global add storybook-to-skills-md"
-  bun="bun add -g storybook-to-skills-md"
+  npm="npm install -g storybook-to-skill-md"
+  pnpm="pnpm add -g storybook-to-skill-md"
+  yarn="yarn global add storybook-to-skill-md"
+  bun="bun add -g storybook-to-skill-md"
 />
 
 Generate SKILL.md files from your Storybook:
 
 ```bash
-storybook-to-skills-md generate \
+storybook-to-skill-md generate \
   --storybook-url https://your-storybook.com \
   --source-dir ./src/components \
   --output-dir ./skills \
