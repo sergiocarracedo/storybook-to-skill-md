@@ -1,0 +1,41 @@
+packages/web/src/content/docs/index.mdx
+  373dbe732e254ae8 11,41-44,50
+packages/web/src/content/docs/providers/overview.md
+  373dbe732e254ae8 3,6
+packages/web/src/content/docs/cli/commands.md
+  373dbe732e254ae8 3,11,160,169,185
+packages/web/src/content/docs/getting-started/quick-start.md
+  373dbe732e254ae8 57,69,84,105
+packages/web/src/content/docs/cli/configuration.md
+  373dbe732e254ae8 3,6,44,107
+packages/web/src/content/docs/getting-started/caching.md
+  373dbe732e254ae8 3,6
+packages/web/src/content/docs/getting-started/installation.mdx
+  373dbe732e254ae8 3,13-16,32
+packages/web/src/content/docs/getting-started/github-action.mdx
+  373dbe732e254ae8 6
+packages/web/src/content/docs/reference/troubleshooting.md
+  373dbe732e254ae8 233
+packages/web/src/pages/index.astro
+  373dbe732e254ae8 10,81,140,153,227
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "7fd411e3c1db14b9b753f3386459052745e364cc",
+  "prompts": {
+    "373dbe732e254ae8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_208f4a5b4ffeqHeNWlnZl1VUyN",
+        "model": "github-copilot/gpt-5.4"
+      },
+      "human_author": "Sergio Carracedo",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 36,
+      "accepted_lines": 36,
+      "overriden_lines": 0
+    }
+  }
+}
