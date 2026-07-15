@@ -97,6 +97,19 @@ Then run:
 storybook-to-skill-md generate --api-key $OPENAI_API_KEY
 ```
 
+### Using an OpenAI-Compatible Provider
+
+```bash
+storybook-to-skill-md generate \
+  --storybook-url https://your-storybook.com \
+  --source-dir ./src/components \
+  --output-dir ./skills \
+  --provider openai-compatible \
+  --model your-model \
+  --base-url https://llm.example.com/v1 \
+  --api-key $API_KEY
+```
+
 ## CLI Options
 
 ```bash
@@ -111,9 +124,10 @@ Directories:
   -o, --output-dir <dir>        Output directory (default: ./skills)
 
 LLM Configuration:
-  -p, --provider <provider>     LLM provider: openai, anthropic, google (required)
+  -p, --provider <provider>     LLM provider: openai, openai-compatible, anthropic, google, groq (required)
   -m, --model <model>           Model name (required)
   -k, --api-key <key>           API key (required)
+  -b, --base-url <url>          Base URL used by openai-compatible or Anthropic proxy endpoints
 
 Filtering:
   -i, --include <patterns...>   Glob patterns to include
@@ -200,7 +214,7 @@ See the [GitHub Action repository](https://github.com/sergiocarracedo/storybook-
 
 - Node.js 20 or later
 - A Storybook project with accessible `index.json`
-- API key for your chosen LLM provider (OpenAI, Anthropic, Google, or Groq)
+- API key for your chosen LLM provider (OpenAI, OpenAI-compatible, Anthropic, Google, or Groq)
 
 ## Programmatic Usage
 

@@ -98,14 +98,21 @@ describe('Cache - Meta', () => {
   });
 
   it('writes and reads skill meta', () => {
-    const meta = createSkillMeta('openai', 'gpt-4o', { '/path/to/file.tsx': 'abc123' }, '1.0.0');
+    const meta = createSkillMeta(
+      'openai-compatible',
+      'llama-3.3-70b-versatile',
+      { '/path/to/file.tsx': 'abc123' },
+      '1.0.0',
+      'https://llm.example.com/v1',
+    );
 
     writeSkillMeta(tempDir, 'button', meta);
     const read = readSkillMeta(tempDir, 'button');
 
     expect(read).toBeDefined();
-    expect(read?.provider).toBe('openai');
-    expect(read?.model).toBe('gpt-4o');
+    expect(read?.provider).toBe('openai-compatible');
+    expect(read?.model).toBe('llama-3.3-70b-versatile');
+    expect(read?.baseUrl).toBe('https://llm.example.com/v1');
     expect(read?.fileHashes['/path/to/file.tsx']).toBe('abc123');
   });
 

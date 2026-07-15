@@ -55,6 +55,9 @@ function printConfigBox(
   printSection('LLM PROVIDER', boxWidth);
   printRow('Provider', config.provider || chalk.dim('(not set)'), boxWidth);
   printRow('Model', config.model || chalk.dim('(not set)'), boxWidth);
+  if (config.baseUrl) {
+    printRow('Base URL', config.baseUrl, boxWidth);
+  }
   printRow(
     'API Key',
     config.apiKey ? chalk.green('✓ configured') : chalk.red('✗ not set'),
@@ -175,9 +178,13 @@ program
     'Source directory containing components (optional for server-only mode)',
   )
   .option('-o, --output-dir <dir>', 'Output directory for SKILL.md files')
-  .option('-p, --provider <provider>', 'LLM provider (openai, anthropic, google)')
+  .option(
+    '-p, --provider <provider>',
+    'LLM provider (openai, openai-compatible, anthropic, google, groq)',
+  )
   .option('-m, --model <model>', 'LLM model name')
   .option('-k, --api-key <key>', 'API key for the LLM provider')
+  .option('-b, --base-url <url>', 'Custom provider base URL')
   .option('-i, --include <patterns...>', 'Glob patterns to include (matched against title)')
   .option('-e, --exclude <patterns...>', 'Glob patterns to exclude (matched against title)')
   .option('-c, --concurrency <number>', 'Number of concurrent LLM requests')
@@ -199,8 +206,6 @@ program
   .option('--index-skill-template <path>', 'Path to a custom template file for the index SKILL.md')
   .action(async (options) => {
     try {
-      const isServerOnly = options.serverOnly || !options.sourceDir;
-
       // Only include options that were explicitly provided
       const cliConfig: Partial<SkillgenConfig> = {};
 
@@ -214,6 +219,7 @@ program
       if (options.provider !== undefined) cliConfig.provider = options.provider;
       if (options.model !== undefined) cliConfig.model = options.model;
       if (options.apiKey !== undefined) cliConfig.apiKey = options.apiKey;
+      if (options.baseUrl !== undefined) cliConfig.baseUrl = options.baseUrl;
       if (options.include !== undefined) cliConfig.include = options.include;
       if (options.exclude !== undefined) cliConfig.exclude = options.exclude;
       if (options.concurrency !== undefined)
@@ -234,6 +240,7 @@ program
         cliConfig.indexSkillTemplate = options.indexSkillTemplate;
 
       const { config, configFilePath } = await loadConfig(cliConfig, options.config);
+      const isServerOnly = options.serverOnly || (!config.indexFile && !config.sourceDir);
 
       if (config.verbose) {
         printConfigBox(config, configFilePath, isServerOnly);

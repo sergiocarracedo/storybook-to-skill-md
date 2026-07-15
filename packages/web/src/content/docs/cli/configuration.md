@@ -18,6 +18,7 @@ Create a `.skillgenrc.json` file in your project root:
   "provider": "openai",
   "model": "gpt-4o",
   "apiKey": "sk-...",
+  "baseUrl": "https://llm.example.com/v1",
   "concurrency": 3,
   "timeout": 60000,
   "retries": 2,
@@ -56,6 +57,7 @@ export SKILLGEN_OUTPUT_DIR=./skills
 export SKILLGEN_PROVIDER=openai
 export SKILLGEN_MODEL=gpt-4o
 export SKILLGEN_API_KEY=sk-...
+export SKILLGEN_BASE_URL=https://llm.example.com/v1
 export SKILLGEN_CONCURRENCY=3
 export SKILLGEN_TIMEOUT=60000
 export SKILLGEN_RETRIES=2

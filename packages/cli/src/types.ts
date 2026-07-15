@@ -127,13 +127,14 @@ export interface SkillMeta {
   toolVersion: string;
   provider: string;
   model: string;
+  baseUrl?: string;
   fileHashes: Record<string, string>;
 }
 
 /**
  * Provider types supported by AI SDK
  */
-export type ProviderType = 'openai' | 'anthropic' | 'google' | 'groq';
+export type ProviderType = 'openai' | 'openai-compatible' | 'anthropic' | 'google' | 'groq';
 
 /**
  * CLI/Config options
@@ -146,6 +147,7 @@ export interface SkillgenConfig {
   provider?: ProviderType;
   model?: string;
   apiKey?: string;
+  baseUrl?: string;
   include?: string[];
   exclude?: string[];
   concurrency: number;

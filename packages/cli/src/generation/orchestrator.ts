@@ -157,7 +157,7 @@ export async function orchestrateGeneration(
   // Create the LLM model (only if not dry run)
   let model: LanguageModelV1 | null = null;
   if (!config.dryRun && config.provider && config.model) {
-    model = await createModel(config.provider, config.model, config.apiKey);
+    model = await createModel(config.provider, config.model, config.apiKey, config.baseUrl);
   }
 
   // Set up concurrency limiter
@@ -195,7 +195,7 @@ export async function generateForComponent(
   // Create the LLM model (only if not dry run)
   let model: LanguageModelV1 | null = null;
   if (!config.dryRun && config.provider && config.model) {
-    model = await createModel(config.provider, config.model, config.apiKey);
+    model = await createModel(config.provider, config.model, config.apiKey, config.baseUrl);
   }
 
   return generateComponentSkill(component, model, config);
@@ -262,7 +262,6 @@ export async function generateComponentSkill(
       );
     }
 
-    // Check if regeneration is needed
     const { needsRegen } = needsRegeneration(
       config.outputDir,
       slug,
@@ -382,7 +381,13 @@ export async function generateComponentSkill(
     writeSkillFile(config.outputDir, slug, skillMdContent);
 
     // Write meta file (provider and model are guaranteed to exist here since we're not in dry run)
-    const meta = createSkillMeta(config.provider!, config.model!, fileHashes, TOOL_VERSION);
+    const meta = createSkillMeta(
+      config.provider!,
+      config.model!,
+      fileHashes,
+      TOOL_VERSION,
+      config.baseUrl,
+    );
     writeSkillMeta(config.outputDir, slug, meta);
 
     const duration = Date.now() - startTime;

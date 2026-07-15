@@ -53,14 +53,21 @@ export function createSkillMeta(
   model: string,
   fileHashes: Record<string, string>,
   toolVersion: string,
+  baseUrl?: string,
 ): SkillMeta {
-  return {
+  const meta: SkillMeta = {
     generatedAt: new Date().toISOString(),
     toolVersion,
     provider,
     model,
     fileHashes,
   };
+
+  if (baseUrl) {
+    meta.baseUrl = baseUrl;
+  }
+
+  return meta;
 }
 
 /**
