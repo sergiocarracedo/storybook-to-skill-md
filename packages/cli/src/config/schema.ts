@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-export const providerSchema = z.enum(['openai', 'anthropic', 'google', 'groq']);
+export const providerSchema = z.enum([
+  'openai',
+  'openai-compatible',
+  'anthropic',
+  'google',
+  'groq',
+]);
 
 export const configSchema = z
   .object({
@@ -11,6 +17,7 @@ export const configSchema = z
     provider: providerSchema.optional(),
     model: z.string().min(1).optional(),
     apiKey: z.string().optional(),
+    baseUrl: z.string().url('baseUrl must be a valid URL').optional().or(z.literal('')),
     include: z.array(z.string()).optional(),
     exclude: z.array(z.string()).optional(),
     concurrency: z.number().int().min(1).max(10).default(3),

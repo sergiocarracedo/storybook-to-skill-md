@@ -30,8 +30,11 @@ function loadEnvConfig(): Partial<SkillgenConfig> {
   if (outputDir) env.outputDir = outputDir;
 
   const provider = process.env[`${ENV_PREFIX}PROVIDER`];
-  if (provider && ['openai', 'anthropic', 'google', 'groq'].includes(provider)) {
-    env.provider = provider as 'openai' | 'anthropic' | 'google' | 'groq';
+  if (
+    provider &&
+    ['openai', 'openai-compatible', 'anthropic', 'google', 'groq'].includes(provider)
+  ) {
+    env.provider = provider as 'openai' | 'openai-compatible' | 'anthropic' | 'google' | 'groq';
   }
 
   const model = process.env[`${ENV_PREFIX}MODEL`];
@@ -39,6 +42,9 @@ function loadEnvConfig(): Partial<SkillgenConfig> {
 
   const apiKey = process.env[`${ENV_PREFIX}API_KEY`];
   if (apiKey) env.apiKey = apiKey;
+
+  const baseUrl = process.env[`${ENV_PREFIX}BASE_URL`];
+  if (baseUrl) env.baseUrl = baseUrl;
 
   const concurrency = process.env[`${ENV_PREFIX}CONCURRENCY`];
   if (concurrency) {

@@ -57,6 +57,7 @@
     "@ai-sdk/google": "^1.0.0",
     "@ai-sdk/groq": "^1.0.0",
     "@ai-sdk/openai": "^1.0.0",
+    "@ai-sdk/openai-compatible": "0.2.16",
     "@mdx-js/mdx": "^3.0.0",
     "@storybook/csf-tools": "^8.0.0",
     "ai": "^4.0.0",

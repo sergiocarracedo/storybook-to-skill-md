@@ -43,7 +43,7 @@ storybook-to-skill-md generate [options]
 
 #### `--provider <provider>` / `-p <provider>` (required)
 - **Description:** LLM provider to use
-- **Choices:** `openai`, `anthropic`, `google`
+- **Choices:** `openai`, `openai-compatible`, `anthropic`, `google`, `groq`
 - **Example:** `--provider anthropic`
 - **Env:** `SKILLGEN_PROVIDER`
 
@@ -59,6 +59,11 @@ storybook-to-skill-md generate [options]
 - **Description:** API key for the LLM provider
 - **Example:** `--api-key sk-...`
 - **Env:** `SKILLGEN_API_KEY`
+
+#### `--base-url <url>` / `-b <url>`
+- **Description:** Custom provider endpoint. Required and used by `openai-compatible`; also used by Anthropic-compatible proxy endpoints. Ignored by other providers.
+- **Example:** `--base-url https://llm.example.com/v1`
+- **Env:** `SKILLGEN_BASE_URL`
 
 ## Filtering Options
 
@@ -178,6 +183,16 @@ storybook-to-skill-md generate \
   --include "Components/**" "Patterns/**" \
   --exclude "**/Internal/**" \
   --verbose
+```
+
+### OpenAI-Compatible Endpoint
+```bash
+storybook-to-skill-md generate \
+  --storybook-url https://storybook.example.com \
+  --provider openai-compatible \
+  --model your-model \
+  --base-url https://llm.example.com/v1 \
+  --api-key $API_KEY
 ```
 
 ### Debug Mode

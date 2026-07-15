@@ -135,5 +135,5 @@ Use `--force` to ignore cache and regenerate everything.
 
 - [CLI Commands](../cli/commands) - All available options
 - [Configuration](../cli/configuration) - Config files, env vars
-- [Providers](../providers/overview) - OpenAI, Anthropic, Google setup
+- [Providers](../providers/overview) - OpenAI, OpenAI-compatible, Anthropic, Google, and Groq setup
 - [GitHub Action](./github-action) - CI/CD automation
